@@ -47,24 +47,10 @@
         </div>
         <div class="pedigreeTree__cell">
           <ChinchillaCard
-            v-if="getParent('m.m.f')"
-            :chinchilla="getParent('m.m.f')"
-          />
-        </div>
-        <div class="pedigreeTree__cell">
-          <ChinchillaCard
             v-if="getParent('m.f.m')"
             :chinchilla="getParent('m.f.m')"
           />
         </div>
-        <div class="pedigreeTree__cell">
-          <ChinchillaCard
-            v-if="getParent('m.f.f')"
-            :chinchilla="getParent('m.f.f')"
-          />
-        </div>
-      </div>
-      <div class="pedigreeTree__row pedigreeTree__row--last">
         <div class="pedigreeTree__cell">
           <ChinchillaCard
             v-if="getParent('f.m.m')"
@@ -73,14 +59,28 @@
         </div>
         <div class="pedigreeTree__cell">
           <ChinchillaCard
-            v-if="getParent('f.m.f')"
-            :chinchilla="getParent('f.m.f')"
+            v-if="getParent('f.f.m')"
+            :chinchilla="getParent('f.f.m')"
+          />
+        </div>
+      </div>
+      <div class="pedigreeTree__row pedigreeTree__row--last">
+        <div class="pedigreeTree__cell">
+          <ChinchillaCard
+            v-if="getParent('m.m.f')"
+            :chinchilla="getParent('m.m.f')"
           />
         </div>
         <div class="pedigreeTree__cell">
           <ChinchillaCard
-            v-if="getParent('f.f.m')"
-            :chinchilla="getParent('f.f.m')"
+            v-if="getParent('m.f.f')"
+            :chinchilla="getParent('m.f.f')"
+          />
+        </div>
+        <div class="pedigreeTree__cell">
+          <ChinchillaCard
+            v-if="getParent('f.m.f')"
+            :chinchilla="getParent('f.m.f')"
           />
         </div>
         <div class="pedigreeTree__cell">
@@ -133,7 +133,7 @@ export default {
   methods: {
     review() {
       document.body.scrollWidth < 1100
-        ? (this.scale = Math.max(document.body.scrollWidth / 1100, 0.5))
+        ? (this.scale = Math.max(document.body.scrollWidth / 1100, 0.2))
         : (this.scale = 1)
       this.scale === 1
         ? (this.margin = 0)

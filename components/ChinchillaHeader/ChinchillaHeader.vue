@@ -177,6 +177,12 @@ export default {
     width: fit-content;
     box-sizing: border-box;
 
+    @include mq('tablet-small') {
+      height: 32px;
+      line-height: 32px;
+      font-size: 14px;
+    }
+
     &:first-of-type {
       top: 15%;
       left: 60%;
@@ -232,6 +238,11 @@ export default {
       height: 240px;
     }
 
+    @include mq('tablet-small') {
+      width: 120px;
+      height: 120px;
+    }
+
     &:hover #{$self}__change {
       top: 0;
       transform: translateX(-50%);
@@ -244,6 +255,11 @@ export default {
       @include mq('tablet') {
         width: 180px;
         height: 180px;
+      }
+
+      @include mq('tablet-small') {
+        width: 90px;
+        height: 90px;
       }
     }
   }

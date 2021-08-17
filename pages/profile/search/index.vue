@@ -52,6 +52,7 @@
             item-value="value"
           />
           <v-select
+            v-if="isRussian"
             v-model="models.status"
             :items="statuses"
             label="Статус"
@@ -87,11 +88,21 @@ export default {
 
   layout: 'profileLayout',
 
+  async asyncData({ $axios, params, app }) {
+    const isRussian = app.store.state.UserModule.country === 'RU'
+    let url = 'chinchilla/search?'
+    if (params.sex) url = `${url}sex=${params.sex}&`
+    if (params.status || !isRussian)
+      url = `${url}status=${isRussian ? params.status : 'sale'}&`
+    const chinchillas = (await $axios.$get(url)).data
+    return {
+      chinchillas,
+    }
+  },
+
   data() {
     return {
-      chinchillas: [],
       isLoading: false,
-      isFinish: false,
       search: '',
       timer: 0,
       dialog: false,
@@ -120,13 +131,16 @@ export default {
         status: this.$route.query.status || '',
       },
       params: {
+        sex: '',
         status: this.$route.query.status || '',
       },
     }
   },
 
-  async fetch() {
-    await this.searchData(true)
+  computed: {
+    isRussian() {
+      return this.$store.state.UserModule.country === 'RU'
+    },
   },
 
   watch: {
@@ -143,8 +157,10 @@ export default {
         let url = 'chinchilla/search?'
         if (this.search) url = `${url}name=${this.search}&`
         if (this.params.sex) url = `${url}sex=${this.params.sex}&`
-        if (this.params.status) url = `${url}status=${this.params.status}&`
+        if (this.params.status || !this.isRussian)
+          url = `${url}status=${this.isRussian ? this.params.status : 'sale'}&`
         this.chinchillas = (await this.$axios.$get(url)).data
+        console.log(this.chinchillas)
         this.isLoading = false
       }
       if (!immediate) this.timer = setTimeout(requestData, 1000)

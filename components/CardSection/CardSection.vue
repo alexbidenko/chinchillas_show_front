@@ -68,6 +68,11 @@ export default {
     border-radius: 0 24px 24px 0;
     display: flex;
     align-items: center;
+
+    @include mq('tablet-small') {
+      font-size: 18px;
+      height: calc(100% + 8px);
+    }
   }
 
   &__headerCard {

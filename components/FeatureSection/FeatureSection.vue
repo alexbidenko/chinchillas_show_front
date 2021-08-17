@@ -142,8 +142,8 @@ export default {
 
   &__title {
     font-weight: 700;
-    font-size: 40px;
-    line-height: 42px;
+    font-size: 24px;
+    line-height: 32px;
     color: #f9f4f2;
     text-align: right;
     margin-top: 5px;

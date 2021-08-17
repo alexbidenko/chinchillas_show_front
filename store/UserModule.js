@@ -24,6 +24,7 @@ export default {
   mutations: {
     [Mutations.SET_COUNTRY](state, value) {
       state.country = value
+      // state.country = 'EN'
     },
     [Mutations.SET_USER](state, value) {
       state.user = value

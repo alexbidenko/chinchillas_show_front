@@ -274,6 +274,12 @@ export default {
       left: 75%;
       padding-left: 35%;
     }
+
+    @include mq('tablet-small') {
+      font-size: 14px;
+      height: 24px;
+      line-height: 24px;
+    }
   }
 
   &__avatar {
@@ -290,6 +296,11 @@ export default {
     @include mq('tablet') {
       width: 240px;
       height: 240px;
+    }
+
+    @include mq('tablet-small') {
+      width: 120px;
+      height: 120px;
     }
 
     &:hover #{$self}__change {
@@ -330,6 +341,11 @@ export default {
 
     &:not(:last-child) {
       margin-bottom: 16px;
+    }
+
+    @include mq('tablet-small') {
+      font-size: 14px;
+      height: 24px;
     }
 
     & * {

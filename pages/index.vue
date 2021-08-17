@@ -206,6 +206,12 @@ export default {
     }
   }
 
+  &__headerLeft ul {
+    @include mq('tablet-small') {
+      padding-left: 8px;
+    }
+  }
+
   &__question {
     font-weight: 800;
     font-size: 36px;
@@ -230,6 +236,12 @@ export default {
     font-size: 18px;
     line-height: 34px;
     color: #262626;
+
+    @include mq('tablet-small') {
+      font-size: 14px;
+      line-height: 24px;
+      padding-left: 24px;
+    }
 
     &::before {
       content: '';
@@ -346,7 +358,7 @@ export default {
 
     @include mq('tablet-small') {
       padding: 7px 0;
-      width: calc(100% / 3);
+      width: calc(100% / 2);
       flex-direction: column;
       height: 76px;
 

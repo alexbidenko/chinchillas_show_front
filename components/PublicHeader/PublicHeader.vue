@@ -73,6 +73,11 @@ export default {
     align-items: center;
     color: #d79b00;
     padding-right: 24px;
+
+    @include mq('tablet-small') {
+      height: 24px;
+      font-size: 18px;
+    }
   }
 
   &__nav {
