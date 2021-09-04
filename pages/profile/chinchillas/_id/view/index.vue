@@ -53,7 +53,7 @@
           <ChinchillaPhoto
             v-for="(photo, index) in data.photos"
             :key="photo.id"
-            :user-id="data.owner_id"
+            :user-id="userId"
             :chinchilla="data"
             :photo="photo"
             @toAvatar="photoToAvatar"

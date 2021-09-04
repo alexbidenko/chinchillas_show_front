@@ -160,7 +160,6 @@ export default {
         if (this.params.status || !this.isRussian)
           url = `${url}status=${this.isRussian ? this.params.status : 'sale'}&`
         this.chinchillas = (await this.$axios.$get(url)).data
-        console.log(this.chinchillas)
         this.isLoading = false
       }
       if (!immediate) this.timer = setTimeout(requestData, 1000)
