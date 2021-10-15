@@ -25,10 +25,7 @@
         Выход
       </button>
       <BaseSidenav>
-        <nuxt-link
-          v-if="user && isRussian"
-          class="profileHeader__sidenavLink"
-          to="/profile"
+        <nuxt-link v-if="user" class="profileHeader__sidenavLink" to="/profile"
           >Профиль</nuxt-link
         >
         <nuxt-link class="profileHeader__sidenavLink" to="/raech"
@@ -38,7 +35,7 @@
           >Аукцион</nuxt-link
         >
         <nuxt-link
-          v-if="user"
+          v-if="user && isRussian"
           class="profileHeader__sidenavLink"
           to="/profile/users"
           >Люди</nuxt-link

@@ -9,6 +9,7 @@ export default {
       country: null,
     }
   },
+
   actions: {
     [Actions.CHECK_USER]({ commit }, callback) {
       return this.$axios.$get('user/details').then((data) => {
@@ -21,6 +22,7 @@ export default {
       this.$axios.setToken(null)
     },
   },
+
   mutations: {
     [Mutations.SET_COUNTRY](state, value) {
       state.country = value
@@ -30,6 +32,7 @@ export default {
       state.user = value
     },
   },
+
   getters: {
     [Getters.GET_USER](state) {
       return state.user
