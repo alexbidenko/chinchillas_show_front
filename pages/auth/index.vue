@@ -196,22 +196,6 @@ export default {
     }
   },
 
-  computed: {
-    isRussian() {
-      return this.$store.state.UserModule.country === 'RU'
-    },
-  },
-
-  watch: {
-    isRussian(val) {
-      if (!val) this.$router.push('/')
-    },
-  },
-
-  created() {
-    if (!this.isRussian) this.$router.push('/')
-  },
-
   methods: {
     submitSignIn() {
       this.$axios.$post('login', this.signIn).then((data) => {

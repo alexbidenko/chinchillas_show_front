@@ -14,7 +14,7 @@
           </ul>
         </div>
         <div class="mainPage__headerRight">
-          <WaterButton v-if="isRussian" class="mainPage__auth" to="/profile"
+          <WaterButton class="mainPage__auth" to="/profile"
             >Перейти в личный кабинет</WaterButton
           >
           <div class="mainPage__social">
@@ -149,12 +149,6 @@ export default {
 
   async fetch() {
     this.statistics = await this.$axios.$get('site/statistics')
-  },
-
-  computed: {
-    isRussian() {
-      return this.$store.state.UserModule.country === 'RU'
-    },
   },
 }
 </script>
