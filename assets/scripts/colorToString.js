@@ -275,18 +275,18 @@ export default (color) => {
       if (POSITION === 1) {
         switch (angora) {
           case 'yes':
-            return 'КПА '
+            return 'ангора '
           default:
             return ''
         }
       } else {
         switch (angora) {
           case 'carrier':
-            return 'НКПА '
+            return 'носитель ангоры '
           case '67%':
-            return '67% НКПА '
+            return '67% носитель ангоры '
           case '50%':
-            return '50% НКПА '
+            return '50% носитель ангоры '
           default:
             return ''
         }

@@ -288,7 +288,9 @@ export default {
                     value,
                   }))
               : undefined,
-          targetUserId: this.breederId,
+          targetUserId:
+            this.updatedStatus === 'sold' ? this.breederId : undefined,
+          sourceUserId: this.updatedStatus === 'sold' ? this.userId : undefined,
         })
         .then((data) => {
           this.isRequest = false

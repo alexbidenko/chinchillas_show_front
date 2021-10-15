@@ -583,7 +583,7 @@
           </td>
         </tr>
         <tr>
-          <td>КПА/RPA</td>
+          <td>Ангора/RPA</td>
           <td>
             <v-btn
               type="button"
