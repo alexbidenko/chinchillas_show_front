@@ -110,6 +110,7 @@ export default {
       const response = await this.$axios.$get(
         `admin/users?page=${this.page}&perPage=${this.perPage}`
       )
+      this.users = Array(response.total).fill({})
       response.data.forEach((el, index) => {
         this.users[(this.page - 1) * this.perPage + index] = el
       })

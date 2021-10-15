@@ -236,6 +236,19 @@ export default {
     },
   },
 
+  created() {
+    if (
+      !(
+        this.isRussian ||
+        this.data.owner_id === this.userId ||
+        this.data.children.some((el) => el.owner_id === this.userId) ||
+        this.data.status.name === 'sale'
+      )
+    ) {
+      this.$router.push('/profile')
+    }
+  },
+
   mounted() {
     window.addEventListener('resize', this.updatePhotosHeight)
     this.updatePhotosHeight()

@@ -9,7 +9,10 @@
       >
       <nuxt-link class="profileHeader__link" to="/raech">РАЭШ</nuxt-link>
       <nuxt-link class="profileHeader__link" to="/auction">Аукцион</nuxt-link>
-      <nuxt-link v-if="user" class="profileHeader__link" to="/profile/users"
+      <nuxt-link
+        v-if="user && isRussian"
+        class="profileHeader__link"
+        to="/profile/users"
         >Люди</nuxt-link
       >
       <nuxt-link class="profileHeader__link" to="/profile/search"
@@ -22,7 +25,10 @@
         Выход
       </button>
       <BaseSidenav>
-        <nuxt-link v-if="user" class="profileHeader__sidenavLink" to="/profile"
+        <nuxt-link
+          v-if="user && isRussian"
+          class="profileHeader__sidenavLink"
+          to="/profile"
           >Профиль</nuxt-link
         >
         <nuxt-link class="profileHeader__sidenavLink" to="/raech"
@@ -65,6 +71,9 @@ export default {
   computed: {
     user() {
       return this.$store.state.UserModule.user
+    },
+    isRussian() {
+      return this.$store.state.UserModule.country === 'RU'
     },
   },
 
