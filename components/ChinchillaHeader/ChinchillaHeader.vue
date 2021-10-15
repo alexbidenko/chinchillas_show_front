@@ -19,6 +19,7 @@
             :data="chinchilla"
             @updateStatuses="$emit('updateStatuses', $event)"
             @updateConclusion="$emit('updateConclusion', $event)"
+            @updateOwner="$emit('updateOwner', $event)"
           />
           <div
             class="chinchillaHeader__avatar"

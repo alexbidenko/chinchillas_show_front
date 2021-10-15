@@ -95,6 +95,24 @@
             </v-row>
           </v-container>
 
+          <v-container v-else-if="updatedStatus === 'sold'">
+            <v-row>
+              <v-col cols="12" class="px-0">
+                <v-autocomplete
+                  v-model="breederId"
+                  :items="breederItems"
+                  :loading="isLoadingBreeder"
+                  :search-input.sync="breederSearch"
+                  item-text="fullName"
+                  item-value="id"
+                  label="Заводчик"
+                  placeholder="Введите имя заводчика"
+                  clearable
+                />
+              </v-col>
+            </v-row>
+          </v-container>
+
           <div class="mb-2 layout">
             <p class="font-weight-bold py-2 my-0">История статусов</p>
             <v-spacer />
@@ -141,7 +159,8 @@
             v-if="
               updatedStatus &&
               userId === data.owner_id &&
-              (updatedStatus !== 'sale' || prices.some((f) => f.value))
+              (updatedStatus !== 'sale' || prices.some((f) => f.value)) &&
+              (updatedStatus !== 'sold' || breederId)
             "
             color="darken-1"
             text
@@ -217,10 +236,15 @@ export default {
           value: '',
         },
       ],
+      breederId: 0,
       userId: +this.$cookies.get('USER_ID'),
       isOpenComments: false,
       showTimeline: true,
       isRequest: false,
+      breederItems: [],
+      isLoadingBreeder: false,
+      breederSearch: '',
+      timers: {},
     }
   },
 
@@ -236,6 +260,9 @@ export default {
   watch: {
     updatedStatus() {
       this.showTimeline = false
+    },
+    breederSearch(val) {
+      this.searchBreeder(val)
     },
   },
 
@@ -261,11 +288,15 @@ export default {
                     value,
                   }))
               : undefined,
+          targetUserId: this.breederId,
         })
         .then((data) => {
           this.isRequest = false
           this.statusesDialog = false
+          this.breederSearch = ''
+          this.breederId = 0
           this.$emit('updateStatuses', [data, ...this.data.statuses])
+          this.$emit('updateOwner')
         })
         .catch(() => alert('Что-то пошло не так'))
     },
@@ -287,6 +318,21 @@ export default {
         )
         .map((el) => `${CURRENCIES[el.currency]}${el.value}`)
         .join(', ')
+    },
+    searchBreeder(val) {
+      clearTimeout(this.timers.breeder)
+      this.timers.breeder = setTimeout(() => {
+        this.isLoadingBreeder = true
+        this.$axios
+          .$get(`user/search?q=${val || ''}&perPage=20`)
+          .then((data) => {
+            this.breederItems = data.concat(data).map((el) => ({
+              ...el,
+              fullName: `${el.first_name} ${el.last_name} (${el.login})`,
+            }))
+            this.isLoadingBreeder = false
+          })
+      }, 500)
     },
   },
 }

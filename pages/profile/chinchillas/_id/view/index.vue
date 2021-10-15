@@ -5,6 +5,7 @@
         :chinchilla="data"
         @updateStatuses="data.statuses = $event"
         @updateConclusion="data.conclusion = $event"
+        @updateOwner="updateUser"
       />
       <div class="baseContainer viewPage__photos pb-6">
         <v-card v-if="activeStatus.name === 'sale'" class="mb-8">
@@ -245,6 +246,11 @@ export default {
   },
 
   methods: {
+    async updateUser() {
+      this.data = await this.$axios.$get(
+        `chinchilla/details/${this.$route.params.id}`
+      )
+    },
     uploadPhotos(event) {
       const requests = [...event.target.files].map(async (file) => {
         const resizedFile = await resizeImage(file)
