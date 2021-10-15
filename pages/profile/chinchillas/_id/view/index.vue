@@ -242,7 +242,7 @@ export default {
         this.isRussian ||
         this.data.owner_id === this.userId ||
         this.data.children.some((el) => el.owner_id === this.userId) ||
-        this.data.status.name === 'sale'
+        this.data.statuses.some((el) => el.name === 'sale')
       )
     ) {
       this.$router.push('/profile')
