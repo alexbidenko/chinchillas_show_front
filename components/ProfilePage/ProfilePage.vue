@@ -6,14 +6,22 @@
       :is-owner="isOwner"
       @update="user = $event"
     />
+    <div v-for="(list, key) in chinchillas" :key="key">
+      <CardSection
+        v-if="list.length"
+        :items="list"
+        :title="
+          (statuses.find((el) => el.key === key) || { label: 'Без статуса' })
+            .label
+        "
+        :default-expand="key !== 'dead'"
+      />
+    </div>
     <CardSection
-      v-for="(list, key) in chinchillas"
-      :key="key"
-      :title="
-        (statuses.find((el) => el.key === key) || { label: 'Без статуса' })
-          .label
-      "
-      :items="list"
+      v-if="soldChinchillas && soldChinchillas.length"
+      title="Проданные"
+      :items="soldChinchillas"
+      :default-expand="false"
     />
     <v-fab-transition>
       <v-btn

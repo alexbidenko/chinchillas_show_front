@@ -17,7 +17,11 @@ export default {
   async fetch() {
     this.user = await this.$axios.$get(`user/details/${this.userId}`)
     const list = await this.$axios.$get(`chinchilla/get/${this.userId}`)
+    this.soldChinchillas = await this.$axios.$get(
+      `chinchilla/sold/${this.userId}`
+    )
     this.chinchillas = list.reduce((arr, el) => {
+      if (this.soldChinchillas.some((f) => f.id === el.id)) return arr
       if (!el.status || el.status.name === 'breeding')
         arr[el.sex] = [el, ...(arr[el.sex] || [])]
       else arr[el.status.name] = [el, ...(arr[el.status.name] || [])]
@@ -28,7 +32,8 @@ export default {
   data() {
     return {
       user: null,
-      chinchillas: null,
+      chinchillas: statuses.reduce((acc, el) => ({ ...acc, [el.key]: [] }), {}),
+      soldChinchillas: null,
       isOwner: this.userId === +this.$cookies.get('USER_ID'),
       statuses: [
         { key: 'm', label: 'Самцы' },

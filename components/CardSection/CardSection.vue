@@ -1,14 +1,23 @@
 <template>
   <section class="cardSection">
     <div class="cardSection__container">
-      <header v-if="title" class="cardSection__header">
-        <div class="cardSection__headerCard">
+      <header
+        v-if="title"
+        class="cardSection__header"
+        @click="expand = !expand"
+      >
+        <div class="cardSection__headerCard paddingRight">
           <h3 class="cardSection__title paddingLeft">
             {{ title }}
           </h3>
+          <v-btn icon>
+            <v-icon>{{
+              expand ? 'mdi-chevron-up' : 'mdi-chevron-down'
+            }}</v-icon>
+          </v-btn>
         </div>
       </header>
-      <main class="cardSection__list baseContainer baseGrid">
+      <main v-if="expand" class="cardSection__list baseContainer baseGrid">
         <ChinchillaCard
           v-for="item in items"
           :key="item.id"
@@ -38,6 +47,16 @@ export default {
       type: String,
       default: null,
     },
+    defaultExpand: {
+      type: Boolean,
+      default: true,
+    },
+  },
+
+  data() {
+    return {
+      expand: this.defaultExpand,
+    }
   },
 }
 </script>
@@ -56,6 +75,7 @@ export default {
 
   &__header {
     padding: 24px 0;
+    cursor: pointer;
   }
 
   &__title {
@@ -78,6 +98,7 @@ export default {
   &__headerCard {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     background-color: #e2e2e2;
     box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
     height: 24px;

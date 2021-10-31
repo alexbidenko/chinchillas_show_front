@@ -98,7 +98,9 @@
           <v-container v-else-if="updatedStatus === 'sold'">
             <v-row>
               <v-col cols="12" class="px-0">
+                <v-checkbox v-model="notInSite" label="Нет на сайте" />
                 <v-autocomplete
+                  v-if="!notInSite"
                   v-model="breederId"
                   :items="breederItems"
                   :loading="isLoadingBreeder"
@@ -160,7 +162,7 @@
               updatedStatus &&
               userId === data.owner_id &&
               (updatedStatus !== 'sale' || prices.some((f) => f.value)) &&
-              (updatedStatus !== 'sold' || breederId)
+              (updatedStatus !== 'sold' || breederId || notInSite)
             "
             color="darken-1"
             text
@@ -237,6 +239,7 @@ export default {
         },
       ],
       breederId: 0,
+      notInSite: false,
       userId: +this.$cookies.get('USER_ID'),
       isOpenComments: false,
       showTimeline: true,
@@ -289,7 +292,11 @@ export default {
                   }))
               : undefined,
           targetUserId:
-            this.updatedStatus === 'sold' ? this.breederId : undefined,
+            this.updatedStatus === 'sold'
+              ? this.notInSite
+                ? null
+                : this.breederId
+              : undefined,
           sourceUserId: this.updatedStatus === 'sold' ? this.userId : undefined,
         })
         .then((data) => {
