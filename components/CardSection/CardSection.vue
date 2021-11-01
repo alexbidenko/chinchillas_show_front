@@ -17,7 +17,7 @@
           </v-btn>
         </div>
       </header>
-      <main v-if="expand" class="cardSection__list baseContainer baseGrid">
+      <main v-if="expand" class="cardSection__list baseContainer">
         <ChinchillaCard
           v-for="item in items"
           :key="item.id"
@@ -107,6 +107,29 @@ export default {
   &__list {
     padding-top: 40px;
     padding-bottom: 40px;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-column-gap: 16px;
+    grid-row-gap: 24px;
+
+    @include mq('desktop', 'desktop-small') {
+      grid-column-gap: 12px;
+      grid-row-gap: 18px;
+    }
+
+    @include mq('desktop-small', 'tablet') {
+      grid-template-columns: repeat(6, 1fr);
+    }
+
+    @include mq('tablet', 'tablet-small') {
+      grid-template-columns: repeat(4, 1fr);
+      grid-column-gap: 18px;
+      grid-row-gap: 24px;
+    }
+
+    @include mq('tablet-small') {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 }
 </style>

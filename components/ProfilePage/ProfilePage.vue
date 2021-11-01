@@ -8,19 +8,24 @@
     />
     <div v-for="(list, key) in chinchillas" :key="key">
       <CardSection
-        v-if="list.length"
+        v-if="list.length && key !== 'dead'"
         :items="list"
         :title="
           (statuses.find((el) => el.key === key) || { label: 'Без статуса' })
             .label
         "
-        :default-expand="key !== 'dead'"
       />
     </div>
     <CardSection
       v-if="soldChinchillas && soldChinchillas.length"
       title="Проданные"
       :items="soldChinchillas"
+      :default-expand="false"
+    />
+    <CardSection
+      v-if="chinchillas.dead.length"
+      :items="chinchillas.dead"
+      title="На радуге"
       :default-expand="false"
     />
     <v-fab-transition>

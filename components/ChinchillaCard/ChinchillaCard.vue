@@ -110,6 +110,14 @@ export default {
     width: 100%;
     left: 0;
     bottom: 0;
+
+    @include mq('desktop-small') {
+      height: 24px;
+    }
+
+    @include mq('tablet-small') {
+      height: 20px;
+    }
   }
 
   &__info {
@@ -123,7 +131,27 @@ export default {
     flex-direction: column;
     justify-content: center;
     transition: transform 0.3s ease;
-    padding: 0 16px 34px;
+    padding: 0 14px 34px;
+
+    @include mq('desktop') {
+      padding: 0 10px 34px;
+    }
+
+    @include mq('desktop-small') {
+      padding: 0 12px 24px;
+    }
+
+    @include mq('tablet') {
+      padding: 0 10px 24px;
+    }
+
+    @include mq('tablet-small') {
+      padding: 0 12px 20px;
+    }
+
+    @include mq('phone') {
+      padding: 0 8px 20px;
+    }
   }
 
   &:hover {
@@ -136,10 +164,25 @@ export default {
     }
   }
 
-  &__infoRow {
+  & &__infoRow {
     font-size: 14px;
     color: #797979;
     margin-bottom: 8px;
+
+    @include mq('desktop') {
+      line-height: 120%;
+      font-size: 10px;
+      margin-bottom: 6px;
+    }
+
+    @include mq('tablet-small') {
+      font-size: 10px;
+      margin-bottom: 4px;
+    }
+
+    @include mq('phone') {
+      font-size: 8px;
+    }
 
     &:last-child {
       margin-bottom: 0;
@@ -157,6 +200,16 @@ export default {
 
     & span {
       color: red;
+    }
+
+    @include mq('desktop-small') {
+      line-height: 23px;
+      font-size: 18px;
+    }
+
+    @include mq('tablet-small') {
+      line-height: 19px;
+      font-size: 14px;
     }
   }
 
