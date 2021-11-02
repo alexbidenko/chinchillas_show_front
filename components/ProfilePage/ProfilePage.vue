@@ -23,7 +23,7 @@
       :default-expand="false"
     />
     <CardSection
-      v-if="chinchillas.dead.length"
+      v-if="chinchillas.dead && chinchillas.dead.length"
       :items="chinchillas.dead"
       title="На радуге"
       :default-expand="false"
