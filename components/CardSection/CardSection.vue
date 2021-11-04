@@ -8,7 +8,7 @@
       >
         <div class="cardSection__headerCard paddingRight">
           <h3 class="cardSection__title paddingLeft">
-            {{ title }}
+            {{ title }} ({{ items.length }})
           </h3>
           <v-btn icon>
             <v-icon>{{

@@ -25,6 +25,7 @@
         <v-card class="mb-8">
           <v-card-text class="pb-0">
             <div class="display-1 text--primary mb-4">Информация шиншиллы</div>
+            <p class="pb-4 mb-0">Идентификатор: {{ data.id }}</p>
             <p v-if="data.breeder" class="pb-4 mb-0">
               Заводчик:
               {{

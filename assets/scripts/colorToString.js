@@ -443,12 +443,11 @@ export default (color) => {
   }
 
   const isFur = () => {
-    if (fur === 'yes') return `мехов${MorFEnd(1)} `
+    if (fur === 'yes' && angora !== 'yes') return `(мехов${MorFEnd(1)}) `
     else return ''
   }
 
   let fullChinColorName =
-    isFur() +
     isStandart() +
     isWHITEPINK() +
     isBeige() +
@@ -473,7 +472,8 @@ export default (color) => {
     isAngora(2) +
     isCalifornia(2) +
     isRex(2) +
-    isLova(2)
+    isLova(2) +
+    isFur()
 
   if (fullChinColorName.substring(0, 10) === 'бриллиант ') {
     fullChinColorName = 'голубой ' + fullChinColorName

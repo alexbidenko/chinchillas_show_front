@@ -354,7 +354,7 @@ export default {
         this.photos.push({
           file,
           data: URL.createObjectURL(file),
-          id: new Date().getTime(),
+          id: Math.random(),
         })
       }
     },

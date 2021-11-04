@@ -34,12 +34,9 @@
             Пол: {{ chinchilla.sex === 'f' ? 'самка' : 'самец' }}
           </p>
           <p class="chinchillaCard__infoRow">
-            Окрас: {{ colorString || 'стандарт' }}
+            {{ colorString || 'стандарт' }}
           </p>
-          <p class="chinchillaCard__infoRow">
-            Дата рождения: {{ dateBirthday }}
-          </p>
-          <p class="chinchillaCard__infoRow">Возраст: {{ dateDifference }}</p>
+          <p class="chinchillaCard__infoRow">{{ dateDifference }}</p>
         </div>
       </v-img>
     </div>
@@ -53,7 +50,6 @@
 
 <script>
 import colorToString from '~/assets/scripts/colorToString'
-import dateFormat from '~/assets/scripts/dateFormat'
 import dateDifference from '~/assets/scripts/dateDifference'
 
 export default {
@@ -69,9 +65,6 @@ export default {
   computed: {
     colorString() {
       return colorToString(this.chinchilla.color)
-    },
-    dateBirthday() {
-      return dateFormat(this.chinchilla.birthday, 'yyyy.MM.dd')
     },
     dateDifference() {
       return dateDifference(this.chinchilla.birthday)
@@ -171,17 +164,17 @@ export default {
 
     @include mq('desktop') {
       line-height: 120%;
-      font-size: 10px;
+      font-size: 11px;
       margin-bottom: 6px;
     }
 
     @include mq('tablet-small') {
-      font-size: 10px;
+      font-size: 11px;
       margin-bottom: 4px;
     }
 
     @include mq('phone') {
-      font-size: 8px;
+      font-size: 9px;
     }
 
     &:last-child {

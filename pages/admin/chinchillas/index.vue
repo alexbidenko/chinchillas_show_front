@@ -14,7 +14,14 @@
       <v-card v-if="activeItem && itemModels">
         <v-card-title class="headline">Проверка шиншиллы</v-card-title>
 
-        <v-card-title>{{ activeItem.name }}</v-card-title>
+        <v-card-title>
+          {{ activeItem.name }}
+          <v-btn
+            target="_blank"
+            :href="`/profile/chinchillas/${activeItem.id}/view`"
+            >Открыть</v-btn
+          >
+        </v-card-title>
 
         <v-divider />
 
@@ -30,18 +37,18 @@
           />
 
           <div class="adminChinchillas__photos">
-            <nuxt-link
+            <a
               v-for="photo in itemModels.photos"
               :key="photo.name"
               target="_blank"
-              :to="`https://api.chinchillas-show.com/photos/chinchillas/${itemModels.owner_id}/${itemModels.id}/${photo.name}`"
+              :href="`https://api.chinchillas-show.com/photos/chinchillas/${itemModels.owner_id}/${itemModels.id}/${photo.name}`"
             >
               <img
                 :src="`https://api.chinchillas-show.com/photos/chinchillas/${itemModels.owner_id}/${itemModels.id}/${photo.name}`"
                 :alt="itemModels.name"
                 class="adminChinchillas__photo"
               />
-            </nuxt-link>
+            </a>
           </div>
 
           <v-textarea
