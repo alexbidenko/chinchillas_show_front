@@ -8,6 +8,22 @@
         @updateOwner="updateUser"
       />
       <div class="baseContainer viewPage__photos pb-6">
+        <v-card
+          v-if="['admin', 'moderator'].includes(user ? user.type : '')"
+          class="mb-8"
+        >
+          <v-card-text>
+            <div class="display-1 text--primary mb-4">Панель модератора</div>
+            <div class="mb-4">
+              <v-btn @click="toggleHideChinchilla"
+                >{{ data.hidden ? 'Показать' : 'Скрыть' }} шиншиллу</v-btn
+              >
+            </div>
+            <div>
+              <v-btn @click="deleteChinchilla">Удалить шиншиллу</v-btn>
+            </div>
+          </v-card-text>
+        </v-card>
         <v-card v-if="activeStatus.name === 'sale'" class="mb-8">
           <v-card-text class="pb-0">
             <div class="display-1 text--primary mb-4">Шиншилла на продажу</div>
@@ -198,6 +214,9 @@ export default {
   },
 
   computed: {
+    user() {
+      return this.$store.state.UserModule.user
+    },
     colorString() {
       return this.data ? colorToString(this.data.color) : ''
     },
@@ -297,6 +316,24 @@ export default {
         this.photosHeight =
           this.$refs.photosDialog.$el.clientHeight -
           this.$refs.photosHeader.$el.clientHeight
+    },
+    toggleHideChinchilla() {
+      this.$axios
+        .put(`admin/chinchilla/${this.data.id}/hidden`, {
+          hidden: !this.data.hidden,
+        })
+        .then(() => {
+          this.data.hidden = !this.data.hidden
+        })
+    },
+    deleteChinchilla() {
+      if (
+        confirm(`Вы уверены что хотите удалить шиншиллу ${this.data.name}?`)
+      ) {
+        this.$axios.delete(`admin/chinchilla/${this.data.id}`).then(() => {
+          this.$router.back()
+        })
+      }
     },
   },
 }
