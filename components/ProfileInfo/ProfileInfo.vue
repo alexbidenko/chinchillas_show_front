@@ -108,6 +108,11 @@
                 />
               </v-list-item-content>
             </v-list-item>
+            <v-list-item>
+              <v-list-item-content>
+                <v-btn to="/profile/password">Изменить пароль</v-btn>
+              </v-list-item-content>
+            </v-list-item>
           </v-list>
         </div>
       </v-card>

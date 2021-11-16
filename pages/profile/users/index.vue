@@ -1,6 +1,6 @@
 <template>
   <div class="usersPage">
-    <UserBlock v-for="user in users" :key="user.id" :user="user" />
+    <UserBlock v-for="user in users" :key="user.id" :user="user" small />
   </div>
 </template>
 

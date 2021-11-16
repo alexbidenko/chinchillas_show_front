@@ -43,19 +43,27 @@ export default {
       type: Object,
       required: true,
     },
+    small: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   data() {
     return {
       infoMetaRight: [
-        {
-          label: 'Телефон',
-          key: 'phone',
-        },
-        {
-          label: 'E-Mail',
-          key: 'email',
-        },
+        ...(this.small
+          ? []
+          : [
+              {
+                label: 'Телефон',
+                key: 'phone',
+              },
+              {
+                label: 'E-Mail',
+                key: 'email',
+              },
+            ]),
         {
           label: 'Страна',
           key: 'country',
