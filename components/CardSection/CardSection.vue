@@ -47,6 +47,10 @@ export default {
       type: String,
       default: null,
     },
+    sectionKey: {
+      type: String,
+      required: true,
+    },
     defaultExpand: {
       type: Boolean,
       default: true,
@@ -54,9 +58,19 @@ export default {
   },
 
   data() {
+    let expand = this.defaultExpand
+    const value = this.$cookies.get(`section_expanded:${this.sectionKey}`)
+    if (typeof value === 'boolean') expand = value
+
     return {
-      expand: this.defaultExpand,
+      expand,
     }
+  },
+
+  watch: {
+    expand(val) {
+      this.$cookies.set(`section_expanded:${this.sectionKey}`, val)
+    },
   },
 }
 </script>

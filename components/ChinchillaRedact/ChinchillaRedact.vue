@@ -72,11 +72,12 @@
         >
           <template #item="data">
             <v-list-item-avatar
+              size="60"
               :style="{
                 background: `no-repeat center / cover url(${
                   data.item.avatar
                     ? `https://api.chinchillas-show.com/photos/chinchillas/${data.item.owner_id}/${data.item.id}/${data.item.avatar.name}`
-                    : 'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg'
+                    : '/assets/empty.jpg'
                 })`,
               }"
             />
@@ -101,11 +102,12 @@
         >
           <template #item="data">
             <v-list-item-avatar
+              size="60"
               :style="{
                 background: `no-repeat center / cover url(${
                   data.item.avatar
                     ? `https://api.chinchillas-show.com/photos/chinchillas/${data.item.owner_id}/${data.item.id}/${data.item.avatar.name}`
-                    : 'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg'
+                    : '/assets/empty.jpg'
                 })`,
               }"
             />

@@ -8,9 +8,9 @@
         :src="
           chinchilla.avatar
             ? `https://api.chinchillas-show.com/photos/chinchillas/${chinchilla.owner_id}/${chinchilla.id}/${chinchilla.avatar.name}`
-            : 'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg'
+            : '/assets/empty.jpg'
         "
-        lazy-src="https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg"
+        lazy-src="/assets/empty.jpg"
       >
         <template #placeholder>
           <v-row class="fill-height ma-0" align="center" justify="center">

@@ -40,6 +40,34 @@ export default {
         { key: 'f', label: 'Самки' },
         ...statuses,
       ],
+      sortItems: [
+        {
+          label: 'По алфавиту',
+          value: 'default',
+        },
+        {
+          label: 'По дате рождения',
+          value: 'birthday',
+        },
+      ],
+      sortValue: this.$cookies.get('sort_value') || 'default',
     }
+  },
+
+  watch: {
+    sortValue(val) {
+      this.$cookies.set('sort_value', val)
+    },
+  },
+
+  computed: {
+    sortedChinchillas() {
+      const result = {}
+      Object.entries(this.chinchillas).forEach(([key, value]) => {
+        const field = this.sortValue === 'birthday' ? 'birthday' : 'name'
+        result[key] = value.sort((a, b) => (a[field] > b[field] ? 1 : -1))
+      })
+      return result
+    },
   },
 }

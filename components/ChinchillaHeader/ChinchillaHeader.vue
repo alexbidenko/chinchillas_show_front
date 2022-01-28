@@ -27,7 +27,7 @@
               backgroundImage: `url(${
                 chinchilla.avatar
                   ? `https://api.chinchillas-show.com/photos/chinchillas/${chinchilla.owner_id}/${chinchilla.id}/${chinchilla.avatar.name}`
-                  : 'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg'
+                  : '/assets/empty.jpg'
               })`,
             }"
           />
@@ -51,7 +51,7 @@
               backgroundImage: `url(${
                 chinchilla.owner.avatar
                   ? `https://api.chinchillas-show.com/photos/users/${chinchilla.owner.id}/${chinchilla.owner.avatar}`
-                  : 'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg'
+                  : '/assets/empty.jpg'
               })`,
             }"
           />

@@ -98,11 +98,13 @@
       <CardSection
         v-if="data.children.length"
         title="Дети"
+        section-key="children"
         :items="data.children"
       />
       <CardSection
         v-if="data.relatives && data.relatives.length"
         title="Браться и сестры"
+        section-key="relatives"
         :items="data.relatives"
       />
 

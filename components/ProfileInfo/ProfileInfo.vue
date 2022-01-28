@@ -14,7 +14,7 @@
               backgroundImage: `url(${
                 user.avatar
                   ? `https://api.chinchillas-show.com/photos/users/${user.id}/${user.avatar}`
-                  : 'https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg'
+                  : '/assets/empty.jpg'
               })`,
             }"
             @click="dialog = isOwner"

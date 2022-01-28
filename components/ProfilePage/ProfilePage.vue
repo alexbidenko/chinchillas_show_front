@@ -6,9 +6,20 @@
       :is-owner="isOwner"
       @update="user = $event"
     />
-    <div v-for="(list, key) in chinchillas" :key="key">
+    <div class="profilePage__settings container">
+      <v-select
+        v-model="sortValue"
+        outlined
+        label="Сортировка шиншилл"
+        :items="sortItems"
+        item-text="label"
+        item-value="value"
+      />
+    </div>
+    <div v-for="(list, key) in sortedChinchillas" :key="key">
       <CardSection
         v-if="list.length && key !== 'dead'"
+        :section-key="key"
         :items="list"
         :title="
           (statuses.find((el) => el.key === key) || { label: 'Без статуса' })
@@ -19,12 +30,14 @@
     <CardSection
       v-if="soldChinchillas && soldChinchillas.length"
       title="Проданные"
+      section-key="extra-sold"
       :items="soldChinchillas"
       :default-expand="false"
     />
     <CardSection
-      v-if="chinchillas.dead && chinchillas.dead.length"
-      :items="chinchillas.dead"
+      v-if="sortedChinchillas.dead && sortedChinchillas.dead.length"
+      :items="sortedChinchillas.dead"
+      section-key="extra-dead"
       title="На радуге"
       :default-expand="false"
     />
@@ -59,6 +72,17 @@
   &__title {
     @include buttonReset;
     font-size: 24px;
+  }
+
+  &__settings {
+    padding-top: 32px;
+    padding-bottom: 32px;
+    display: flex;
+    justify-content: end;
+
+    & > * {
+      max-width: 300px;
+    }
   }
 }
 </style>
