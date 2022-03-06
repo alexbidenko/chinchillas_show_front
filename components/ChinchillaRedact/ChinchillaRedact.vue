@@ -24,9 +24,9 @@
               label="День рождения"
               prepend-icon="event"
               name="birthday"
-              readonly
               v-bind="attrs"
               v-on="on"
+              @blur="saveBirthday"
             />
           </template>
           <v-date-picker v-model="birthday" @input="datepicker = false" />
@@ -56,6 +56,12 @@
           label="Заводчик"
           placeholder="Введите имя заводчика"
           clearable
+        />
+        <v-text-field
+          v-if="models.breeder_type === 'not_user'"
+          v-model="models.breeder_name"
+          name="breeder_name"
+          label="Имя заводчика"
         />
         <v-divider />
         <v-checkbox v-model="globalSearch" label="Глобальный поиск" />
@@ -202,6 +208,7 @@ export default {
         description: '',
         breeder_type: 'owner',
         breeder_id: null,
+        breeder_name: '',
       },
       userId: +this.$cookies.get('USER_ID'),
       birthday: null,
@@ -249,7 +256,9 @@ export default {
       )
       this.photos = this.models.photos
       this.avatar = this.models.avatar
-      this.birthday = new Date(this.models.birthday).toISOString().substr(0, 10)
+      this.birthday = new Date(this.models.birthday)
+        .toISOString()
+        .substring(0, 10)
       this.formatBirthday = dateFormat(
         new Date(this.models.birthday),
         'yyyy.MM.dd'
@@ -288,12 +297,22 @@ export default {
       this.search(this.motherSearch, 'Mother')
       this.search(this.fatherSearch, 'Father')
     },
+    saveBirthday() {
+      if (/^[\d]{1,2}.[\d]{1,2}.[\d]{4}$/.test(this.formatBirthday)) {
+        const paths = this.formatBirthday.split('.')
+        const date = new Date()
+        date.setFullYear(+paths[2], +paths[1] - 1, +paths[0])
+        this.birthday = date.toISOString().substring(0, 10)
+        this.models.birthday = date.getTime()
+      }
+    },
     onSubmit() {
       this.models.birthday = new Date(this.birthday).getTime()
       this.isLoading = true
       const models = { ...this.models }
       if (this.chinchillaId) delete models.status
       if (models.breeder_type !== 'user') models.breeder_id = null
+      if (models.breeder_type !== 'not_user') models.breeder_name = ''
       if (models.breeder_type === 'owner')
         models.breeder_id = +this.$cookies.get('USER_ID')
       this.$axios[this.chinchillaId ? '$put' : '$post'](
@@ -424,63 +443,4 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.chinchillaRedact {
-  width: 100%;
-
-  &__form {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    grid-column-gap: 24px;
-    padding: 40px 0;
-
-    @include mq('tablet', 'phone') {
-      grid-template-columns: 1fr 1fr;
-    }
-
-    @include mq('phone') {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  &__photos {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-column-gap: 24px;
-    grid-row-gap: 16px;
-
-    @include mq('tablet') {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  &__uploadPhoto {
-    max-height: 400px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #828282;
-    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
-    transition: box-shadow 0.3s ease;
-
-    & input {
-      display: none;
-    }
-
-    &:hover {
-      box-shadow: none;
-    }
-
-    &::before {
-      content: '';
-      padding-bottom: 100%;
-      display: inline-block;
-      vertical-align: top;
-    }
-  }
-
-  &__photo {
-    background: no-repeat center / cover;
-  }
-}
-</style>
+<style lang="scss" src="./ChinchillaRedact.scss"></style>

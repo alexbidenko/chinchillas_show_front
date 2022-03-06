@@ -6,17 +6,31 @@
       :is-owner="isOwner"
       @update="user = $event"
     />
-    <div class="profilePage__settings container">
+    <div class="profilePage__settings baseContainer">
+      <v-select
+        v-model="gridCountValue"
+        solo
+        label="В ряд"
+        :items="gridCountItems"
+        item-text="label"
+        item-value="value"
+        class="profilePage__gridCount"
+      />
       <v-select
         v-model="sortValue"
-        outlined
+        solo
         label="Сортировка шиншилл"
         :items="sortItems"
         item-text="label"
         item-value="value"
+        class="profilePage__sorting"
       />
     </div>
-    <div v-for="(list, key) in sortedChinchillas" :key="key">
+    <div
+      v-for="(list, key) in sortedChinchillas"
+      :key="key"
+      :class="`gridCount__${gridCountValue}`"
+    >
       <CardSection
         v-if="list.length && key !== 'dead'"
         :section-key="key"
@@ -76,13 +90,27 @@
 
   &__settings {
     padding-top: 32px;
-    padding-bottom: 32px;
+    padding-bottom: 0;
     display: flex;
     justify-content: end;
+    column-gap: 16px;
 
-    & > * {
-      max-width: 300px;
+    @include mq('tablet-small') {
+      column-gap: 8px;
     }
+  }
+
+  & &__gridCount {
+    display: none;
+    max-width: 120px;
+
+    @include mq('tablet-small') {
+      display: block;
+    }
+  }
+
+  & &__sorting {
+    max-width: 180px;
   }
 }
 </style>

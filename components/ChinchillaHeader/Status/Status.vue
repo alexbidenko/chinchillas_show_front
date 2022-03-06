@@ -349,7 +349,7 @@ export default {
 
 <style lang="scss">
 .status {
-  display: flex;
+  display: flex !important;
   align-items: center;
 
   &__dialog {

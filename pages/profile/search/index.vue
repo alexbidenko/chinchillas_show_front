@@ -26,7 +26,23 @@
         </v-fab-transition>
       </span>
     </label>
-    <div class="searchPage__list baseGrid">
+
+    <div class="searchPage__settings">
+      <v-select
+        v-model="gridCountValue"
+        solo
+        label="В ряд"
+        :items="gridCountItems"
+        item-text="label"
+        item-value="value"
+        class="searchPage__gridCount"
+      />
+    </div>
+
+    <div
+      class="searchPage__list baseGrid"
+      :class="`gridCount__${gridCountValue}`"
+    >
       <ChinchillaCard
         v-for="chinchilla in chinchillas"
         :key="chinchilla.id"
@@ -120,6 +136,17 @@ export default {
           value: 'm',
         },
       ],
+      gridCountItems: [
+        {
+          label: '2 карточки',
+          value: 'default',
+        },
+        {
+          label: '4 карточки',
+          value: 'more',
+        },
+      ],
+      gridCountValue: this.$cookies.get('grid_count_value') || 'default',
       statuses: [
         {
           key: '',
@@ -146,6 +173,9 @@ export default {
   watch: {
     search() {
       this.searchData()
+    },
+    gridCountValue(val) {
+      this.$cookies.set('grid_count_value', val)
     },
   },
 
@@ -230,6 +260,16 @@ export default {
       @include mq('tablet') {
         display: block;
       }
+    }
+  }
+
+  & &__gridCount {
+    display: none;
+    max-width: 160px;
+    margin-left: auto;
+
+    @include mq('tablet-small') {
+      display: block;
     }
   }
 }

@@ -37,13 +37,17 @@
             class="authPage__input"
             name="password"
           />
-          <nuxt-link to="" class="authPage__remindPassword"
-            >Забыли пароль?</nuxt-link
+          <button
+            type="button"
+            class="authPage__remindPassword"
+            @click="mode = 'remind'"
           >
+            Забыли пароль?
+          </button>
           <button type="submit" class="authPage__submit">Войти</button>
         </form>
         <form
-          v-if="mode === 'signUp'"
+          v-else-if="mode === 'signUp'"
           key="signUp"
           class="authPage__form authPage__form--signUp"
           @submit.prevent
@@ -159,6 +163,27 @@
             </v-card>
           </v-dialog>
         </form>
+        <form
+          v-else
+          key="signIn"
+          class="authPage__form authPage__form--signIn"
+          @submit.prevent="submitRemind"
+        >
+          <v-text-field
+            v-model="email"
+            placeholder="Email"
+            class="authPage__input"
+            name="email"
+          />
+          <button
+            type="button"
+            class="authPage__remindPassword"
+            @click="mode = 'signIn'"
+          >
+            Войти
+          </button>
+          <button type="submit" class="authPage__submit">Восстановить</button>
+        </form>
       </transition>
     </article>
   </div>
@@ -176,6 +201,7 @@ export default {
   data() {
     return {
       mode: 'signIn',
+      email: '',
       signIn: {
         login: '',
         password: '',
@@ -197,6 +223,7 @@ export default {
   },
 
   methods: {
+    submitRemind() {},
     submitSignIn() {
       this.$axios.$post('login', this.signIn).then((data) => {
         this.$cookies.set('TOKEN', data.token)

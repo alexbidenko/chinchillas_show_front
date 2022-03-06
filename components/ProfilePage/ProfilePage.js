@@ -40,6 +40,16 @@ export default {
         { key: 'f', label: 'Самки' },
         ...statuses,
       ],
+      gridCountItems: [
+        {
+          label: '2 карточки',
+          value: 'default',
+        },
+        {
+          label: '4 карточки',
+          value: 'more',
+        },
+      ],
       sortItems: [
         {
           label: 'По алфавиту',
@@ -50,11 +60,15 @@ export default {
           value: 'birthday',
         },
       ],
+      gridCountValue: this.$cookies.get('grid_count_value') || 'default',
       sortValue: this.$cookies.get('sort_value') || 'default',
     }
   },
 
   watch: {
+    gridCountValue(val) {
+      this.$cookies.set('grid_count_value', val)
+    },
     sortValue(val) {
       this.$cookies.set('sort_value', val)
     },

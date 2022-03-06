@@ -48,6 +48,9 @@
                 `${data.breeder.first_name} ${data.breeder.last_name} (${data.breeder.login})`
               }}
             </p>
+            <p v-else-if="data.breeder_name">
+              Заводчик: {{ data.breeder_name }}
+            </p>
             <p class="pb-4 mb-0">
               Пол: {{ data.sex === 'f' ? 'самка' : 'самец' }}
             </p>

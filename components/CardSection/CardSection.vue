@@ -78,17 +78,13 @@ export default {
 <style lang="scss">
 .cardSection {
   width: 100%;
-  padding: 24px 0 0;
-  background-color: #adadad;
-  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
-  margin-bottom: 32px;
+  padding-bottom: 16px;
 
   &__container {
     background-color: white;
   }
 
   &__header {
-    padding: 24px 0;
     cursor: pointer;
   }
 
@@ -96,7 +92,7 @@ export default {
     background: #d79b00;
     box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
     color: white;
-    height: calc(100% + 24px);
+    height: calc(100% - 16px);
     font-size: 24px;
     padding-right: 32px;
     border-radius: 0 24px 24px 0;
@@ -105,7 +101,7 @@ export default {
 
     @include mq('tablet-small') {
       font-size: 18px;
-      height: calc(100% + 8px);
+      height: calc(100% - 8px);
     }
   }
 
@@ -114,8 +110,11 @@ export default {
     align-items: center;
     justify-content: space-between;
     background-color: #e2e2e2;
-    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
-    height: 24px;
+    height: 56px;
+
+    @include mq('tablet-small') {
+      height: 40px;
+    }
   }
 
   &__list {
@@ -137,13 +136,21 @@ export default {
 
     @include mq('tablet', 'tablet-small') {
       grid-template-columns: repeat(4, 1fr);
-      grid-column-gap: 18px;
+      grid-column-gap: 16px;
       grid-row-gap: 24px;
     }
 
     @include mq('tablet-small') {
       grid-template-columns: repeat(2, 1fr);
     }
+  }
+}
+
+.gridCount__more .cardSection__list {
+  @include mq('tablet-small') {
+    grid-template-columns: repeat(4, 1fr);
+    grid-column-gap: 8px;
+    grid-row-gap: 16px;
   }
 }
 </style>

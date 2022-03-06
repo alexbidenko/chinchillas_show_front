@@ -1,7 +1,7 @@
 import moment from 'moment'
 import wordFormat from './wordFormat'
 
-export default (dateStart, dateEnd = new Date()) => {
+export default (dateStart, dateEnd = new Date(), size = 'md') => {
   moment.locale('ru')
   const start = dateStart instanceof Date ? dateStart : new Date(dateStart)
 
@@ -12,11 +12,24 @@ export default (dateStart, dateEnd = new Date()) => {
   const days = Math.floor(difference.add(-months, 'months').asDays())
   const result = []
   if (years)
-    result.push(`${years} ${wordFormat(years, ['год', 'года', 'лет'])}`)
+    result.push(
+      `${years} ${
+        size === 'md' ? wordFormat(years, ['год', 'года', 'лет']) : 'г.'
+      }`
+    )
   if (months)
     result.push(
-      `${months} ${wordFormat(months, ['месяц', 'месяца', 'месяцев'])}`
+      `${months} ${
+        size === 'md'
+          ? wordFormat(months, ['месяц', 'месяца', 'месяцев'])
+          : 'м.'
+      }`
     )
-  if (days) result.push(`${days} ${wordFormat(days, ['день', 'дня', 'дней'])}`)
+  if (days)
+    result.push(
+      `${days} ${
+        size === 'md' ? wordFormat(days, ['день', 'дня', 'дней']) : 'д.'
+      }`
+    )
   return result.join(' ')
 }

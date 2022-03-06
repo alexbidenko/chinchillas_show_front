@@ -12,6 +12,12 @@ body,
 }
 
 body {
+  --column-space: 24px;
+
+  @include mq("tablet") {
+    --column-space: 16px;
+  }
+
   background-color: #fff;
   font-family: 'Roboto', sans-serif;
   color: #000;
@@ -34,22 +40,34 @@ input[type=file] {
 
 .baseGrid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(8, 1fr);
   grid-column-gap: 16px;
   grid-row-gap: 24px;
 
+  @include mq('desktop', 'desktop-small') {
+    grid-column-gap: 12px;
+    grid-row-gap: 18px;
+  }
+
   @include mq('desktop-small', 'tablet') {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(6, 1fr);
   }
 
   @include mq('tablet', 'tablet-small') {
-    grid-template-columns: repeat(2, 1fr);
-    grid-column-gap: 24px;
-    grid-row-gap: 32px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-column-gap: 16px;
+    grid-row-gap: 24px;
   }
 
   @include mq('tablet-small') {
-    grid-template-columns: repeat(1, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.gridCount__more.baseGrid {
+
+  @include mq('tablet-small') {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 

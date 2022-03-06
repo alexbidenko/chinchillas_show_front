@@ -20,11 +20,7 @@
             ></v-progress-circular>
           </v-row>
         </template>
-        <div
-          class="chinchillaCard__bubbleContainer"
-          @click.prevent
-          @touchend.prevent
-        >
+        <div class="chinchillaCard__bubbleContainer" @click.stop.prevent>
           <div class="chinchillaCard__infoBubble">
             <v-icon>info</v-icon>
           </div>
@@ -67,7 +63,7 @@ export default {
       return colorToString(this.chinchilla.color)
     },
     dateDifference() {
-      return dateDifference(this.chinchilla.birthday)
+      return dateDifference(this.chinchilla.birthday, new Date(), 'sm')
     },
   },
 }
@@ -160,7 +156,11 @@ export default {
   & &__infoRow {
     font-size: 14px;
     color: #797979;
+    display: -webkit-box;
     margin-bottom: 8px;
+    overflow: hidden;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
 
     @include mq('desktop') {
       line-height: 120%;
@@ -229,6 +229,50 @@ export default {
 
     @include mq('tablet') {
       display: flex;
+    }
+  }
+}
+
+.gridCount__more .chinchillaCard {
+  &__bubbleContainer {
+    @include mq('tablet-small') {
+      padding: 8px;
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  &__info {
+    @include mq('tablet-small') {
+      padding: 0 8px 16px;
+    }
+
+    @include mq('phone') {
+      padding: 0 4px 16px;
+    }
+  }
+
+  &__infoRow {
+    @include mq('tablet-small') {
+      font-size: 10px;
+      -webkit-line-clamp: 2;
+    }
+
+    @include mq('phone') {
+      font-size: 8px;
+    }
+  }
+
+  &__titleContainer {
+    @include mq('tablet-small') {
+      height: 16px;
+    }
+  }
+
+  &__title {
+    @include mq('tablet-small') {
+      line-height: 16px;
+      font-size: 12px;
     }
   }
 }

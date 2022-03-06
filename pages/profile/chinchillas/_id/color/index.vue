@@ -1,7 +1,8 @@
 <template>
   <div class="colorPage">
     <div v-if="data" class="baseContainer">
-      {{ data.name }}
+      <h1 class="text-h4 my-4">{{ data.name }}</h1>
+      <p>{{ colorName }}</p>
       <form class="colorPage__form" @submit.prevent="onSubmit">
         <v-combobox
           v-for="item in config"
@@ -25,6 +26,7 @@
 <script>
 import BaseSpinner from '~/components/BaseSpinner/BaseSpinner.vue'
 import colorConfig from '~/assets/datas/colorConfig.json'
+import colorToString from '~/assets/scripts/colorToString'
 
 export default {
   name: 'ColorPage',
@@ -45,6 +47,12 @@ export default {
       models,
       userId: this.$cookies.get('USER_ID'),
     }
+  },
+
+  computed: {
+    colorName() {
+      return colorToString(this.models)
+    },
   },
 
   created() {
@@ -79,11 +87,21 @@ export default {
   &__form {
     display: flex;
     flex-wrap: wrap;
+    column-gap: var(--column-space);
+    row-gap: 8px;
+
+    @include mq('tablet') {
+      row-gap: 0;
+    }
   }
 
   &__label {
-    width: 25%;
+    width: calc((100% + var(--column-space)) / 4 - var(--column-space));
     display: block;
+
+    @include mq('tablet') {
+      width: calc((100% + var(--column-space)) / 2 - var(--column-space));
+    }
   }
 
   & .baseSpinner {

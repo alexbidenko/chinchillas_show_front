@@ -1,15 +1,15 @@
 <template>
-  <div class="usersPage">
-    <UserBlock v-for="user in users" :key="user.id" :user="user" small />
+  <div class="usersPage baseContainer">
+    <UserCard v-for="user in users" :key="user.id" :user="user" />
   </div>
 </template>
 
 <script>
-import UserBlock from '~/components/UserBlock/UserBlock'
+import UserCard from '~/components/UserCard/UserCard'
 
 export default {
   name: 'UsersPage',
-  components: { UserBlock },
+  components: { UserCard },
   layout: 'profileLayout',
 
   data() {
@@ -64,10 +64,27 @@ export default {
 
 <style lang="scss">
 .usersPage {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-column-gap: 24px;
+  grid-row-gap: 32px;
+  padding-top: 32px;
+  padding-bottom: 32px;
+
+  @include mq('desktop') {
+    grid-template-columns: repeat(4, 1fr);
+    grid-column-gap: 16px;
+    grid-row-gap: 24px;
+  }
+
+  @include mq('desktop-small', 'tablet') {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @include mq('tablet') {
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 8px;
+    grid-row-gap: 16px;
+  }
 }
 </style>
