@@ -226,16 +226,20 @@ export default {
     submitRemind() {},
     submitSignIn() {
       this.$axios.$post('login', this.signIn).then((data) => {
-        this.$cookies.set('TOKEN', data.token)
-        this.$cookies.set('USER_ID', data.user.id)
+        const date = new Date()
+        date.setFullYear(date.getFullYear() + 200)
+        this.$cookies.set('TOKEN', data.token, { expires: date })
+        this.$cookies.set('USER_ID', data.user.id, { expires: date })
         this.$axios.setHeader('Authorization', `Bearer ${data.token}`)
         this.$router.push('/profile')
       })
     },
     submitSignUp() {
       this.$axios.$post('register', this.signUp).then((data) => {
-        this.$cookies.set('TOKEN', data.token)
-        this.$cookies.set('USER_ID', data.user.id)
+        const date = new Date()
+        date.setFullYear(date.getFullYear() + 200)
+        this.$cookies.set('TOKEN', data.token, { expires: date })
+        this.$cookies.set('USER_ID', data.user.id, { expires: date })
         this.$axios.setHeader('Authorization', `Bearer ${data.token}`)
         this.$router.push('/profile')
       })

@@ -69,7 +69,11 @@ export default {
 
   watch: {
     expand(val) {
-      this.$cookies.set(`section_expanded:${this.sectionKey}`, val)
+      const date = new Date()
+      date.setFullYear(date.getFullYear() + 200)
+      this.$cookies.set(`section_expanded:${this.sectionKey}`, val, {
+        expires: date,
+      })
     },
   },
 }

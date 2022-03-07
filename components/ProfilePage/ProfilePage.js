@@ -67,10 +67,14 @@ export default {
 
   watch: {
     gridCountValue(val) {
-      this.$cookies.set('grid_count_value', val)
+      const date = new Date()
+      date.setFullYear(date.getFullYear() + 200)
+      this.$cookies.set('grid_count_value', val, { expires: date })
     },
     sortValue(val) {
-      this.$cookies.set('sort_value', val)
+      const date = new Date()
+      date.setFullYear(date.getFullYear() + 200)
+      this.$cookies.set('sort_value', val, { expires: date })
     },
   },
 

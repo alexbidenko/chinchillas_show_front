@@ -175,7 +175,9 @@ export default {
       this.searchData()
     },
     gridCountValue(val) {
-      this.$cookies.set('grid_count_value', val)
+      const date = new Date()
+      date.setFullYear(date.getFullYear() + 200)
+      this.$cookies.set('grid_count_value', val, { expires: date })
     },
   },
 
