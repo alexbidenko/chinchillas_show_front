@@ -1,15 +1,24 @@
 <template>
   <section
     class="pedigreeTree"
+    :class="{ pedigreeTree__forPrint: forPrint }"
     :style="{ transform: `scale(${scale})`, margin: `${margin}px` }"
   >
-    <div ref="container" class="pedigreeTree__container">
+    <div v-if="!forPrint" ref="container" class="pedigreeTree__container">
       <div class="pedigreeTree__row">
         <div class="pedigreeTree__cell">
-          <ChinchillaCard v-if="getParent('m')" :chinchilla="getParent('m')" />
+          <ChinchillaCard
+            v-if="getParent('m')"
+            :chinchilla="getParent('m')"
+            :opened="forPrint"
+          />
         </div>
         <div class="pedigreeTree__cell">
-          <ChinchillaCard v-if="getParent('f')" :chinchilla="getParent('f')" />
+          <ChinchillaCard
+            v-if="getParent('f')"
+            :chinchilla="getParent('f')"
+            :opened="forPrint"
+          />
         </div>
       </div>
       <div class="pedigreeTree__row">
@@ -17,24 +26,28 @@
           <ChinchillaCard
             v-if="getParent('m.m')"
             :chinchilla="getParent('m.m')"
+            :opened="forPrint"
           />
         </div>
         <div class="pedigreeTree__cell">
           <ChinchillaCard
             v-if="getParent('m.f')"
             :chinchilla="getParent('m.f')"
+            :opened="forPrint"
           />
         </div>
         <div class="pedigreeTree__cell pedigreeTree__cell--pair">
           <ChinchillaCard
             v-if="getParent('f.m')"
             :chinchilla="getParent('f.m')"
+            :opened="forPrint"
           />
         </div>
         <div class="pedigreeTree__cell">
           <ChinchillaCard
             v-if="getParent('f.f')"
             :chinchilla="getParent('f.f')"
+            :opened="forPrint"
           />
         </div>
       </div>
@@ -43,24 +56,28 @@
           <ChinchillaCard
             v-if="getParent('m.m.m')"
             :chinchilla="getParent('m.m.m')"
+            :opened="forPrint"
           />
         </div>
         <div class="pedigreeTree__cell">
           <ChinchillaCard
             v-if="getParent('m.f.m')"
             :chinchilla="getParent('m.f.m')"
+            :opened="forPrint"
           />
         </div>
         <div class="pedigreeTree__cell">
           <ChinchillaCard
             v-if="getParent('f.m.m')"
             :chinchilla="getParent('f.m.m')"
+            :opened="forPrint"
           />
         </div>
         <div class="pedigreeTree__cell">
           <ChinchillaCard
             v-if="getParent('f.f.m')"
             :chinchilla="getParent('f.f.m')"
+            :opened="forPrint"
           />
         </div>
       </div>
@@ -69,24 +86,46 @@
           <ChinchillaCard
             v-if="getParent('m.m.f')"
             :chinchilla="getParent('m.m.f')"
+            :opened="forPrint"
           />
         </div>
         <div class="pedigreeTree__cell">
           <ChinchillaCard
             v-if="getParent('m.f.f')"
             :chinchilla="getParent('m.f.f')"
+            :opened="forPrint"
           />
         </div>
         <div class="pedigreeTree__cell">
           <ChinchillaCard
             v-if="getParent('f.m.f')"
             :chinchilla="getParent('f.m.f')"
+            :opened="forPrint"
           />
         </div>
         <div class="pedigreeTree__cell">
           <ChinchillaCard
             v-if="getParent('f.f.f')"
             :chinchilla="getParent('f.f.f')"
+            :opened="forPrint"
+          />
+        </div>
+      </div>
+    </div>
+    <div v-else ref="container" class="pedigreeTree__container">
+      <div class="pedigreeTree__row">
+        <div class="pedigreeTree__cell">
+          <ChinchillaCard
+            v-if="getParent('m')"
+            :chinchilla="getParent('m')"
+            :opened="forPrint"
+          />
+        </div>
+        <div class="pedigreeTree__cell">
+          <ChinchillaCard
+            v-if="getParent('f')"
+            :chinchilla="getParent('f')"
+            :opened="forPrint"
           />
         </div>
       </div>
@@ -108,6 +147,10 @@ export default {
     chinchilla: {
       type: Object,
       required: true,
+    },
+    forPrint: {
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -132,8 +175,9 @@ export default {
 
   methods: {
     review() {
-      document.body.scrollWidth < 1100
-        ? (this.scale = Math.max(document.body.scrollWidth / 1100, 0.2))
+      const width = document.body.scrollWidth
+      width < 1100
+        ? (this.scale = Math.max(width / 1100, 0.2))
         : (this.scale = 1)
       this.scale === 1
         ? (this.margin = 0)
@@ -208,6 +252,16 @@ export default {
     &::after {
       bottom: -32px;
       height: 32px;
+    }
+  }
+
+  &__forPrint &__cell {
+    &::after {
+      display: none;
+    }
+
+    &::before {
+      display: none;
     }
   }
 }

@@ -95,6 +95,16 @@
           </label>
         </div>
       </div>
+      <div v-if="isPrinting" class="my-4">
+        <a
+          :href="`/profile/chinchillas/${data.id}/print`"
+          target="_blank"
+          rel="noopener"
+          style="text-decoration: none"
+        >
+          <v-btn>Открыть родословную</v-btn>
+        </a>
+      </div>
       <div style="overflow-x: auto">
         <PedigreeTree :chinchilla="data" />
       </div>
@@ -219,6 +229,12 @@ export default {
   },
 
   computed: {
+    isPrinting() {
+      return (
+        this.data.owner_id === +this.$cookies.get('USER_ID') ||
+        this.data.breeder_id === +this.$cookies.get('USER_ID')
+      )
+    },
     user() {
       return this.$store.state.UserModule.user
     },

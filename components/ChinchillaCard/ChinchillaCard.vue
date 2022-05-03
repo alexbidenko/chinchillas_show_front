@@ -1,6 +1,7 @@
 <template>
   <nuxt-link
     class="chinchillaCard"
+    :class="{ chinchillaCard__opened: opened }"
     :to="`/profile/chinchillas/${chinchilla.id}/view`"
   >
     <div class="chinchillaCard__container">
@@ -32,7 +33,9 @@
           <p class="chinchillaCard__infoRow">
             {{ colorString || 'стандарт' }}
           </p>
-          <p class="chinchillaCard__infoRow">{{ dateDifference }}</p>
+          <p class="chinchillaCard__infoRow">
+            {{ opened ? birthdayDate : dateDifference }}
+          </p>
         </div>
       </v-img>
     </div>
@@ -45,6 +48,7 @@
 </template>
 
 <script>
+import dateFormat from 'assets/scripts/dateFormat'
 import colorToString from '~/assets/scripts/colorToString'
 import dateDifference from '~/assets/scripts/dateDifference'
 
@@ -56,6 +60,10 @@ export default {
       type: Object,
       required: true,
     },
+    opened: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   computed: {
@@ -64,6 +72,9 @@ export default {
     },
     dateDifference() {
       return dateDifference(this.chinchilla.birthday, new Date(), 'sm')
+    },
+    birthdayDate() {
+      return dateFormat(this.chinchilla.birthday, 'yyyy.MM.dd')
     },
   },
 }
@@ -143,6 +154,7 @@ export default {
     }
   }
 
+  &__opened,
   &:hover {
     #{$self}__info {
       transform: translateY(0);
