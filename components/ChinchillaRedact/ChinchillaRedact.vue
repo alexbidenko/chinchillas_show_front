@@ -340,11 +340,10 @@ export default {
             }&perPage=20${this.globalSearch ? '' : '&is_owner=true'}`
           )
           .then((response) => {
-            this[type.toLowerCase() + 'Items'] = (this.models[
-              type.toLowerCase()
-            ]
-              ? [this.models[type.toLowerCase()]]
-              : []
+            this[type.toLowerCase() + 'Items'] = (
+              this.models[type.toLowerCase()]
+                ? [this.models[type.toLowerCase()]]
+                : []
             ).concat(response.data.filter((f) => f.id !== this.chinchillaId))
             this['isLoading' + type] = false
           })
@@ -357,9 +356,8 @@ export default {
         this.$axios
           .$get(`user/search?q=${val || ''}&perPage=20`)
           .then((data) => {
-            this.breederItems = (this.models.breeder
-              ? [this.models.breeder]
-              : []
+            this.breederItems = (
+              this.models.breeder ? [this.models.breeder] : []
             )
               .concat(data)
               .map((el) => ({
