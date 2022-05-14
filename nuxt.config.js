@@ -18,13 +18,11 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       {
         rel: 'stylesheet',
-        href:
-          'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Noto+Sans&family=Roboto&display=swap',
+        href: 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Noto+Sans&family=Roboto&display=swap',
       },
       {
         rel: 'stylesheet',
-        href:
-          'https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css',
+        href: 'https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css',
       },
     ],
   },
@@ -89,6 +87,7 @@ export default {
   axios: {
     baseURL: process.env.BASE_API || 'https://api.chinchillas-show.com/api/',
   },
+  serverMiddleware: [{ path: '/api', handler: '~/api/chinchillasAPI.js' }],
   /*
    ** Build configuration
    */

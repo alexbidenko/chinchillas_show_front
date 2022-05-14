@@ -1,4 +1,4 @@
-export default (color) => {
+export default (color, short = false) => {
   if (!color) return ''
   const {
     standard,
@@ -57,7 +57,7 @@ export default (color) => {
     let ebonyName = ''
     switch (ebony) {
       case 'carrier':
-        ebonyName = 'носитель эбони'
+        ebonyName = short ? '' : 'носитель эбони'
         break
       case 'light':
         ebonyName = 'эбони светлый'
@@ -170,7 +170,7 @@ export default (color) => {
   }
 
   const isMosaic = () => {
-    if (mosaic === 'yes') return 'мозаика '
+    if (mosaic === 'yes') return short ? '' : 'мозаика '
     else return ''
   }
 
@@ -187,11 +187,11 @@ export default (color) => {
         } else {
           switch (violet) {
             case 'carrier':
-              return 'носитель фиолета '
+              return short ? 'нФ ' : 'носитель фиолета '
             case '67%':
-              return '67% носитель фиолета '
+              return short ? 'нФ ' : '67% носитель фиолета '
             case '50%':
-              return '50% носитель фиолета '
+              return short ? 'нФ ' : '50% носитель фиолета '
             default:
               return ''
           }
@@ -201,11 +201,11 @@ export default (color) => {
     } else if (POSITION === 2) {
       switch (violet) {
         case 'carrier':
-          return 'носитель фиолета '
+          return short ? 'нФ ' : 'носитель фиолета '
         case '67%':
-          return '67% носитель фиолета '
+          return short ? 'нФ ' : '67% носитель фиолета '
         case '50%':
-          return '50% носитель фиолета '
+          return short ? 'нФ ' : '50% носитель фиолета '
         default:
           return ''
       }
@@ -225,11 +225,11 @@ export default (color) => {
         } else {
           switch (sapphire) {
             case 'carrier':
-              return 'носитель сапфира '
+              return short ? 'нС ' : 'носитель сапфира '
             case '67%':
-              return '67% носитель сапфира '
+              return short ? 'нС ' : '67% носитель сапфира '
             case '50%':
-              return '50% носитель сапфира '
+              return short ? 'нС ' : '50% носитель сапфира '
             default:
               return ''
           }
@@ -239,11 +239,11 @@ export default (color) => {
     } else if (POSITION === 2) {
       switch (sapphire) {
         case 'carrier':
-          return 'носитель сапфира '
+          return short ? 'нС ' : 'носитель сапфира '
         case '67%':
-          return '67% носитель сапфира '
+          return short ? 'нС ' : '67% носитель сапфира '
         case '50%':
-          return '50% носитель сапфира '
+          return short ? 'нС ' : '50% носитель сапфира '
         default:
           return ''
       }
@@ -275,18 +275,18 @@ export default (color) => {
       if (POSITION === 1) {
         switch (angora) {
           case 'yes':
-            return 'ангора '
+            return short ? 'КПА' : 'ангора '
           default:
             return ''
         }
       } else {
         switch (angora) {
           case 'carrier':
-            return 'носитель ангоры '
+            return short ? 'нКПА ' : 'носитель ангоры '
           case '67%':
-            return '67% носитель ангоры '
+            return short ? 'нКПА ' : '67% носитель ангоры '
           case '50%':
-            return '50% носитель ангоры '
+            return short ? 'нКПА ' : '50% носитель ангоры '
           default:
             return ''
         }
@@ -326,11 +326,11 @@ export default (color) => {
       } else {
         switch (pearl) {
           case 'carrier':
-            return 'носитель жемчуга '
+            return short ? 'нЧЖ ' : 'носитель жемчуга '
           case '67%':
-            return '67% носитель жемчуга '
+            return short ? 'нЧЖ ' : '67% носитель жемчуга '
           case '50%':
-            return '50% носитель жемчуга '
+            return short ? 'нЧЖ ' : '50% носитель жемчуга '
           default:
             return ''
         }
@@ -350,11 +350,11 @@ export default (color) => {
       } else {
         switch (california) {
           case 'carrier':
-            return 'носитель калифорнийского белого '
+            return short ? 'нКБ ' : 'носитель калифорнийского белого '
           case '67%':
-            return '67% носитель калифорнийского белого '
+            return short ? 'нКБ ' : '67% носитель калифорнийского белого '
           case '50%':
-            return '50% носитель калифорнийского белого '
+            return short ? 'нКБ ' : '50% носитель калифорнийского белого '
           default:
             return ''
         }
@@ -374,11 +374,11 @@ export default (color) => {
       } else {
         switch (rex) {
           case 'carrier':
-            return 'носитель рекса '
+            return short ? 'нР ' : 'носитель рекса '
           case '67%':
-            return '67% носитель рекса '
+            return short ? 'нР ' : '67% носитель рекса '
           case '50%':
-            return '50% носитель рекса '
+            return short ? 'нР ' : '50% носитель рекса '
           default:
             return ''
         }
@@ -398,11 +398,11 @@ export default (color) => {
       } else {
         switch (lova) {
           case 'carrier':
-            return 'носитель Лова '
+            return short ? 'нЛ ' : 'носитель Лова '
           case '67%':
-            return '67% носитель Лова '
+            return short ? 'нЛ ' : '67% носитель Лова '
           case '50%':
-            return '50% носитель Лова '
+            return short ? 'нЛ ' : '50% носитель Лова '
           default:
             return ''
         }
@@ -423,11 +423,11 @@ export default (color) => {
         } else {
           switch (german) {
             case 'carrier':
-              return 'носитель немецкого фиолета '
+              return short ? 'нДФ ' : 'носитель немецкого фиолета '
             case '67%':
-              return '67% носитель немецкого фиолета '
+              return short ? 'нДФ ' : '67% носитель немецкого фиолета '
             case '50%':
-              return '50% носитель немецкого фиолета '
+              return short ? 'нДФ ' : '50% носитель немецкого фиолета '
             default:
               return ''
           }
@@ -443,7 +443,8 @@ export default (color) => {
   }
 
   const isFur = () => {
-    if (fur === 'yes' && angora !== 'yes') return `(мехов${MorFEnd(1)}) `
+    if (fur === 'yes' && angora !== 'yes')
+      return short ? '' : `(мехов${MorFEnd(1)}) `
     else return ''
   }
 
@@ -487,5 +488,5 @@ export default (color) => {
 
   fullChinColorName =
     fullChinColorName[0].toUpperCase() + fullChinColorName.slice(1)
-  return fullChinColorName
+  return fullChinColorName.trim()
 }

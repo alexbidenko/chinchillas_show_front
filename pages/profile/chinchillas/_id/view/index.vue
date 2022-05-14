@@ -22,6 +22,16 @@
             <div>
               <v-btn @click="deleteChinchilla">Удалить шиншиллу</v-btn>
             </div>
+            <div>
+              <a
+                href="https://docs.google.com/document/d/1s_YV9SWVg0_kL2nLJPPbt_ZUHYN7pd0qDghlMcpMrYY/edit"
+                target="_blank"
+                rel="noopener"
+                style="text-decoration: none"
+              >
+                <v-btn>Умная родословная</v-btn>
+              </a>
+            </div>
           </v-card-text>
         </v-card>
         <v-card v-if="activeStatus.name === 'sale'" class="mb-8">
