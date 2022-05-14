@@ -8,7 +8,7 @@ app.get('/chinchillas/:chinchillaId', async (req, res) => {
   const response = await fetch(
     `${
       process.env.BASE_API || 'https://api.chinchillas-show.com/api/'
-    }chinchilla/details/${req.params.chinchillaId}`
+    }chinchilla/documents/${req.params.chinchillaId}`
   )
   const data = await response.json()
 
