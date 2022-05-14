@@ -18,9 +18,9 @@
       <nuxt-link class="profileHeader__link" to="/profile/search"
         >Шиншиллы</nuxt-link
       >
-      <nuxt-link v-if="user" class="profileHeader__link" to="/auction"
-        >Калькулятор</nuxt-link
-      >
+      <!--<nuxt-link v-if="user" class="profileHeader__link" to="/auction"-->
+      <!--  >Калькулятор</nuxt-link-->
+      <!--&gt;-->
       <button v-if="user" class="profileHeader__link" @click="logout">
         Выход
       </button>
@@ -43,9 +43,9 @@
         <nuxt-link class="profileHeader__sidenavLink" to="/profile/search"
           >Шиншиллы</nuxt-link
         >
-        <nuxt-link v-if="user" class="profileHeader__sidenavLink" to="/auction"
-          >Калькулятор</nuxt-link
-        >
+        <!--<nuxt-link v-if="user" class="profileHeader__sidenavLink" to="/auction"-->
+        <!--  >Калькулятор</nuxt-link-->
+        <!--&gt;-->
         <button v-if="user" class="profileHeader__sidenavLink" @click="logout">
           Выход
         </button>

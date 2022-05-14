@@ -14,7 +14,11 @@ export default (dateStart, dateEnd = new Date(), size = 'md') => {
   if (years)
     result.push(
       `${years} ${
-        size === 'md' ? wordFormat(years, ['год', 'года', 'лет']) : 'г.'
+        size === 'md'
+          ? wordFormat(years, ['год', 'года', 'лет'])
+          : years >= 5
+          ? 'л.'
+          : 'г.'
       }`
     )
   if (months)

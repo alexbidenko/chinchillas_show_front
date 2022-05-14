@@ -4,7 +4,7 @@
     :class="{ pedigreeTree__forPrint: forPrint }"
     :style="{ transform: `scale(${scale})`, margin: `${margin}px` }"
   >
-    <div v-if="!forPrint" ref="container" class="pedigreeTree__container">
+    <div ref="container" class="pedigreeTree__container">
       <div class="pedigreeTree__row">
         <div class="pedigreeTree__cell">
           <ChinchillaCard
@@ -21,7 +21,7 @@
           />
         </div>
       </div>
-      <div class="pedigreeTree__row">
+      <div class="pedigreeTree__row pedigreeTree__row_2">
         <div class="pedigreeTree__cell pedigreeTree__cell--pair">
           <ChinchillaCard
             v-if="getParent('m.m')"
@@ -51,7 +51,7 @@
           />
         </div>
       </div>
-      <div class="pedigreeTree__row pedigreeTree__row--join">
+      <div v-if="!forPrint" class="pedigreeTree__row pedigreeTree__row--join">
         <div class="pedigreeTree__cell">
           <ChinchillaCard
             v-if="getParent('m.m.m')"
@@ -81,7 +81,7 @@
           />
         </div>
       </div>
-      <div class="pedigreeTree__row pedigreeTree__row--last">
+      <div v-if="!forPrint" class="pedigreeTree__row pedigreeTree__row--last">
         <div class="pedigreeTree__cell">
           <ChinchillaCard
             v-if="getParent('m.m.f')"
@@ -107,24 +107,6 @@
           <ChinchillaCard
             v-if="getParent('f.f.f')"
             :chinchilla="getParent('f.f.f')"
-            :opened="forPrint"
-          />
-        </div>
-      </div>
-    </div>
-    <div v-else ref="container" class="pedigreeTree__container">
-      <div class="pedigreeTree__row">
-        <div class="pedigreeTree__cell">
-          <ChinchillaCard
-            v-if="getParent('m')"
-            :chinchilla="getParent('m')"
-            :opened="forPrint"
-          />
-        </div>
-        <div class="pedigreeTree__cell">
-          <ChinchillaCard
-            v-if="getParent('f')"
-            :chinchilla="getParent('f')"
             :opened="forPrint"
           />
         </div>
@@ -197,6 +179,8 @@ export default {
 
 <style lang="scss">
 .pedigreeTree {
+  $self: &;
+
   width: 100%;
   min-width: 1100px;
   overflow: hidden;
@@ -204,6 +188,9 @@ export default {
 
   &__container {
     min-width: 1100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   &__row {
@@ -255,13 +242,21 @@ export default {
     }
   }
 
-  &__forPrint &__cell {
-    &::after {
-      display: none;
+  &__forPrint {
+    #{$self}__cell {
+      &::after {
+        display: none;
+      }
+
+      &::before {
+        display: none;
+      }
     }
 
-    &::before {
-      display: none;
+    #{$self}__row_2 {
+      transform-origin: 50% 50%;
+      transform: scale(0.5);
+      margin: -80px 0;
     }
   }
 }

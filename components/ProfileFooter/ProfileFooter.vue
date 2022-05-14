@@ -11,12 +11,9 @@
       </span>
 
       <div class="profileFooter__links">
-        <nuxt-link to="/" class="profileFooter__linksItem">О нас</nuxt-link>
-        <nuxt-link to="/" class="profileFooter__linksItem">Правила</nuxt-link>
-        <nuxt-link to="/" class="profileFooter__linksItem">Реклама</nuxt-link>
-        <nuxt-link to="/" class="profileFooter__linksItem"
-          >Разработчикам</nuxt-link
-        >
+        <!--<nuxt-link to="/" class="profileFooter__linksItem">О нас</nuxt-link>-->
+        <!--<nuxt-link to="/" class="profileFooter__linksItem">Правила</nuxt-link>-->
+        <!--<nuxt-link to="/" class="profileFooter__linksItem">Реклама</nuxt-link>-->
       </div>
     </nav>
   </footer>

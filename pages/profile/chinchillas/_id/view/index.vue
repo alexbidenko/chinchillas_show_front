@@ -19,7 +19,7 @@
                 >{{ data.hidden ? 'Показать' : 'Скрыть' }} шиншиллу</v-btn
               >
             </div>
-            <div>
+            <div class="mb-4">
               <v-btn @click="deleteChinchilla">Удалить шиншиллу</v-btn>
             </div>
             <div>

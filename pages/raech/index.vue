@@ -1,6 +1,7 @@
 <template>
   <div class="raechPage">
-    <span class="raechPage__title">РАЭШ</span>
+    <p class="raechPage__title mb-0">РАЭШ</p>
+    <p class="text--secondary mt-2">Раздел сайта находится в разработке</p>
   </div>
 </template>
 
@@ -11,6 +12,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   flex: 1;
 
   &__title {
