@@ -5,6 +5,11 @@ services:
     image: ghcr.io/alexbidenko1998/chinchillas-show/nginx:latest
     expose:
       - 80
+    ports:
+      - mode: host
+        protocol: tcp
+        published: 8888
+        target: 80
     deploy:
       replicas: 1
       update_config:
