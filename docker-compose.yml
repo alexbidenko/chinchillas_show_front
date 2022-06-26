@@ -15,6 +15,7 @@ services:
       restart_policy:
         condition: on-failure
     networks:
+      - application
       - server
 
   application:
@@ -30,8 +31,11 @@ services:
         order: start-first
       restart_policy:
         condition: on-failure
+    networks:
+      - application
 
 networks:
+  application:
   server:
     external:
       name: server

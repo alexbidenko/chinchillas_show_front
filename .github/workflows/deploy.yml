@@ -27,7 +27,7 @@ jobs:
 
       - name: Build and publish Nginx
         run: |
-          docker build . --tag ghcr.io/alexbidenko1998/chinchillas-show/nginx:latest
+          docker build .nginx --tag ghcr.io/alexbidenko1998/chinchillas-show/nginx:latest
           docker push ghcr.io/alexbidenko1998/chinchillas-show/nginx:latest
 
       - name: Install SSH key
