@@ -13,7 +13,7 @@ services:
   nginx:
     restart: unless-stopped
     build: ./.nginx
-    container_name: chinhillas_show
+    container_name: chinchillas_show
     expose:
       - 80
     ports:
