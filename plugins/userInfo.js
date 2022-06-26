@@ -11,9 +11,9 @@ export default async ({ $cookies, store, route, redirect, app }) => {
       )
     }
   } else if (route.path === '/loading') {
-    const response = await fetch('http://www.geoplugin.net/json.gp')
+    const response = await fetch('https://ipinfo.io/json')
     const data = await response.json()
-    $cookies.set('location', data.geoplugin_countryCode)
+    $cookies.set('location', data.country)
     location.href = route.query.path || '/'
   }
 }
