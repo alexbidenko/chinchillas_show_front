@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   nginx:
@@ -15,15 +15,12 @@ services:
       restart_policy:
         condition: on-failure
     networks:
-      - app_network
       - server
 
   application:
     image: ghcr.io/alexbidenko1998/chinchillas-show/application:latest
     expose:
       - 3333
-    networks:
-      - app_network
     ports:
       - "3333:3333"
     deploy:
@@ -35,8 +32,6 @@ services:
         condition: on-failure
 
 networks:
-  app_network:
-    driver: overlay
   server:
     external:
       name: server
