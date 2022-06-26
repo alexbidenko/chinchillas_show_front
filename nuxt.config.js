@@ -6,7 +6,6 @@ export default {
       {
         name: 'viewport',
         content: 'width=device-width, initial-scale=1',
-        // content: 'width=480, initial-scale=1',
       },
       {
         hid: 'description',
@@ -41,7 +40,7 @@ export default {
    ** Plugins to load before mounting the App
    */
   plugins: [
-    { src: '~/plugins/userInfo', mode: 'server' },
+    { src: '~/plugins/userInfo', mode: 'all' },
     { src: '~/plugins/Vuebar', mode: 'all' },
     { src: '~/plugins/Vuetify', mode: 'all' },
     { src: '~/plugins/axios', mode: 'all' },

@@ -1,23 +1,19 @@
-import requestIp from 'request-ip'
 import Mutations from '~/store/mutations.type'
 
-export default async ({ store, req }) => {
+export default async ({ $cookies, store, route, redirect, app }) => {
   if (process.server) {
-    const ip = requestIp.getClientIp(req)
-    const response = await fetch(`http://www.geoplugin.net/json.gp?ip=${ip}`)
+    if (!$cookies.get('location') && route.path !== '/loading') {
+      redirect(302, `/loading?path=${encodeURIComponent(route.path)}`)
+    } else if ($cookies.get('location')) {
+      store.commit(
+        'UserModule/' + Mutations.SET_COUNTRY,
+        $cookies.get('location')
+      )
+    }
+  } else if (route.path === '/loading') {
+    const response = await fetch('http://www.geoplugin.net/json.gp')
     const data = await response.json()
-    console.log('ClientIp:', ip, data)
-    console.log(
-      'Test2:',
-      req.headers,
-      req.headers['x-forwarded-for'],
-      req.socket.remoteAddress
-    )
-    store.commit(
-      'UserModule/' + Mutations.SET_COUNTRY,
-      ['127.0.0.1', '192.168.1.220', '192.168.43.1'].includes(ip)
-        ? 'RU'
-        : data.geoplugin_countryCode
-    )
+    $cookies.set('location', data.geoplugin_countryCode)
+    location.href = route.query.path || '/'
   }
 }
