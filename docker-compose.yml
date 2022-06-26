@@ -26,10 +26,7 @@ services:
     expose:
       - 3333
     ports:
-      - mode: host
-        protocol: tcp
-        published: 3333
-        target: 3333
+      - "3333:3333"
     deploy:
       replicas: 1
       update_config:
