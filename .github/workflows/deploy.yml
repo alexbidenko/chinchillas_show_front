@@ -6,12 +6,8 @@ on:
       - master
 
 jobs:
-  ci:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [ubuntu-20.04]
+  build:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout 🛎
@@ -34,6 +30,10 @@ jobs:
           docker build . --tag ghcr.io/alexbidenko1998/chinchillas-show/nginx:latest
           docker push ghcr.io/alexbidenko1998/chinchillas-show/nginx:latest
 
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Install SSH key
         run: |
           mkdir -p ~/.ssh/
