@@ -33,6 +33,7 @@ services:
         condition: on-failure
     networks:
       - application
+      - server
 
 networks:
   application:
