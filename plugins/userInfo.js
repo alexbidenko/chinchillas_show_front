@@ -1,6 +1,6 @@
 import Mutations from '~/store/mutations.type'
 
-export default async ({ $cookies, store, route, redirect, app }) => {
+export default async ({ $cookies, store, route, redirect }) => {
   if (process.server) {
     if (!$cookies.get('location') && route.path !== '/loading') {
       redirect(302, `/loading?path=${encodeURIComponent(route.path)}`)

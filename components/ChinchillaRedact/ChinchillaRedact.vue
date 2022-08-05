@@ -334,11 +334,14 @@ export default {
       this.timers[type] = setTimeout(() => {
         this['isLoading' + type] = true
         this.$axios
-          .$get(
-            `chinchilla/search?name=${val || ''}&sex=${
-              type === 'Mother' ? 'f' : 'm'
-            }&perPage=20${this.globalSearch ? '' : '&is_owner=true'}`
-          )
+          .$get(`chinchilla/search`, {
+            params: {
+              name: val || undefined,
+              sex: type === 'Mother' ? 'f' : 'm',
+              limit: 20,
+              is_owner: this.globalSearch ? undefined : true,
+            },
+          })
           .then((response) => {
             this[type.toLowerCase() + 'Items'] = (
               this.models[type.toLowerCase()]

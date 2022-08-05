@@ -93,6 +93,7 @@
 import statuses from '~/assets/datas/statuses.json'
 import ChinchillaCard from '~/components/ChinchillaCard/ChinchillaCard.vue'
 import BaseSpinner from '~/components/BaseSpinner/BaseSpinner.vue'
+import Actions from '~/store/actions.type'
 
 export default {
   name: 'SearchPage',
@@ -104,23 +105,27 @@ export default {
 
   layout: 'profileLayout',
 
-  async asyncData({ $axios, params, app }) {
-    const isRussian = app.store.state.UserModule.country === 'RU'
-    let url = 'chinchilla/search?'
-    if (params.sex) url = `${url}sex=${params.sex}&`
-    if (params.status || !isRussian)
-      url = `${url}status=${isRussian ? params.status : 'sale'}&`
-    const chinchillas = (await $axios.$get(url)).data
-    return {
-      chinchillas,
+  async asyncData({
+    params,
+    app: {
+      store: { state, dispatch },
+    },
+  }) {
+    if (!state.ChinchillaModule.chinchillas.length) {
+      const isRussian = state.UserModule.country === 'RU'
+      params.status = isRussian ? params.status : 'sale'
+      await dispatch('ChinchillaModule/' + Actions.FETCH_CHINCHILLAS, {
+        reset: true,
+        isRussian,
+        params,
+      })
     }
   },
 
   data() {
     return {
-      isLoading: false,
-      search: '',
       timer: 0,
+      search: '',
       dialog: false,
       sexItems: [
         {
@@ -168,11 +173,25 @@ export default {
     isRussian() {
       return this.$store.state.UserModule.country === 'RU'
     },
+    chinchillas() {
+      return this.$store.state.ChinchillaModule.chinchillas
+    },
+    isLoading() {
+      return this.$store.state.ChinchillaModule.isLoading
+    },
   },
 
   watch: {
     search() {
-      this.searchData()
+      clearTimeout(this.timer)
+      setTimeout(() => {
+        this.$store.dispatch('ChinchillaModule/' + Actions.FETCH_CHINCHILLAS, {
+          reset: true,
+          isRussian: this.isRussian,
+          search: this.search,
+          params: this.params,
+        })
+      }, 1000)
     },
     gridCountValue(val) {
       const date = new Date()
@@ -181,26 +200,36 @@ export default {
     },
   },
 
+  mounted() {
+    window.addEventListener('scroll', this.onScroll)
+  },
+
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.onScroll)
+  },
+
   methods: {
-    async searchData(immediate) {
-      clearTimeout(this.timer)
-      const requestData = async () => {
-        this.isLoading = true
-        let url = 'chinchilla/search?'
-        if (this.search) url = `${url}name=${this.search}&`
-        if (this.params.sex) url = `${url}sex=${this.params.sex}&`
-        if (this.params.status || !this.isRussian)
-          url = `${url}status=${this.isRussian ? this.params.status : 'sale'}&`
-        this.chinchillas = (await this.$axios.$get(url)).data
-        this.isLoading = false
+    onScroll() {
+      if (
+        window.scrollY + window.innerHeight + 500 >
+        document.body.scrollHeight
+      ) {
+        this.$store.dispatch('ChinchillaModule/' + Actions.FETCH_CHINCHILLAS, {
+          isRussian: this.isRussian,
+          search: this.search,
+          params: this.params,
+        })
       }
-      if (!immediate) this.timer = setTimeout(requestData, 1000)
-      else await requestData()
     },
     apply() {
       this.dialog = false
       this.params = this.models
-      this.searchData(true)
+      this.$store.dispatch('ChinchillaModule/' + Actions.FETCH_CHINCHILLAS, {
+        reset: true,
+        isRussian: this.isRussian,
+        search: this.search,
+        params: this.params,
+      })
     },
   },
 }
