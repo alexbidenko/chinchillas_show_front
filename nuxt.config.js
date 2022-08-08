@@ -78,6 +78,7 @@ export default {
         },
       },
     ],
+    '@nuxt/image',
   ],
   /*
    ** Axios module configuration
@@ -85,6 +86,9 @@ export default {
    */
   axios: {
     baseURL: process.env.BASE_API || 'https://api.chinchillas-show.com/api/',
+  },
+  image: {
+    domains: ['api.chinchillas-show.com'],
   },
   serverMiddleware: [{ path: '/api', handler: '~/api/chinchillasAPI.js' }],
   /*

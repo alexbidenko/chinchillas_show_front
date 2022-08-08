@@ -2,15 +2,19 @@
   <div
     class="chinchillaPhoto"
     :class="{ chinchillaPhoto_avatar: isAvatar }"
-    :style="{
-      backgroundImage: `url(${
+    @click="$emit('click', $event)"
+  >
+    <nuxt-img
+      class="chinchillaPhoto__image"
+      format="webp"
+      :src="
         !photo.file
           ? `https://api.chinchillas-show.com/photos/chinchillas/${chinchilla.owner_id}/${chinchilla.id}/${photo.name}`
           : photo.data
-      })`,
-    }"
-    @click="$emit('click', $event)"
-  >
+      "
+      width="400"
+      height="400"
+    />
     <template v-if="!chinchilla || userId === chinchilla.owner_id">
       <v-btn
         type="button"
@@ -73,14 +77,20 @@ export default {
 <style lang="scss">
 .chinchillaPhoto {
   position: relative;
-  background: no-repeat center / cover;
   cursor: pointer;
   box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
   transition: box-shadow 0.3s ease;
   max-height: 400px;
+  aspect-ratio: 1 / 1;
 
   &:hover {
     box-shadow: none;
+  }
+
+  &__image {
+    max-height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   &__delete {
@@ -97,13 +107,6 @@ export default {
 
   &_avatar {
     border: 1px solid #d79b00;
-  }
-
-  &::before {
-    content: '';
-    padding-bottom: 100%;
-    display: inline-block;
-    vertical-align: top;
   }
 }
 </style>
