@@ -33,9 +33,11 @@
           <v-text-field
             v-model="signIn.password"
             placeholder="Пароль"
-            type="password"
+            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="showPassword ? 'text' : 'password'"
             class="authPage__input"
             name="password"
+            @click:append="showPassword = !showPassword"
           />
           <button
             type="button"
@@ -121,9 +123,11 @@
               v-model="$v.signUp.password.$model"
               :error="$v.signUp.password.$error"
               label="Пароль"
-              type="password"
+              :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="showPassword ? 'text' : 'password'"
               class="authPage__input"
               name="password"
+              @click:append="showPassword = !showPassword"
             />
           </BaseScroller>
 
@@ -218,6 +222,7 @@ export default {
         password: '',
       },
       repeatPassword: '',
+      showPassword: false,
       dialog: false,
     }
   },
@@ -353,11 +358,7 @@ export default {
   }
 
   &__input {
-    margin: 24px 0 32px;
-
-    &:last-of-type {
-      margin-bottom: 12px;
-    }
+    margin: 12px 0;
   }
 
   &__remindPassword {

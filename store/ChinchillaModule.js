@@ -44,12 +44,10 @@ export default {
 
   mutations: {
     [Mutations.SET_CHINCHILLAS](state, data) {
-      state.chinchillas = data.chinchillas || state.chinchillas
-      state.isLoading =
-        data.isLoading !== undefined ? data.isLoading : state.isLoading
-      state.isFinish =
-        data.isFinish !== undefined ? data.isFinish : state.isFinish
-      state.offset = data.offset !== undefined ? data.offset : state.offset
+      state.chinchillas = data.chinchillas ?? state.chinchillas
+      state.isLoading = data.isLoading ?? state.isLoading
+      state.isFinish = data.isFinish ?? state.isFinish
+      state.offset = data.offset ?? state.offset
     },
   },
 

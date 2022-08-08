@@ -45,7 +45,7 @@
             {{ chinchilla.owner.last_name || 'Не указано' }}
           </p>
           <nuxt-link
-            :to="`/profile?id=${chinchilla.owner.id}`"
+            :to="`/profile/${chinchilla.owner.id}`"
             class="chinchillaHeader__avatar chinchillaHeader__avatar--owner"
             :style="{
               backgroundImage: `url(${

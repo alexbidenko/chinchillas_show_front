@@ -1,5 +1,5 @@
 <template>
-  <nuxt-link class="userCard" :to="`/profile?id=${user.id}`">
+  <nuxt-link class="userCard" :to="`/profile/${user.id}`">
     <v-img
       :src="
         user.avatar

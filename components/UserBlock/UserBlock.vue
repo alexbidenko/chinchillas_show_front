@@ -1,5 +1,5 @@
 <template>
-  <nuxt-link class="userBlock" :to="`/profile?id=${user.id}`">
+  <nuxt-link class="userBlock" :to="`/profile/${user.id}`">
     <div class="userBlock__background">
       <div class="userBlock__backgroundImage"></div>
     </div>
