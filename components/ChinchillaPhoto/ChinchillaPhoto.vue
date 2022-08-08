@@ -7,6 +7,7 @@
     <nuxt-img
       class="chinchillaPhoto__image"
       format="webp"
+      placeholder="/assets/empty.jpg"
       :src="
         !photo.file
           ? `https://api.chinchillas-show.com/photos/chinchillas/${chinchilla.owner_id}/${chinchilla.id}/${photo.name}`

@@ -5,39 +5,34 @@
     :to="`/profile/chinchillas/${chinchilla.id}/view`"
   >
     <div class="chinchillaCard__container">
-      <v-img
+      <nuxt-img
+        class="chinchillaCard__image"
+        format="webp"
+        placeholder="/assets/empty.jpg"
         :src="
           chinchilla.avatar
             ? `https://api.chinchillas-show.com/photos/chinchillas/${chinchilla.owner_id}/${chinchilla.id}/${chinchilla.avatar.name}`
             : '/assets/empty.jpg'
         "
-        lazy-src="/assets/empty.jpg"
-      >
-        <template #placeholder>
-          <v-row class="fill-height ma-0" align="center" justify="center">
-            <v-progress-circular
-              indeterminate
-              color="grey lighten-5"
-            ></v-progress-circular>
-          </v-row>
-        </template>
-        <div class="chinchillaCard__bubbleContainer" @click.stop.prevent>
-          <div class="chinchillaCard__infoBubble">
-            <v-icon>info</v-icon>
-          </div>
+        width="400"
+        height="400"
+      />
+      <div class="chinchillaCard__bubbleContainer" @click.stop.prevent>
+        <div class="chinchillaCard__infoBubble">
+          <v-icon>info</v-icon>
         </div>
-        <div class="chinchillaCard__info">
-          <p class="chinchillaCard__infoRow">
-            Пол: {{ chinchilla.sex === 'f' ? 'самка' : 'самец' }}
-          </p>
-          <p class="chinchillaCard__infoRow">
-            {{ colorString || 'стандарт' }}
-          </p>
-          <p class="chinchillaCard__infoRow">
-            {{ opened ? birthdayDate : dateDifference }}
-          </p>
-        </div>
-      </v-img>
+      </div>
+      <div class="chinchillaCard__info">
+        <p class="chinchillaCard__infoRow">
+          Пол: {{ chinchilla.sex === 'f' ? 'самка' : 'самец' }}
+        </p>
+        <p class="chinchillaCard__infoRow">
+          {{ colorString || 'стандарт' }}
+        </p>
+        <p class="chinchillaCard__infoRow">
+          {{ opened ? birthdayDate : dateDifference }}
+        </p>
+      </div>
     </div>
     <div class="chinchillaCard__titleContainer">
       <h4 class="chinchillaCard__title">
@@ -100,6 +95,13 @@ export default {
     width: 100%;
     display: flex;
     overflow: hidden;
+    aspect-ratio: 1 / 1;
+  }
+
+  &__image {
+    max-height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   &__titleContainer {
