@@ -34,14 +34,17 @@
             </div>
           </v-card-text>
         </v-card>
-        <v-card v-if="activeStatus.name === 'sale'" class="mb-8">
+        <v-card
+          v-if="activeStatus.name === 'sale' && data.price_rub"
+          class="mb-8"
+        >
           <v-card-text class="pb-0">
             <div class="display-1 text--primary mb-4">Шиншилла на продажу</div>
             <p class="pb-4 mb-0">
               Цена шиншиллы:
               {{
                 activeStatus.prices
-                  .filter((el) => el.currency === (isRussian ? 'RUB' : 'EUR'))
+                  .filter((el) => el.currency === 'RUB')
                   .map((el) => `${CURRENCIES[el.currency]}${el.value}`)
                   .join(', ')
               }}
