@@ -1,4 +1,4 @@
-# chinchillas_show_front
+# Chinshillas Show Frontend
 
 > My wondrous Nuxt.js project
 
