@@ -17,7 +17,7 @@ app.get('/chinchillas/:chinchillaId', async (req, res) => {
 
   const createParentColor = (chinchilla) => {
     if (chinchilla.father) {
-      chinchilla.father.color_name = colorToString(chinchilla.mother.color)
+      chinchilla.father.color_name = colorToString(chinchilla.father.color)
       chinchilla.father.color_name_short = colorToString(
         chinchilla.father.color,
         true
