@@ -16,9 +16,7 @@
 
         <v-card-title>
           {{ activeItem.name }}
-          <v-btn
-            target="_blank"
-            :href="`/profile/chinchillas/${activeItem.id}/view`"
+          <v-btn target="_blank" :href="`/profile/chinchillas/${activeItem.id}`"
             >Открыть</v-btn
           >
         </v-card-title>

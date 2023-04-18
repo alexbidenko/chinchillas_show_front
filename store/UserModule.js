@@ -12,10 +12,13 @@ export default {
 
   actions: {
     [Actions.CHECK_USER]({ commit }, callback) {
-      return this.$axios.$get('user/details').then((data) => {
-        commit(Mutations.SET_USER, data.user)
-        if (callback) callback(data.user)
-      })
+      return this.$axios
+        .$get('user/details')
+        .then((data) => {
+          commit(Mutations.SET_USER, data.user)
+          callback?.(data.user)
+        })
+        .catch(() => callback?.())
     },
     [Actions.LOGOUT]({ commit }) {
       commit(Mutations.SET_USER, null)

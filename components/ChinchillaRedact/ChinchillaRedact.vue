@@ -408,7 +408,7 @@ export default {
         }
         this.$router.push(
           this.chinchillaId
-            ? `/profile/chinchillas/${this.chinchillaId}/view`
+            ? `/profile/chinchillas/${this.chinchillaId}`
             : `/profile/chinchillas/${id}/color`
         )
       })

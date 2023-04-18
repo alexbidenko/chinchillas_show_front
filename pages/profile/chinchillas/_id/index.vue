@@ -223,9 +223,16 @@ export default {
 
   layout: 'profileLayout',
 
-  async asyncData({ $axios, params }) {
-    return {
-      data: await $axios.$get(`chinchilla/details/${params.id}`),
+  async asyncData({ $axios, params, error }) {
+    try {
+      return {
+        data: await $axios.$get(`chinchilla/details/${params.id}`),
+      }
+    } catch (err) {
+      error({
+        statusCode: 404,
+        message: 'Запрашиваемая шиншилла не найдена',
+      })
     }
   },
 

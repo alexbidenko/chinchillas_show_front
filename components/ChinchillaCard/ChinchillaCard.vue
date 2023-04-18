@@ -2,7 +2,7 @@
   <nuxt-link
     class="chinchillaCard"
     :class="{ chinchillaCard__opened: opened }"
-    :to="`/profile/chinchillas/${chinchilla.id}/view`"
+    :to="`/profile/chinchillas/${chinchilla.id}`"
   >
     <div class="chinchillaCard__container">
       <nuxt-img
