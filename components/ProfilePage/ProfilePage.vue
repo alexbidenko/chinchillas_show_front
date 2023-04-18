@@ -92,7 +92,7 @@
     padding-top: 32px;
     padding-bottom: 0;
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     column-gap: 16px;
 
     @include mq('tablet-small') {

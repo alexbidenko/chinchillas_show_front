@@ -5,6 +5,8 @@ services:
     image: ghcr.io/alexbidenko1998/chinchillas-show/nginx:latest
     expose:
       - 80
+    volumes:
+      - nginx-cache:/data/nginx/cache
     deploy:
       replicas: 1
       update_config:
@@ -30,6 +32,9 @@ services:
     networks:
       - application
       - server
+
+volumes:
+  nginx-cache:
 
 networks:
   application:

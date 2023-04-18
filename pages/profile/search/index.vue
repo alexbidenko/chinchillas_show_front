@@ -1,31 +1,6 @@
 <template>
   <div class="searchPage baseContainer">
-    <label class="searchPage__searchContainer">
-      <v-icon color="white">search</v-icon>
-      <input
-        v-model="search"
-        class="searchPage__search"
-        placeholder="Поиск шиншиллы"
-      />
-      <span class="searchPage__settings">
-        <v-btn icon @click="dialog = true">
-          <v-icon color="white">settings</v-icon>
-        </v-btn>
-        <v-fab-transition>
-          <v-btn
-            color="primary"
-            dark
-            fixed
-            bottom
-            right
-            fab
-            @click="dialog = true"
-          >
-            <v-icon>settings</v-icon>
-          </v-btn>
-        </v-fab-transition>
-      </span>
-    </label>
+    <ChinchillaSearch :parameters="params" @change="apply" />
 
     <div class="searchPage__settings">
       <v-select
@@ -52,53 +27,20 @@
     <div v-if="isLoading" class="searchPage__loaderContainer">
       <BaseSpinner />
     </div>
-
-    <v-dialog v-model="dialog" width="500">
-      <v-card>
-        <v-card-title class="headline lighten-2">
-          Параметры поиска
-        </v-card-title>
-
-        <v-card-text>
-          <v-select
-            v-model="models.sex"
-            :items="sexItems"
-            label="Пол"
-            item-text="label"
-            item-value="value"
-          />
-          <v-select
-            v-if="isRussian"
-            v-model="models.status"
-            :items="statuses"
-            label="Статус"
-            item-text="label"
-            item-value="key"
-          />
-        </v-card-text>
-
-        <v-divider></v-divider>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn text @click="dialog = false"> Закрыть </v-btn>
-          <v-btn color="primary" text @click="apply"> Применить </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 
 <script>
-import statuses from '~/assets/datas/statuses.json'
 import ChinchillaCard from '~/components/ChinchillaCard/ChinchillaCard.vue'
 import BaseSpinner from '~/components/BaseSpinner/BaseSpinner.vue'
 import Actions from '~/store/actions.type'
+import ChinchillaSearch from '~/components/ChinchillaSearch/ChinchillaSearch.vue'
 
 export default {
   name: 'SearchPage',
 
   components: {
+    ChinchillaSearch,
     BaseSpinner,
     ChinchillaCard,
   },
@@ -124,23 +66,6 @@ export default {
 
   data() {
     return {
-      timer: 0,
-      search: '',
-      dialog: false,
-      sexItems: [
-        {
-          label: 'Любой',
-          value: '',
-        },
-        {
-          label: 'Самка',
-          value: 'f',
-        },
-        {
-          label: 'Самец',
-          value: 'm',
-        },
-      ],
       gridCountItems: [
         {
           label: '2 карточки',
@@ -152,19 +77,11 @@ export default {
         },
       ],
       gridCountValue: this.$cookies.get('grid_count_value') || 'default',
-      statuses: [
-        {
-          key: '',
-          label: 'Любой',
-        },
-      ].concat(statuses),
-      models: {
-        sex: '',
-        status: this.$route.query.status || '',
-      },
       params: {
+        search: '',
         sex: '',
         status: this.$route.query.status || '',
+        colors: {},
       },
     }
   },
@@ -182,17 +99,6 @@ export default {
   },
 
   watch: {
-    search() {
-      clearTimeout(this.timer)
-      setTimeout(() => {
-        this.$store.dispatch('ChinchillaModule/' + Actions.FETCH_CHINCHILLAS, {
-          reset: true,
-          isRussian: this.isRussian,
-          search: this.search,
-          params: this.params,
-        })
-      }, 1000)
-    },
     gridCountValue(val) {
       const date = new Date()
       date.setFullYear(date.getFullYear() + 200)
@@ -216,18 +122,16 @@ export default {
       ) {
         this.$store.dispatch('ChinchillaModule/' + Actions.FETCH_CHINCHILLAS, {
           isRussian: this.isRussian,
-          search: this.search,
           params: this.params,
         })
       }
     },
-    apply() {
+    apply(parameters) {
       this.dialog = false
-      this.params = this.models
+      this.params = parameters
       this.$store.dispatch('ChinchillaModule/' + Actions.FETCH_CHINCHILLAS, {
         reset: true,
         isRussian: this.isRussian,
-        search: this.search,
         params: this.params,
       })
     },
@@ -259,24 +163,6 @@ export default {
       height: 44px;
       width: 44px;
     }
-  }
-
-  &__searchContainer {
-    background-color: #c5c5c5;
-    border-radius: 22px;
-    height: 44px;
-    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
-    display: flex;
-    align-items: center;
-    margin-bottom: 32px;
-    padding: 4px 16px;
-  }
-
-  &__search {
-    margin-left: 16px;
-    margin-right: 16px;
-    color: white;
-    flex: 1;
   }
 
   &__settings {

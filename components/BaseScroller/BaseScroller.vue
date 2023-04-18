@@ -1,7 +1,9 @@
-<template lang="pug">
-  .baseScroller(v-bar)
-    div(@scroll="onUpdate", ref="scroller")
-      slot
+<template>
+  <div v-bar class="baseScroller">
+    <div ref="scroller" @scroll="onUpdate">
+      <slot />
+    </div>
+  </div>
 </template>
 
 <script>

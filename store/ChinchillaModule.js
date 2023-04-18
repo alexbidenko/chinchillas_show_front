@@ -17,7 +17,7 @@ export default {
   actions: {
     async [Actions.FETCH_CHINCHILLAS](
       { commit, state },
-      { reset, isRussian, search, params }
+      { reset, isRussian, params }
     ) {
       if (reset) commit(Mutations.SET_CHINCHILLAS, { isFinish: false })
       if (state.isLoading || state.isFinish) return
@@ -25,11 +25,22 @@ export default {
       const data = (
         await this.$axios.$get('chinchilla/search', {
           params: {
-            name: search || undefined,
+            name: params.search || undefined,
             sex: params.sex || undefined,
             status: isRussian ? params.status || undefined : 'sale',
             offset: reset ? 0 : state.offset,
             limit: PER_PAGE_COUNT,
+
+            ...(params.colors
+              ? {
+                  color_operation: 'and',
+                  colors: encodeURIComponent(
+                    Object.entries(params.colors)
+                      .map(([key, value]) => `${key}:${value}`)
+                      .join(',')
+                  ),
+                }
+              : {}),
           },
         })
       ).data

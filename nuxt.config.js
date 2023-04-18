@@ -99,6 +99,7 @@ export default {
      ** You can extend webpack config here
      */
     extend(config, ctx) {},
+    vendor: ['vuetify'],
   },
   server: {
     host: '0.0.0.0',
