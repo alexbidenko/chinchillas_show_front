@@ -91,16 +91,6 @@ export default {
     domains: ['api.chinchillas-show.com'],
   },
   serverMiddleware: [{ path: '/api', handler: '~/api/chinchillasAPI.js' }],
-  /*
-   ** Build configuration
-   */
-  build: {
-    /*
-     ** You can extend webpack config here
-     */
-    extend(config, ctx) {},
-    vendor: ['vuetify'],
-  },
   server: {
     host: '0.0.0.0',
   },
