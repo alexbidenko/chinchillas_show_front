@@ -12,7 +12,7 @@ export default async ({ store, redirect, app, route }) => {
       app.$cookies.remove('USER_ID')
       store.dispatch('UserModule/' + Actions.LOGOUT, check)
       redirect('/auth')
-    } else if (route.path.startsWith('/profile') && user.admitted)
+    } else if (route.path.startsWith('/profile') && !user.admitted)
       redirect('/await')
     else if (
       route.path.startsWith('/admin') &&
