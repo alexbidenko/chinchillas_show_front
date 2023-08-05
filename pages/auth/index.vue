@@ -25,10 +25,13 @@
           @submit.prevent="submitSignIn"
         >
           <v-text-field
-            v-model="signIn.login"
-            placeholder="Логин"
+            v-model="signIn.email"
+            placeholder="Email"
             class="authPage__input"
-            name="login"
+            type="email"
+            name="email"
+            autocomplete="email"
+            inputmode="email"
           />
           <v-text-field
             v-model="signIn.password"
@@ -37,6 +40,7 @@
             :type="showPassword ? 'text' : 'password'"
             class="authPage__input"
             name="password"
+            autocomplete="current-password"
             @click:append="showPassword = !showPassword"
           />
           <button
@@ -56,28 +60,32 @@
         >
           <BaseScroller>
             <v-text-field
-              v-model="$v.signUp.login.$model"
-              :error="$v.signUp.login.$error"
-              label="Логин"
-              class="authPage__input"
-              name="login"
-            />
-            <v-text-field
               v-model="$v.signUp.email.$model"
               :error="$v.signUp.email.$error"
-              label="E-Mail"
               type="email"
-              class="authPage__input"
               name="email"
+              autocomplete="email"
+              inputmode="email"
+              class="authPage__input"
             />
             <v-text-field
               v-model="$v.signUp.phone.$model"
               :error="$v.signUp.phone.$error"
               type="tel"
+              name="phone"
+              autocomplete="tel"
+              inputmode="tel"
               label="Телефон"
               class="authPage__input"
-              name="phone"
               mask="+7 (###)-###-##-##"
+            />
+            <v-text-field
+              v-model="$v.signUp.login.$model"
+              :error="$v.signUp.login.$error"
+              label="Логин"
+              class="authPage__input"
+              name="login"
+              autocomplete="nickname"
             />
             <v-text-field
               v-model="$v.signUp.first_name.$model"
@@ -86,6 +94,7 @@
               type="text"
               class="authPage__input"
               name="firstName"
+              autocomplete="given-name"
             />
             <v-text-field
               v-model="$v.signUp.last_name.$model"
@@ -94,6 +103,7 @@
               type="text"
               class="authPage__input"
               name="lastName"
+              autocomplete="family-name"
             />
             <v-text-field
               v-model="$v.signUp.patronymic.$model"
@@ -102,6 +112,7 @@
               type="text"
               class="authPage__input"
               name="patronymic"
+              autocomplete="additional-name"
             />
             <v-text-field
               v-model="$v.signUp.country.$model"
@@ -110,6 +121,7 @@
               type="text"
               class="authPage__input"
               name="country"
+              autocomplete="country"
             />
             <v-text-field
               v-model="$v.signUp.city.$model"
@@ -118,6 +130,7 @@
               type="text"
               class="authPage__input"
               name="city"
+              autocomplete="city"
             />
             <v-text-field
               v-model="$v.signUp.password.$model"
@@ -127,6 +140,7 @@
               :type="showPassword ? 'text' : 'password'"
               class="authPage__input"
               name="password"
+              autocomplete="new-password"
               @click:append="showPassword = !showPassword"
             />
           </BaseScroller>
@@ -177,7 +191,10 @@
             v-model="email"
             placeholder="Email"
             class="authPage__input"
+            type="email"
             name="email"
+            autocomplete="email"
+            inputmode="email"
           />
           <button
             type="button"
@@ -207,7 +224,7 @@ export default {
       mode: 'signIn',
       email: '',
       signIn: {
-        login: '',
+        email: '',
         password: '',
       },
       signUp: {

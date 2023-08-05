@@ -182,7 +182,8 @@ export default {
       this.isLoading = true
       const formData = new FormData()
       Object.keys(this.models).forEach((key) => {
-        this.models[key] && formData.append(key, this.models[key])
+        if (key !== 'avatar' || this.models[key])
+          formData.append(key, this.models[key])
       })
       this.$axios
         .$post('user/update', formData)

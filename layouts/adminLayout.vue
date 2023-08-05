@@ -2,7 +2,9 @@
   <v-app class="adminLayout">
     <div>
       <v-toolbar dense>
-        <v-toolbar-title>Chinchillas-Show</v-toolbar-title>
+        <nuxt-link to="/">
+          <v-toolbar-title>Chinchillas-Show</v-toolbar-title>
+        </nuxt-link>
 
         <v-spacer />
 
