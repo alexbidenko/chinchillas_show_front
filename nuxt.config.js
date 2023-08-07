@@ -85,8 +85,8 @@ export default {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    baseURL: process.env.BASE_API || 'http://localhost:8000/api/',
-    // baseURL: process.env.BASE_API || 'https://api.chinchillas-show.com/api/',
+    // baseURL: process.env.BASE_API || 'http://localhost:8000/api/',
+    baseURL: process.env.BASE_API || 'https://api.chinchillas-show.com/api/',
   },
   image: {
     domains: ['api.chinchillas-show.com'],
