@@ -31,7 +31,6 @@ services:
         condition: on-failure
     networks:
       - application
-      - server
 
 volumes:
   nginx-cache:
