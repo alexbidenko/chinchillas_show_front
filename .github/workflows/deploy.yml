@@ -32,7 +32,7 @@ jobs:
             SITE_ENVIRONMENT=production
             NUXT_DADATA_TOKEN=${{ secrets.NUXT_DADATA_TOKEN }}
           push: true
-          tags: ghcr.io/alexbidenko1998/chinchillas-show/application:latest
+          tags: ghcr.io/alexbidenko/chinchillas-show/application:latest
 
   build-nginx:
     name: Build Nginx
@@ -57,7 +57,7 @@ jobs:
         with:
           context: .nginx
           push: true
-          tags: ghcr.io/alexbidenko1998/chinchillas-show/nginx:latest
+          tags: ghcr.io/alexbidenko/chinchillas-show/nginx:latest
 
   deploy:
     name: Deploy
