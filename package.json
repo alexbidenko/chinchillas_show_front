@@ -1,7 +1,6 @@
 {
   "name": "chinchillas_show_front",
   "version": "1.0.0",
-  "description": "My wondrous Nuxt.js project",
   "author": "Alexander",
   "private": true,
   "scripts": {
@@ -9,12 +8,11 @@
     "dev:local": "cross-env BASE_API=http://chinchillas-show-back.test/api/ nuxt",
     "build": "cross-env NUXT_PORT=3333 nuxt build",
     "start": "cross-env NUXT_PORT=3333 nuxt start",
-    "generate": "nuxt generate",
     "lint": "eslint --fix --ext .js,.vue --ignore-path .gitignore ."
   },
   "lint-staged": {
     "*.{js,vue}": "yarn lint",
-    "*.{css,vue}": "stylelint"
+    "*.{css,vue}": "yarn stylelint"
   },
   "husky": {
     "hooks": {
@@ -28,7 +26,7 @@
     "@nuxtjs/style-resources": "^1.2.1",
     "cookie-universal-nuxt": "^2.2.2",
     "cross-env": "^7.0.3",
-    "express": "^3.21.2",
+    "express": "^4.18.2",
     "hammerjs": "^2.0.8",
     "material-design-icons-iconfont": "^6.7.0",
     "moment": "^2.29.4",
@@ -56,6 +54,7 @@
     "eslint-plugin-prettier": "^3.4.1",
     "husky": "^4.3.8",
     "lint-staged": "^10.5.4",
+    "nuxi": "^3.9.1",
     "prettier": "^2.8.8",
     "sass": "^1.64.2",
     "sass-loader": "^10.4.1",

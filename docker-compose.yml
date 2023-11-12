@@ -2,11 +2,11 @@ version: "3.8"
 
 services:
   nginx:
-    image: ghcr.io/alexbidenko1998/chinchillas-show/nginx:latest
+    image: ghcr.io/alexbidenko/chinchillas-show/nginx:latest
     expose:
       - 80
     volumes:
-      - nginx-cache:/data/nginx/cache
+      - nginx-cache:/var/cache/nginx/ipx
     deploy:
       replicas: 1
       update_config:
@@ -19,7 +19,7 @@ services:
       - server
 
   application:
-    image: ghcr.io/alexbidenko1998/chinchillas-show/application:latest
+    image: ghcr.io/alexbidenko/chinchillas-show/application:latest
     expose:
       - 3333
     deploy:

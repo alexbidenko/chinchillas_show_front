@@ -7,11 +7,6 @@ export default {
         name: 'viewport',
         content: 'width=device-width, initial-scale=1',
       },
-      {
-        hid: 'description',
-        name: 'description',
-        content: process.env.npm_package_description || '',
-      },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -25,20 +20,14 @@ export default {
       },
     ],
   },
-  /*
-   ** Customize the progress-bar color
-   */
   loading: { color: '#fff' },
-  /*
-   ** Global CSS
-   */
-  css: ['~/assets/styles/styles.scss'],
+  css: [
+    '~/assets/styles/styles.scss',
+    'node_modules/material-design-icons-iconfont/dist/material-design-icons.css',
+  ],
   styleResources: {
     scss: './assets/styles/settings.scss',
   },
-  /*
-   ** Plugins to load before mounting the App
-   */
   plugins: [
     { src: '~/plugins/userInfo', mode: 'all' },
     { src: '~/plugins/Vuebar', mode: 'all' },
@@ -46,24 +35,9 @@ export default {
     { src: '~/plugins/axios', mode: 'all' },
     { src: '~/plugins/Vuelidate', mode: 'all' },
   ],
-  /*
-   ** Nuxt.js dev-modules
-   */
-  buildModules: [
-    // Doc: https://github.com/nuxt-community/eslint-module
-    '@nuxtjs/eslint-module',
-    // Doc: https://github.com/nuxt-community/stylelint-module
-    '@nuxtjs/stylelint-module',
-    '@nuxtjs/vuetify',
-  ],
-  /*
-   ** Nuxt.js modules
-   */
   modules: [
-    // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/pwa',
-    // Doc: https://github.com/nuxt-community/dotenv-module
     '@nuxtjs/dotenv',
     '@nuxtjs/style-resources',
     'cookie-universal-nuxt',
@@ -79,11 +53,10 @@ export default {
       },
     ],
     '@nuxt/image',
+    '@nuxtjs/eslint-module',
+    '@nuxtjs/stylelint-module',
+    '@nuxtjs/vuetify',
   ],
-  /*
-   ** Axios module configuration
-   ** See https://axios.nuxtjs.org/options
-   */
   axios: {
     // baseURL: process.env.BASE_API || 'http://localhost:8000/api/',
     baseURL: process.env.BASE_API || 'https://api.chinchillas-show.com/api/',
