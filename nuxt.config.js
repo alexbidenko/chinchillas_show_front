@@ -1,9 +1,4 @@
-import { defineNuxtConfig } from '@nuxt/bridge'
-
-export default defineNuxtConfig({
-  bridge: {
-    nitro: false,
-  },
+export default {
   head: {
     title: 'Chinchillas Show',
     meta: [
@@ -30,7 +25,6 @@ export default defineNuxtConfig({
     '~/assets/styles/styles.scss',
     'node_modules/material-design-icons-iconfont/dist/material-design-icons.css',
   ],
-  // @ts-ignore
   styleResources: {
     scss: './assets/styles/settings.scss',
   },
@@ -74,4 +68,4 @@ export default defineNuxtConfig({
   server: {
     host: '0.0.0.0',
   },
-})
+}

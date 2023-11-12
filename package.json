@@ -4,10 +4,10 @@
   "author": "Alexander",
   "private": true,
   "scripts": {
-    "dev": "nuxt2",
-    "dev:local": "cross-env BASE_API=http://chinchillas-show-back.test/api/ nuxt2",
-    "build": "cross-env NUXT_PORT=3333 nuxt2 build",
-    "start": "cross-env NUXT_PORT=3333 nuxt2 start",
+    "dev": "nuxt",
+    "dev:local": "cross-env BASE_API=http://chinchillas-show-back.test/api/ nuxt",
+    "build": "cross-env NUXT_PORT=3333 nuxt build",
+    "start": "cross-env NUXT_PORT=3333 nuxt start",
     "lint": "eslint --fix --ext .js,.vue --ignore-path .gitignore ."
   },
   "lint-staged": {
@@ -41,7 +41,6 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@nuxt/bridge": "npm:@nuxt/bridge-edge",
     "@nuxt/image": "^0.7.1",
     "@nuxt/types": "^2.17.1",
     "@nuxtjs/eslint-config": "^6.0.1",
