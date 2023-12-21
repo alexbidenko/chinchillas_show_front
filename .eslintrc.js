@@ -22,6 +22,7 @@ module.exports = {
         endOfLine: 'auto',
       },
     ],
+    'no-undef': 'off',
   },
   settings: {
     'import/core-modules': ['vue', 'vuex'],

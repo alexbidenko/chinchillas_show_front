@@ -1,5 +1,5 @@
-const express = require('express')
-const colorToString = require('../assets/scripts/colorToString').default
+import express from 'express'
+import colorToString from '../assets/scripts/colorToString'
 
 const app = express()
 app.use(express.json())
@@ -38,4 +38,4 @@ app.get('/chinchillas/:chinchillaId', async (req, res) => {
   await res.json(data)
 })
 
-module.exports = app
+export default app

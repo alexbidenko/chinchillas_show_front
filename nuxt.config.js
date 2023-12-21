@@ -1,4 +1,7 @@
-export default {
+import { defineNuxtConfig } from '@nuxt/bridge'
+import vuetify from 'vite-plugin-vuetify'
+
+export default defineNuxtConfig({
   head: {
     title: 'Chinchillas Show',
     meta: [
@@ -32,20 +35,10 @@ export default {
   /*
    ** Global CSS
    */
-  css: ['~/assets/styles/styles.scss'],
+  css: ['./assets/styles/styles.scss'],
   styleResources: {
     scss: './assets/styles/settings.scss',
   },
-  /*
-   ** Plugins to load before mounting the App
-   */
-  plugins: [
-    { src: '~/plugins/userInfo', mode: 'all' },
-    { src: '~/plugins/Vuebar', mode: 'all' },
-    { src: '~/plugins/Vuetify', mode: 'all' },
-    { src: '~/plugins/axios', mode: 'all' },
-    { src: '~/plugins/Vuelidate', mode: 'all' },
-  ],
   /*
    ** Nuxt.js dev-modules
    */
@@ -79,6 +72,11 @@ export default {
       },
     ],
     '@nuxt/image',
+    (options, nuxt) => {
+      nuxt.hooks.hook('vite:extendConfig', (config) =>
+        config.plugins.push(vuetify())
+      )
+    },
   ],
   /*
    ** Axios module configuration
@@ -95,13 +93,16 @@ export default {
    ** Build configuration
    */
   build: {
-    /*
-     ** You can extend webpack config here
-     */
-    extend(config, ctx) {},
-    vendor: ['vuetify'],
+    transpile: ['vuetify'],
   },
   server: {
     host: '0.0.0.0',
   },
-}
+  vite: {
+    // @ts-ignore
+    // curently this will lead to a type error, but hopefully will be fixed soon #justBetaThings
+    ssr: {
+      noExternal: ['vuetify'], // add the vuetify vite plugin
+    },
+  },
+})
