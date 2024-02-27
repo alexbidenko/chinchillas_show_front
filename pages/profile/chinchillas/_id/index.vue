@@ -92,10 +92,7 @@
             :photo="photo"
             @toAvatar="photoToAvatar"
             @delete="deletePhoto"
-            @click="
-              isOpenPhotos = true
-              activePhoto = index
-            "
+            @click="openPhoto(index)"
           />
           <label v-if="userId === data.owner_id" class="viewPage__uploadPhoto">
             <v-icon size="40px" color="white">mdi-plus</v-icon>
@@ -223,10 +220,10 @@ export default {
 
   layout: 'profileLayout',
 
-  async asyncData({ $axios, params, error }) {
+  async asyncData({ params, error }) {
     try {
       return {
-        data: await $axios.$get(`chinchilla/details/${params.id}`),
+        data: await $request.$get(`chinchilla/details/${params.id}`),
       }
     } catch (err) {
       error({
@@ -237,9 +234,10 @@ export default {
   },
 
   data() {
+    const userId = useCookie('USER_ID');
     return {
       chinchillaId: +this.$route.params.id,
-      userId: +this.$cookies.get('USER_ID'),
+      userId: +userId.value,
       isOpenPhotos: false,
       photosHeight: 500,
       activePhoto: 0,
@@ -321,7 +319,7 @@ export default {
 
   methods: {
     async updateUser() {
-      this.data = await this.$axios.$get(
+      this.data = await $request.$get(
         `chinchilla/details/${this.$route.params.id}`
       )
     },
@@ -330,7 +328,7 @@ export default {
         const resizedFile = await resizeImage(file)
         const formData = new FormData()
         formData.append('photo', resizedFile)
-        return this.$axios.$post(`/photo/chinchilla/${this.data.id}`, formData)
+        return $request.$post(`/photo/chinchilla/${this.data.id}`, formData)
       })
       Promise.allSettled(requests).then((data) => {
         this.data.photos = this.data.photos.concat(
@@ -339,12 +337,12 @@ export default {
       })
     },
     deletePhoto(photoId) {
-      this.$axios.$delete(`/photo/chinchilla/${photoId}`).then(() => {
+      $request.$delete(`/photo/chinchilla/${photoId}`).then(() => {
         this.data.photos = this.data.photos.filter((el) => el.id !== photoId)
       })
     },
     photoToAvatar(photoId) {
-      this.$axios
+      $request
         .$put(`/chinchilla/update/${this.data.id}`, {
           avatar_id: photoId,
         })
@@ -359,7 +357,7 @@ export default {
           this.$refs.photosHeader.$el.clientHeight
     },
     toggleHideChinchilla() {
-      this.$axios
+      $request
         .put(`admin/chinchilla/${this.data.id}/hidden`, {
           hidden: !this.data.hidden,
         })
@@ -371,11 +369,15 @@ export default {
       if (
         confirm(`Вы уверены что хотите удалить шиншиллу ${this.data.name}?`)
       ) {
-        this.$axios.delete(`admin/chinchilla/${this.data.id}`).then(() => {
+        $request.delete(`admin/chinchilla/${this.data.id}`).then(() => {
           this.$router.back()
         })
       }
     },
+    openPhoto(index) {
+      this.isOpenPhotos = true
+      this.activePhoto = index
+    }
   },
 }
 </script>

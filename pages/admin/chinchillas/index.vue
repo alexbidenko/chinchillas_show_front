@@ -108,7 +108,7 @@ export default {
 
   async fetch() {
     try {
-      const response = await this.$axios.$get('admin/chinchillas/1/10')
+      const response = await $request.$get('admin/chinchillas/1/10')
       this.chinchillas = response.data.map((el) => ({
         ...el,
         ownerName: `${el.owner.first_name} ${el.owner.last_name} (${el.owner.login})`,
@@ -120,7 +120,7 @@ export default {
 
   methods: {
     async requestPage() {
-      const response = await this.$axios.$get(
+      const response = await $request.$get(
         `admin/chinchillas/${this.page}/${this.perPage}`
       )
       response.data.forEach((el, index) => {
@@ -143,7 +143,7 @@ export default {
     async changeChinchilla() {
       Object.assign(
         this.activeItem,
-        await this.$axios.$put(`admin/chinchilla/${this.itemModels.id}`, {
+        await $request.$put(`admin/chinchilla/${this.itemModels.id}`, {
           conclusion: this.itemModels.conclusion,
         })
       )
@@ -153,7 +153,7 @@ export default {
       return colorToString(color)
     },
     sendComment() {
-      this.$axios
+      $request
         .$post('admin/color/comment', {
           chinchillaId: this.itemModels.id,
           content: this.commentText,

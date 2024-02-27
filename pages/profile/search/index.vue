@@ -65,6 +65,8 @@ export default {
   },
 
   data() {
+    const gridCountValue = useCookie('grid_count_value');
+
     return {
       gridCountItems: [
         {
@@ -76,7 +78,7 @@ export default {
           value: 'more',
         },
       ],
-      gridCountValue: this.$cookies.get('grid_count_value') || 'default',
+      gridCountValue: gridCountValue.value || 'default',
       params: {
         search: '',
         sex: '',

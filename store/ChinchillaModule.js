@@ -23,7 +23,7 @@ export default {
       if (state.isLoading || state.isFinish) return
       commit(Mutations.SET_CHINCHILLAS, { isLoading: true })
       const data = (
-        await this.$axios.$get('chinchilla/search', {
+        await $request.$get('chinchilla/search', {
           params: {
             name: params.search || undefined,
             sex: params.sex || undefined,

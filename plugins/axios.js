@@ -1,4 +1,6 @@
-export default function ({ $axios, $cookies, store }) {
-  if ($cookies.get('TOKEN')) $axios.setToken($cookies.get('TOKEN'), 'Bearer')
-  $axios.setHeader('Country-Code', store.state.UserModule.country)
-}
+export default defineNuxtPlugin((nuxtApp) => {
+  const token = useCookie('token');
+
+  if (token.value) $request.setToken(token.value, 'Bearer')
+  $request.setHeader('Country-Code', nuxtApp.$store.state.UserModule.country)
+});

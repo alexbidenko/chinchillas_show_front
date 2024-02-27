@@ -27,8 +27,9 @@ export default {
   },
 
   data() {
+    const userId = useCookie('USER_ID');
     return {
-      isOwner: this.userId === +this.$cookies.get('USER_ID'),
+      isOwner: this.userId === +userId.value,
       statuses: [
         { key: 'm', label: 'Самцы' },
         { key: 'f', label: 'Самки' },

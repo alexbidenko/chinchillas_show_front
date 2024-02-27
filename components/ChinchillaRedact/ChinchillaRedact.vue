@@ -173,7 +173,7 @@
 </template>
 
 <script>
-import { required } from 'vuelidate/lib/validators'
+import { required } from '@vuelidate/validators'
 import ChinchillaPhoto from '~/components/ChinchillaPhoto/ChinchillaPhoto.vue'
 import colorToString from '~/assets/scripts/colorToString'
 import dateFormat from '~/assets/scripts/dateFormat'
@@ -193,6 +193,7 @@ export default {
   },
 
   data() {
+    const userId = useCookie('USER_ID');
     return {
       models: {
         name: '',
@@ -210,7 +211,7 @@ export default {
         breeder_id: null,
         breeder_name: '',
       },
-      userId: +this.$cookies.get('USER_ID'),
+      userId: +userId.value,
       birthday: null,
       formatBirthday: null,
       isLoading: false,
@@ -251,7 +252,7 @@ export default {
 
   async fetch() {
     if (this.chinchillaId) {
-      this.models = await this.$axios.$get(
+      this.models = await $request.$get(
         `chinchilla/details/${this.chinchillaId}`
       )
       this.photos = this.models.photos
@@ -307,6 +308,8 @@ export default {
       }
     },
     onSubmit() {
+      const userId = useCookie('USER_ID');
+
       this.models.birthday = new Date(this.birthday).getTime()
       this.isLoading = true
       const models = { ...this.models }
@@ -314,8 +317,8 @@ export default {
       if (models.breeder_type !== 'user') models.breeder_id = null
       if (models.breeder_type !== 'not_user') models.breeder_name = ''
       if (models.breeder_type === 'owner')
-        models.breeder_id = +this.$cookies.get('USER_ID')
-      this.$axios[this.chinchillaId ? '$put' : '$post'](
+        models.breeder_id = +userId.value
+      $request[this.chinchillaId ? '$put' : '$post'](
         this.chinchillaId
           ? `chinchilla/update/${this.chinchillaId}`
           : 'chinchilla/create',
@@ -333,7 +336,7 @@ export default {
       clearTimeout(this.timers[type])
       this.timers[type] = setTimeout(() => {
         this['isLoading' + type] = true
-        this.$axios
+        $request
           .$get(`chinchilla/search`, {
             params: {
               name: val || undefined,
@@ -356,7 +359,7 @@ export default {
       clearTimeout(this.timers.breeder)
       this.timers.breeder = setTimeout(() => {
         this.isLoadingBreeder = true
-        this.$axios
+        $request
           .$get(`user/search?q=${val || ''}&perPage=20`)
           .then((data) => {
             this.breederItems = (
@@ -387,7 +390,7 @@ export default {
           const formData = new FormData()
           formData.append('photo', file)
           return new Promise((resolve, reject) => {
-            this.$axios
+            $request
               .$post(`/photo/chinchilla/${id}`, formData)
               .then((data) => {
                 resolve({
@@ -415,13 +418,13 @@ export default {
     },
     async deletePhoto(photoId) {
       if (this.chinchillaId)
-        await this.$axios.$delete(`/photo/chinchilla/${photoId}`)
+        await $request.$delete(`/photo/chinchilla/${photoId}`)
       this.photos = this.photos.filter((el) => el.id !== photoId)
       if (this.avatar && this.avatar.id === photoId) this.avatar = null
     },
     async photoToAvatar(photoId, chinchillaId) {
       if (chinchillaId)
-        await this.$axios.$put(
+        await $request.$put(
           `/chinchilla/update/${this.chinchillaId || chinchillaId}`,
           {
             avatar_id: photoId,

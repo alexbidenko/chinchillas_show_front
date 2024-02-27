@@ -48,7 +48,7 @@ export default {
     onRequest() {
       if (!this.isLoading && !this.isFinish) {
         this.isLoading = true
-        return this.$axios
+        return $request
           .$get(`user/search/${this.page}/${this.perPage}`)
           .then((users) => {
             this.page++

@@ -9,12 +9,12 @@ export default {
 
   middleware: 'auth',
 
-  async asyncData({ params, $axios, $cookies }) {
-    const userId = +params.id || +$cookies.get('USER_ID')
+  async asyncData({ params }) {
+    const userId = +params.id || +useCookie('USER_ID').value
     const data = await Promise.all([
-      $axios.$get(`user/details/${userId}`),
-      $axios.$get(`chinchilla/get/${userId}`),
-      $axios.$get(`chinchilla/sold/${userId}`),
+      $request.$get(`user/details/${userId}`),
+      $request.$get(`chinchilla/get/${userId}`),
+      $request.$get(`chinchilla/sold/${userId}`),
     ])
     const user = data[0]
     const soldChinchillas = data[2]

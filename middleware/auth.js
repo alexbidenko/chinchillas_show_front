@@ -8,8 +8,10 @@ export default async ({ store, redirect, app, route }) => {
 
   const check = (user) => {
     if (!user) {
-      app.$cookies.remove('TOKEN')
-      app.$cookies.remove('USER_ID')
+      const token = useCookie('TOKEN');
+      const userId = useCookie('USER_ID');
+      token.value = null;
+      userId.value = null;
       store.dispatch('UserModule/' + Actions.LOGOUT, check)
       redirect('/auth')
     } else if (route.path.startsWith('/profile') && !user.admitted)

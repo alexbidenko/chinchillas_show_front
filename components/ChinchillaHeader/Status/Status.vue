@@ -223,6 +223,7 @@ export default {
   },
 
   data() {
+    const userId = useCookie('USER_ID');
     return {
       statusesDialog: false,
       updatedStatus: null,
@@ -240,7 +241,7 @@ export default {
       ],
       breederId: 0,
       notInSite: false,
-      userId: +this.$cookies.get('USER_ID'),
+      userId: +userId.value,
       isOpenComments: false,
       showTimeline: true,
       isRequest: false,
@@ -278,7 +279,7 @@ export default {
     },
     saveStatus() {
       this.isRequest = true
-      this.$axios
+      $request
         .$post('chinchilla/create/status', {
           name: this.updatedStatus,
           chinchillaId: this.data.id,
@@ -310,7 +311,7 @@ export default {
         .catch(() => alert('Что-то пошло не так'))
     },
     forOvervalue() {
-      this.$axios
+      $request
         .$post(`chinchilla/color/for-overvalue/${this.data.id}`)
         .then(() => {
           this.$emit('updateConclusion', 'overvalue')
@@ -332,7 +333,7 @@ export default {
       clearTimeout(this.timers.breeder)
       this.timers.breeder = setTimeout(() => {
         this.isLoadingBreeder = true
-        this.$axios
+        $request
           .$get(`user/search?q=${val || ''}&perPage=20`)
           .then((data) => {
             this.breederItems = data.concat(data).map((el) => ({

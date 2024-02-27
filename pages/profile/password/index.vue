@@ -38,7 +38,7 @@ export default {
   methods: {
     savePassword() {
       this.request = true
-      this.$axios
+      $request
         .$post('user/password', { password: this.password })
         .then(() => {
           this.$router.push('/profile')

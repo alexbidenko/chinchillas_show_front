@@ -185,7 +185,7 @@ export default {
         if (key !== 'avatar' || this.models[key])
           formData.append(key, this.models[key])
       })
-      this.$axios
+      $request
         .$post('user/update', formData)
         .then((data) => {
           this.$emit('update', data)

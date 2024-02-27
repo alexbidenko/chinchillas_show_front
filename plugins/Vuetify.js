@@ -1,15 +1,18 @@
-import Vue from 'vue'
-import Vuetify from 'vuetify'
+import '@mdi/font/css/materialdesignicons.css'
 
-Vue.use(Vuetify)
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
 
-export default new Vuetify({
-  theme: {
-    light: true,
-    themes: {
-      light: {
-        primary: '#d79b00',
+export default defineNuxtPlugin((app) => {
+  const vuetify = createVuetify({
+    theme: {
+      light: true,
+      themes: {
+        light: {
+          primary: '#d79b00',
+        },
       },
     },
-  },
+  })
+  app.vueApp.use(vuetify)
 })

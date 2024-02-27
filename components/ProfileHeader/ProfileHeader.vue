@@ -76,8 +76,10 @@ export default {
 
   methods: {
     logout() {
-      this.$cookies.remove('TOKEN')
-      this.$cookies.remove('USER_ID')
+      const token = useCookie('TOKEN');
+      const userId = useCookie('USER_ID');
+      token.value = null;
+      userId.value = null;
       this.$store
         .dispatch('UserModule/' + Actions.LOGOUT)
         .then(() => this.$router.push('/auth'))

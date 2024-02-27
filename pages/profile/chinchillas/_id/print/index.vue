@@ -71,16 +71,17 @@ export default {
 
   layout: 'empty',
 
-  async asyncData({ $axios, params }) {
+  async asyncData({ params }) {
     return {
-      data: await $axios.$get(`chinchilla/details/${params.id}`),
+      data: await $request.$get(`chinchilla/details/${params.id}`),
     }
   },
 
   data() {
+    const userId = useCookie('USER_ID');
     return {
       chinchillaId: +this.$route.params.id,
-      userId: +this.$cookies.get('USER_ID'),
+      userId: +userId.value,
       isOpenPhotos: false,
       photosHeight: 500,
       activePhoto: 0,

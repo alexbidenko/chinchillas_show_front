@@ -183,7 +183,7 @@
         </form>
         <form
           v-else
-          key="signIn"
+          key="signRemind"
           class="authPage__form authPage__form--signIn"
           @submit.prevent="submitRemind"
         >
@@ -211,7 +211,7 @@
 </template>
 
 <script>
-import { required, email, minLength } from 'vuelidate/lib/validators'
+import { required, email, minLength } from '@vuelidate/validators'
 import BaseScroller from '~/components/BaseScroller/BaseScroller.vue'
 
 export default {
@@ -247,22 +247,22 @@ export default {
   methods: {
     submitRemind() {},
     submitSignIn() {
-      this.$axios.$post('login', this.signIn).then((data) => {
+      $request.$post('login', this.signIn).then((data) => {
         const date = new Date()
         date.setFullYear(date.getFullYear() + 200)
         this.$cookies.set('TOKEN', data.token, { expires: date })
         this.$cookies.set('USER_ID', data.user.id, { expires: date })
-        this.$axios.setHeader('Authorization', `Bearer ${data.token}`)
+        $request.setHeader('Authorization', `Bearer ${data.token}`)
         this.$router.push('/profile')
       })
     },
     submitSignUp() {
-      this.$axios.$post('register', this.signUp).then((data) => {
+      $request.$post('register', this.signUp).then((data) => {
         const date = new Date()
         date.setFullYear(date.getFullYear() + 200)
         this.$cookies.set('TOKEN', data.token, { expires: date })
         this.$cookies.set('USER_ID', data.user.id, { expires: date })
-        this.$axios.setHeader('Authorization', `Bearer ${data.token}`)
+        $request.setHeader('Authorization', `Bearer ${data.token}`)
         this.$router.push('/profile')
       })
     },

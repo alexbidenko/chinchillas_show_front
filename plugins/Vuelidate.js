@@ -1,4 +1,5 @@
-import Vue from 'vue'
-import Vuelidate from 'vuelidate'
+import Vuelidate from '@vuelidate/core'
 
-Vue.use(Vuelidate)
+export default defineNuxtPlugin((nuxtApp) => {
+  nuxtApp.vueApp.use(Vuelidate);
+});

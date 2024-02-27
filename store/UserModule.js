@@ -12,7 +12,7 @@ export default {
 
   actions: {
     [Actions.CHECK_USER]({ commit }, callback) {
-      return this.$axios
+      return $request
         .$get('user/details')
         .then((data) => {
           commit(Mutations.SET_USER, data.user)
@@ -22,7 +22,7 @@ export default {
     },
     [Actions.LOGOUT]({ commit }) {
       commit(Mutations.SET_USER, null)
-      this.$axios.setToken(null)
+      $request.setToken(null)
     },
   },
 

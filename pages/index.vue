@@ -145,7 +145,7 @@ export default {
   },
 
   async fetch() {
-    this.statistics = await this.$axios.$get('site/statistics')
+    this.statistics = await $request.$get('site/statistics')
   },
 }
 </script>

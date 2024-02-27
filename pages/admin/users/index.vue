@@ -95,7 +95,7 @@ export default {
 
   async fetch() {
     try {
-      const response = await this.$axios.$get('admin/users')
+      const response = await $request.$get('admin/users')
       this.users = Array(response.total).fill({})
       response.data.forEach((el, index) => {
         this.users[(response.page - 1) * 10 + index] = el
@@ -107,7 +107,7 @@ export default {
 
   methods: {
     async requestPage() {
-      const response = await this.$axios.$get(
+      const response = await $request.$get(
         `admin/users?page=${this.page}&perPage=${this.perPage}`
       )
       this.users = Array(response.total).fill({})
@@ -131,7 +131,7 @@ export default {
     async changeUser() {
       Object.assign(
         this.activeItem,
-        await this.$axios.$put(`admin/user/${this.itemModels.id}`, {
+        await $request.$put(`admin/user/${this.itemModels.id}`, {
           admitted: this.itemModels.admitted,
           type: this.itemModels.type,
         })

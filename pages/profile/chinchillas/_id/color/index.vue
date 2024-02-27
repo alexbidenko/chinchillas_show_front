@@ -38,6 +38,7 @@ export default {
   middleware: 'auth',
 
   data() {
+    const userId = useCookie('USER_ID');
     const models = {}
     colorConfig.forEach((el) => (models[el.name] = el.variants[0].value))
     return {
@@ -45,7 +46,7 @@ export default {
       data: null,
       config: colorConfig,
       models,
-      userId: this.$cookies.get('USER_ID'),
+      userId: userId.value,
     }
   },
 
@@ -56,7 +57,7 @@ export default {
   },
 
   created() {
-    this.$axios.$get(`chinchilla/details/${this.chinchillaId}`).then((data) => {
+    $request.$get(`chinchilla/details/${this.chinchillaId}`).then((data) => {
       if (data.owner_id === +this.userId) {
         this.data = data
         if (data.color) this.models = data.color
@@ -66,7 +67,7 @@ export default {
 
   methods: {
     onSubmit() {
-      this.$axios
+      $request
         .$post(`chinchilla/color/${this.chinchillaId}`, this.models)
         .then(() => {
           this.$router.push(`/profile/chinchillas/${this.chinchillaId}`)
