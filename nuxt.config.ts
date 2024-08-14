@@ -4,8 +4,10 @@ export default defineNuxtConfig({
     "vuetify-nuxt-module",
     '@pinia/nuxt',
     '@nuxt/image',
+    'nuxt-security',
   ],
   app: {
+    pageTransition: { name: 'page', mode: 'out-in' },
     head: {
       title: 'Chinchillas Show',
       meta: [
@@ -28,6 +30,15 @@ export default defineNuxtConfig({
       ],
     },
   },
+  hooks: {
+    'build:manifest': (manifest: any) => {
+      for (const key in manifest) {
+        manifest[key].assets = manifest[key].assets?.filter(
+          (asset: string) => !/(.+).(webp|png|jpe?g|svg)$/.test(asset),
+        );
+      }
+    },
+  },
   vite: {
     css: {
       preprocessorOptions: {
@@ -35,17 +46,11 @@ export default defineNuxtConfig({
       },
     },
   },
-  css: [
-    '@mdi/font/css/materialdesignicons.css',
-  ],
   image: {
     domains: ['api.chinchillas-show.com'],
   },
   vuetify: {
     vuetifyOptions: {
-      icons: {
-        defaultSet: 'mdi',
-      },
       theme: {
         defaultTheme: 'light',
         themes: {
@@ -57,6 +62,9 @@ export default defineNuxtConfig({
         },
       },
     },
+  },
+  security: {
+    rateLimiter: false,
   },
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },

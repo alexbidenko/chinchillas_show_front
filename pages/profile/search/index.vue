@@ -45,12 +45,14 @@ export default {
       const isRussian = userStore.country === 'RU'
       const params = { ...route.params, status: isRussian ? route.params.status : 'sale' }
 
-      onServerPrefetch(async () => {
+      await useAsyncData(async () => {
         await chinchillaStore.fetchChinchillas({
           reset: true,
           isRussian,
           params,
-        })
+        });
+
+        return 'search-chinchillas';
       });
     }
   },
@@ -112,20 +114,20 @@ export default {
         window.scrollY + window.innerHeight + 500 >
         document.body.scrollHeight
       ) {
-        this.$store.dispatch('ChinchillaModule/' + Actions.FETCH_CHINCHILLAS, {
+        this.chinchillaStore.fetchChinchillas({
           isRussian: this.isRussian,
           params: this.params,
-        })
+        });
       }
     },
     apply(parameters) {
       this.dialog = false
       this.params = parameters
-      this.$store.dispatch('ChinchillaModule/' + Actions.FETCH_CHINCHILLAS, {
+      this.chinchillaStore.fetchChinchillas({
         reset: true,
         isRussian: this.isRussian,
         params: this.params,
-      })
+      });
     },
   },
 }

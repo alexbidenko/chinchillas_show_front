@@ -17,7 +17,8 @@
           Регистрация
         </button>
       </nav>
-      <transition mode="out-in" name="fade">
+
+      <div v-auto-animate class="authPage__container">
         <form
           v-if="mode === 'signIn'"
           key="signIn"
@@ -41,7 +42,7 @@
             class="authPage__input"
             name="password"
             autocomplete="current-password"
-            @click:append="showPassword = !showPassword"
+            @click:append-inner="showPassword = !showPassword"
           />
           <button
             type="button"
@@ -55,96 +56,94 @@
         <form
           v-else-if="mode === 'signUp'"
           key="signUp"
-          class="authPage__form authPage__form--signUp"
+          class="authPage__form"
           @submit.prevent
         >
-          <BaseScroller>
-            <v-text-field
-              v-model="v$.signUp.email.$model"
-              :error="v$.signUp.email.$error"
-              type="email"
-              name="email"
-              placeholder="Email"
-              autocomplete="email"
-              inputmode="email"
-              class="authPage__input"
-            />
-            <v-text-field
-              v-model="v$.signUp.phone.$model"
-              :error="v$.signUp.phone.$error"
-              type="tel"
-              name="phone"
-              autocomplete="tel"
-              inputmode="tel"
-              label="Телефон"
-              class="authPage__input"
-              mask="+7 (###)-###-##-##"
-            />
-            <v-text-field
-              v-model="v$.signUp.login.$model"
-              :error="v$.signUp.login.$error"
-              label="Логин"
-              class="authPage__input"
-              name="login"
-              autocomplete="nickname"
-            />
-            <v-text-field
-              v-model="v$.signUp.first_name.$model"
-              :error="v$.signUp.first_name.$error"
-              label="Имя"
-              type="text"
-              class="authPage__input"
-              name="firstName"
-              autocomplete="given-name"
-            />
-            <v-text-field
-              v-model="v$.signUp.last_name.$model"
-              :error="v$.signUp.last_name.$error"
-              label="Фамилия"
-              type="text"
-              class="authPage__input"
-              name="lastName"
-              autocomplete="family-name"
-            />
-            <v-text-field
-              v-model="v$.signUp.patronymic.$model"
-              :error="v$.signUp.patronymic.$error"
-              label="Отчество"
-              type="text"
-              class="authPage__input"
-              name="patronymic"
-              autocomplete="additional-name"
-            />
-            <v-text-field
-              v-model="v$.signUp.country.$model"
-              :error="v$.signUp.country.$error"
-              label="Страна"
-              type="text"
-              class="authPage__input"
-              name="country"
-              autocomplete="country"
-            />
-            <v-text-field
-              v-model="v$.signUp.city.$model"
-              :error="v$.signUp.city.$error"
-              label="Город"
-              type="text"
-              class="authPage__input"
-              name="city"
-              autocomplete="city"
-            />
-            <v-text-field
-              v-model="v$.signUp.password.$model"
-              :error="v$.signUp.password.$error"
-              label="Пароль"
-              :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-              :type="showPassword ? 'text' : 'password'"
-              class="authPage__input"
-              name="password"
-              autocomplete="new-password"
-              @click:append="showPassword = !showPassword"
-            />
-          </BaseScroller>
+          <v-text-field
+            v-model="v$.signUp.email.$model"
+            :error="v$.signUp.email.$error"
+            type="email"
+            name="email"
+            placeholder="Email"
+            autocomplete="email"
+            inputmode="email"
+            class="authPage__input"
+          />
+          <v-text-field
+            v-model="v$.signUp.phone.$model"
+            :error="v$.signUp.phone.$error"
+            type="tel"
+            name="phone"
+            autocomplete="tel"
+            inputmode="tel"
+            label="Телефон"
+            class="authPage__input"
+            mask="+7 (###)-###-##-##"
+          />
+          <v-text-field
+            v-model="v$.signUp.login.$model"
+            :error="v$.signUp.login.$error"
+            label="Логин"
+            class="authPage__input"
+            name="login"
+            autocomplete="nickname"
+          />
+          <v-text-field
+            v-model="v$.signUp.first_name.$model"
+            :error="v$.signUp.first_name.$error"
+            label="Имя"
+            type="text"
+            class="authPage__input"
+            name="firstName"
+            autocomplete="given-name"
+          />
+          <v-text-field
+            v-model="v$.signUp.last_name.$model"
+            :error="v$.signUp.last_name.$error"
+            label="Фамилия"
+            type="text"
+            class="authPage__input"
+            name="lastName"
+            autocomplete="family-name"
+          />
+          <v-text-field
+            v-model="v$.signUp.patronymic.$model"
+            :error="v$.signUp.patronymic.$error"
+            label="Отчество"
+            type="text"
+            class="authPage__input"
+            name="patronymic"
+            autocomplete="additional-name"
+          />
+          <v-text-field
+            v-model="v$.signUp.country.$model"
+            :error="v$.signUp.country.$error"
+            label="Страна"
+            type="text"
+            class="authPage__input"
+            name="country"
+            autocomplete="country"
+          />
+          <v-text-field
+            v-model="v$.signUp.city.$model"
+            :error="v$.signUp.city.$error"
+            label="Город"
+            type="text"
+            class="authPage__input"
+            name="city"
+            autocomplete="city"
+          />
+          <v-text-field
+            v-model="v$.signUp.password.$model"
+            :error="v$.signUp.password.$error"
+            label="Пароль"
+            :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="showPassword ? 'text' : 'password'"
+            class="authPage__input"
+            name="password"
+            autocomplete="new-password"
+            @click:append-inne="showPassword = !showPassword"
+          />
 
           <v-dialog v-model="dialog">
             <template #activator="{ props }">
@@ -205,7 +204,7 @@
           </button>
           <button type="submit" class="authPage__submit">Восстановить</button>
         </form>
-      </transition>
+      </div>
     </article>
   </div>
 </template>
@@ -325,9 +324,13 @@ export default {
   background: url('/assets/background/background_auth.png') no-repeat center /
     cover;
   display: flex;
-  align-items: center;
-  padding-top: 80px;
+  align-items: baseline;
+  padding-top: 120px;
   padding-bottom: 40px;
+
+  &__container {
+    overflow: hidden !important;
+  }
 
   &__card {
     background: #fff;
@@ -347,7 +350,7 @@ export default {
     height: 36px;
     border-radius: 18px;
     overflow: hidden;
-    margin-bottom: 12px;
+    margin-bottom: 24px;
     display: flex;
   }
 
@@ -377,19 +380,10 @@ export default {
     &.fade-leave-to {
       opacity: 0;
     }
-
-    &--signUp {
-      height: calc(100vh - 500px);
-      min-height: 400px;
-    }
-
-    .baseScroller {
-      flex: 1;
-    }
   }
 
   &__input {
-    margin: 12px 0;
+    margin-bottom: 4px;
   }
 
   &__remindPassword {

@@ -7,19 +7,19 @@
       placeholder="Поиск шиншиллы"
     />
     <span class="chinchillaSearch__settings">
-      <v-btn icon @click="dialog = true">
+      <v-btn icon variant="text" @click="dialog = true">
         <v-icon color="white">settings</v-icon>
       </v-btn>
-        <v-fab
-          color="primary"
-          dark
-          position="fixed"
-          location="bottom end"
-          app
-          @click="dialog = true"
-          icon="settings"
-          style="bottom: 80px; left: -80px;"
-        />
+      <v-fab
+        color="primary"
+        dark
+        position="fixed"
+        location="bottom end"
+        app
+        @click="dialog = true"
+        icon="settings"
+        style="bottom: 80px; left: -80px;"
+      />
     </span>
 
     <v-dialog v-model="dialog" width="500">
@@ -226,6 +226,7 @@ export default {
         display: none;
       }
     }
+
     & > *:last-child {
       display: none;
 
