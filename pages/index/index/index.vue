@@ -42,26 +42,26 @@
             statistics ? statistics.totalChinchillas : ''
           }}</span>
           <p class="mainPage__label">
-            Всего зарегистрированных<br />шиншилл на сайте
+            Всего зарегистрированных<br >шиншилл на сайте
           </p>
         </div>
         <div class="mainPage__infoGroup">
           <span class="mainPage__count">{{
             statistics ? statistics.totalUsers : ''
           }}</span>
-          <p class="mainPage__label">Активных пользователей<br />на сайте</p>
+          <p class="mainPage__label">Активных пользователей<br >на сайте</p>
         </div>
         <div class="mainPage__infoGroup">
           <span class="mainPage__count">{{
             statistics ? statistics.activeSales : ''
           }}</span>
-          <p class="mainPage__label">На продажу сейчас<br />шиншилл</p>
+          <p class="mainPage__label">На продажу сейчас<br >шиншилл</p>
         </div>
         <div class="mainPage__infoGroup">
           <span class="mainPage__count">{{
             statistics ? statistics.totalSold : ''
           }}</span>
-          <p class="mainPage__label">Успешных сделок<br />совершенных ранее</p>
+          <p class="mainPage__label">Успешных сделок<br >совершенных ранее</p>
         </div>
       </div>
     </div>
@@ -85,6 +85,12 @@
 import sprite from '~/assets/sprites/common.svg'
 
 export default {
+
+  async setup() {
+    const { data: statistics } = await useAsyncData(() => $request('site/statistics'));
+
+    return { statistics };
+  },
   data() {
     return {
       socials: [
@@ -134,12 +140,6 @@ export default {
         },
       ],
     }
-  },
-
-  async setup() {
-    const { data: statistics } = await useAsyncData(() => $request('site/statistics'));
-
-    return { statistics };
   },
 }
 </script>

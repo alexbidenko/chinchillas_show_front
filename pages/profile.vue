@@ -1,13 +1,3 @@
-<template>
-  <v-app class="profileLayout">
-    <ProfileHeader />
-    <main class="profileLayout__content">
-      <NuxtPage />
-    </main>
-    <ProfileFooter />
-  </v-app>
-</template>
-
 <script lang="ts" setup>
 const userStore = useUserStore();
 
@@ -19,6 +9,16 @@ definePageMeta({
   middleware: ['auth'],
 });
 </script>
+
+<template>
+  <v-app class="profileLayout">
+    <ProfileHeader />
+    <main class="profileLayout__content">
+      <NuxtPage />
+    </main>
+    <ProfileFooter />
+  </v-app>
+</template>
 
 <style lang="scss">
 .profileLayout {

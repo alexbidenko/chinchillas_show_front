@@ -1,6 +1,9 @@
 import {defineStore} from "pinia";
 import {type UserType, UserTypeVariant} from "~/types/common";
 
+const ADMIN_ACCESSES: (UserTypeVariant | undefined)[] = [UserTypeVariant.admin];
+const MODERATOR_ACCESSES: (UserTypeVariant | undefined)[] = [UserTypeVariant.admin, UserTypeVariant.moderator];
+
 export const useUserStore = defineStore('user', () => {
   const tokenStore = useTokenStore();
 
@@ -11,8 +14,8 @@ export const useUserStore = defineStore('user', () => {
   const user = ref<UserType | null>(null);
   const country = ref<string | null>(null);
 
-  const isAdmin = computed(() => [UserTypeVariant.admin].includes(user.value?.type as any))
-  const isModerator = computed(() => [UserTypeVariant.admin, UserTypeVariant.moderator].includes(user.value?.type as any))
+  const isAdmin = computed(() => ADMIN_ACCESSES.includes(user.value?.type))
+  const isModerator = computed(() => MODERATOR_ACCESSES.includes(user.value?.type))
 
   const isRussian = computed(() => country.value === 'RU');
   const fullAccess = computed(() => isRussian.value || isModerator.value);

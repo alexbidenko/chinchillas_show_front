@@ -39,7 +39,7 @@
         </v-card-text>
 
         <v-card-actions>
-          <v-spacer></v-spacer>
+          <v-spacer/>
 
           <v-btn color="darken-1" variant="text" @click="changeUser"> Сохранить </v-btn>
 

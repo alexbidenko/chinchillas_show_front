@@ -1,3 +1,9 @@
+<script setup>
+definePageMeta({
+  middleware: ['auth'],
+});
+</script>
+
 <template>
   <v-app class="adminLayout">
     <div>
@@ -17,12 +23,6 @@
     </div>
   </v-app>
 </template>
-
-<script setup>
-definePageMeta({
-  middleware: ['auth'],
-});
-</script>
 
 <style lang="scss">
 .adminLayout {

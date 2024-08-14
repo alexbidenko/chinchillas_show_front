@@ -166,10 +166,10 @@
                   v-model="repeatPassword"
                   label="Пароль"
                   type="password"
-                ></v-text-field>
+                />
               </v-card-text>
               <v-card-actions>
-                <v-spacer></v-spacer>
+                <v-spacer/>
                 <v-btn
                   color="primary"
                   :disabled="repeatPassword !== signUp.password"
@@ -215,6 +215,10 @@ import {mapStores} from "pinia";
 import useVuelidate from "@vuelidate/core";
 
 export default {
+
+  setup () {
+    return { v$: useVuelidate() }
+  },
   data() {
     return {
       mode: 'signIn',
@@ -240,8 +244,8 @@ export default {
     }
   },
 
-  setup () {
-    return { v$: useVuelidate() }
+  computed: {
+    ...mapStores(useTokenStore),
   },
 
   methods: {
@@ -273,10 +277,6 @@ export default {
         this.$router.push('/profile')
       })
     },
-  },
-
-  computed: {
-    ...mapStores(useTokenStore),
   },
 
   validations() {

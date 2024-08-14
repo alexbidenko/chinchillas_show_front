@@ -5,20 +5,21 @@
 </template>
 
 <script setup>
+const PER_PAGE = 24;
+
 const users = useState(() => [])
 const page = useState(() => 1)
-const perPage = useState(() => 10)
 const isLoading = useState(() => false)
 const isFinish = useState(() => false)
 
 const onRequest = async () => {
   if (!isLoading.value && !isFinish.value) {
     isLoading.value = true
-    const newUsers = await $request(`user/search/${page.value}/${perPage.value}`)
+    const newUsers = await $request(`user/search/${page.value}/${PER_PAGE}`)
     users.value = users.value.concat(newUsers)
     page.value++
     isLoading.value = false
-    if (newUsers.length < perPage.value) isFinish.value = true;
+    if (newUsers.length < PER_PAGE) isFinish.value = true;
   }
 
   return 'users';

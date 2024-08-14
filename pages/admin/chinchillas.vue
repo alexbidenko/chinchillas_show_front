@@ -16,9 +16,9 @@
 
         <v-card-title>
           {{ activeItem.name }}
-          <v-btn target="_blank" :href="`/profile/chinchillas/${activeItem.id}`"
-            >Открыть</v-btn
-          >
+          <v-btn target="_blank" :href="`/profile/chinchillas/${activeItem.id}`">
+            Открыть
+          </v-btn>
         </v-card-title>
 
         <v-divider />
@@ -45,7 +45,7 @@
                 :src="`https://api.chinchillas-show.com/photos/chinchillas/${itemModels.owner_id}/${itemModels.id}/${photo.name}`"
                 :alt="itemModels.name"
                 class="adminChinchillas__photo"
-              />
+              >
             </a>
           </div>
 
@@ -62,7 +62,7 @@
         </v-card-text>
 
         <v-card-actions>
-          <v-spacer></v-spacer>
+          <v-spacer/>
 
           <v-btn v-if="commentText" color="darken-1" variant="text" @click="sendComment">
             Комментировать
@@ -85,6 +85,17 @@ import chinchillaConclusions from '~/assets/datas/chinchillaConclusions.json'
 export default {
   name: 'AdminChinchillas',
 
+  async setup() {
+    const { data: chinchillas, error } = await useAsyncData(() => $request('admin/chinchillas/1/10').then((data) => data.data.map((el) => ({
+      ...el,
+      ownerName: `${el.owner.first_name} ${el.owner.last_name} (${el.owner.login})`,
+    }))));
+
+    if (error.value) await navigateTo('/');
+
+    return { chinchillas };
+  },
+
   data() {
     return {
       headers: [
@@ -100,17 +111,6 @@ export default {
       itemModels: null,
       commentText: '',
     }
-  },
-
-  async setup() {
-    const { data: chinchillas, error } = await useAsyncData(() => $request('admin/chinchillas/1/10').then((data) => data.data.map((el) => ({
-      ...el,
-      ownerName: `${el.owner.first_name} ${el.owner.last_name} (${el.owner.login})`,
-    }))));
-
-    if (error.value) await navigateTo('/');
-
-    return { chinchillas };
   },
 
   methods: {

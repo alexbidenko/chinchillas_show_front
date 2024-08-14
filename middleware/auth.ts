@@ -1,7 +1,6 @@
 import type {UserType} from "~/types/common";
 
 export default defineNuxtRouteMiddleware(async (to) => {
-  const app = useNuxtApp();
   const userStore = useUserStore();
 
   if (!userStore.token || !userStore.userId) {

@@ -99,7 +99,7 @@ export default {
     window.addEventListener('scroll', this.onScroll)
   },
 
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener('scroll', this.onScroll)
   },
 

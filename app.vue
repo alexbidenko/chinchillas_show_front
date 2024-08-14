@@ -9,6 +9,7 @@
     <Meta name="theme-color" content="#ffffff" />
   </Head>
 
+  <VitePwaManifest />
   <NuxtLoadingIndicator />
   <NuxtPage />
 </template>
@@ -26,5 +27,3 @@
   opacity: 0;
 }
 </style>
-<script setup lang="ts">
-</script>

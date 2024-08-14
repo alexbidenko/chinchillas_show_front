@@ -14,7 +14,7 @@ export default {
     try {
       const data = await $request(`chinchilla/details/${route.params.id}`)
       return { data }
-    } catch (err) {
+    } catch {
       handleError({
         statusCode: 404,
         message: 'Запрашиваемая шиншилла не найдена',
@@ -99,7 +99,7 @@ export default {
     this.updatePhotosHeight()
   },
 
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener('resize', this.updatePhotosHeight)
   },
 
@@ -176,9 +176,9 @@ export default {
     <template v-if="data">
       <ChinchillaHeader
         :chinchilla="data"
-        @updateStatuses="data.statuses = $event"
-        @updateConclusion="data.conclusion = $event"
-        @updateOwner="updateUser"
+        @update-statuses="data.statuses = $event"
+        @update-conclusion="data.conclusion = $event"
+        @update-owner="updateUser"
       />
       <div class="baseContainer viewPage__photos pb-6">
         <v-card
@@ -263,7 +263,7 @@ export default {
             :user-id="userId"
             :chinchilla="data"
             :photo="photo"
-            @toAvatar="photoToAvatar"
+            @to-avatar="photoToAvatar"
             @delete="deletePhoto"
             @click="
               isOpenPhotos = true;
@@ -277,7 +277,7 @@ export default {
               multiple
               accept="image/*"
               @change="uploadPhotos"
-            />
+            >
           </label>
         </div>
       </div>
@@ -321,9 +321,9 @@ export default {
             position="fixed"
             location="bottom end"
             app
-            @click="fab = !fab"
             :icon="fab ? 'close' : 'edit'"
             v-bind="props"
+            @click="fab = !fab"
           />
         </template>
 
