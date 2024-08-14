@@ -14,18 +14,16 @@
           v-model="datepicker"
           :close-on-content-click="false"
           :nudge-right="40"
-          transition="scale-transition"
           offset-y
           min-width="290px"
         >
-          <template #activator="{ on, attrs }">
+          <template #activator="{ props }">
             <v-text-field
               v-model="formatBirthday"
               label="День рождения"
               prepend-icon="event"
               name="birthday"
-              v-bind="attrs"
-              v-on="on"
+              v-bind="props"
               @blur="saveBirthday"
             />
           </template>
@@ -42,16 +40,16 @@
           v-model="models.breeder_type"
           :items="breederTypes"
           label="О заводчике"
-          item-text="label"
+          item-title="label"
           item-value="key"
         />
         <v-autocomplete
           v-if="models.breeder_type === 'user'"
           v-model="models.breeder_id"
+          v-model:search="breederSearch"
           :items="breederItems"
           :loading="isLoadingBreeder"
-          :search-input.sync="breederSearch"
-          item-text="fullName"
+          item-title="fullName"
           item-value="id"
           label="Заводчик"
           placeholder="Введите имя заводчика"
@@ -67,62 +65,54 @@
         <v-checkbox v-model="globalSearch" label="Глобальный поиск" />
         <v-autocomplete
           v-model="models.mother_id"
+          v-model:search="motherSearch"
           :items="motherItems"
           :loading="isLoadingMother"
-          :search-input.sync="motherSearch"
-          item-text="name"
+          item-title="name"
           item-value="id"
           label="Мама"
           placeholder="Введите кличку шиншиллы"
           clearable
         >
-          <template #item="data">
-            <v-list-item-avatar
-              size="60"
-              :style="{
-                background: `no-repeat center / cover url(${
-                  data.item.avatar
-                    ? `https://api.chinchillas-show.com/photos/chinchillas/${data.item.owner_id}/${data.item.id}/${data.item.avatar.name}`
+          <template #item="{ item, props }">
+            <v-list-item
+              :prepend-avatar="
+                item.raw.avatar
+                    ? `https://api.chinchillas-show.com/photos/chinchillas/${item.raw.owner_id}/${item.raw.id}/${item.raw.avatar.name}`
                     : '/assets/empty.jpg'
-                })`,
-              }"
-            />
-            <v-list-item-content>
-              <v-list-item-title>{{ data.item.name }}</v-list-item-title>
-              <v-list-item-subtitle>{{
-                colorToString(data.item.color) || 'Стандарт'
-              }}</v-list-item-subtitle>
-            </v-list-item-content>
+              "
+              v-bind="props"
+            >
+              <v-list-item-subtitle>
+                {{ colorToString(item.raw.color) || 'Стандарт' }}
+              </v-list-item-subtitle>
+            </v-list-item>
           </template>
         </v-autocomplete>
         <v-autocomplete
           v-model="models.father_id"
+          v-model:search="fatherSearch"
           :items="fatherItems"
           :loading="isLoadingFather"
-          :search-input.sync="fatherSearch"
-          item-text="name"
+          item-title="name"
           item-value="id"
           label="Папа"
           placeholder="Введите кличку шиншиллы"
           clearable
         >
-          <template #item="data">
-            <v-list-item-avatar
-              size="60"
-              :style="{
-                background: `no-repeat center / cover url(${
-                  data.item.avatar
-                    ? `https://api.chinchillas-show.com/photos/chinchillas/${data.item.owner_id}/${data.item.id}/${data.item.avatar.name}`
+          <template #item="{ item, props }">
+            <v-list-item
+              :prepend-avatar="
+                item.raw.avatar
+                    ? `https://api.chinchillas-show.com/photos/chinchillas/${item.raw.owner_id}/${item.raw.id}/${item.raw.avatar.name}`
                     : '/assets/empty.jpg'
-                })`,
-              }"
-            />
-            <v-list-item-content>
-              <v-list-item-title>{{ data.item.name }}</v-list-item-title>
-              <v-list-item-subtitle>{{
-                colorToString(data.item.color) || 'Стандарт'
-              }}</v-list-item-subtitle>
-            </v-list-item-content>
+              "
+              v-bind="props"
+            >
+              <v-list-item-subtitle>
+                {{ colorToString(item.raw.color) || 'Стандарт' }}
+              </v-list-item-subtitle>
+            </v-list-item>
           </template>
         </v-autocomplete>
         <v-divider />
@@ -145,7 +135,7 @@
         <v-btn
           color="primary"
           type="submit"
-          :disabled="$v.$invalid || isLoading"
+          :disabled="v$.$invalid || isLoading"
           >Сохранить</v-btn
         >
       </div>
@@ -172,276 +162,254 @@
   </div>
 </template>
 
-<script>
-import { required } from 'vuelidate/lib/validators'
-import ChinchillaPhoto from '~/components/ChinchillaPhoto/ChinchillaPhoto.vue'
-import colorToString from '~/assets/scripts/colorToString'
+<script setup>
+import { required } from '@vuelidate/validators'
+import useVuelidate from '@vuelidate/core'
 import dateFormat from '~/assets/scripts/dateFormat'
 
-export default {
-  name: 'ChinchillaRedact',
+const route = useRoute()
+const router = useRouter()
 
-  components: {
-    ChinchillaPhoto,
-  },
+const chinchillaId = ref(route.params.id || 0)
 
-  props: {
-    chinchillaId: {
-      default: 0,
-      type: Number,
-    },
-  },
+const models = reactive({
+  name: '',
+  status: 'growing',
+  is_ready: false,
+  birthday: null,
+  sex: 'f',
+  mother_id: null,
+  father_id: null,
+  weight: '',
+  brothers: '',
+  awards: '',
+  description: '',
+  breeder_type: 'owner',
+  breeder_id: null,
+  breeder_name: '',
+})
 
-  data() {
-    return {
-      models: {
-        name: '',
-        status: 'growing',
-        is_ready: false,
-        birthday: null,
-        sex: 'f',
-        mother_id: null,
-        father_id: null,
-        weight: '',
-        brothers: '',
-        awards: '',
-        description: '',
-        breeder_type: 'owner',
-        breeder_id: null,
-        breeder_name: '',
+const userId = useState(() => +useCookie('USER_ID').value)
+const birthday = ref(null)
+const formatBirthday = ref(null)
+const isLoading = ref(false)
+const datepicker = ref(false)
+const isLoadingMother = ref(false)
+const isLoadingFather = ref(false)
+const isLoadingBreeder = ref(false)
+const motherItems = ref([])
+const fatherItems = ref([])
+const breederItems = ref([])
+const motherSearch = ref('')
+const fatherSearch = ref('')
+const breederSearch = ref('')
+const photos = ref([])
+const avatar = ref(null)
+const globalSearch = ref(false)
+const timers = ref({})
+const breederTypes = ref([
+  { key: 'owner', label: 'Владелец' },
+  { key: 'user', label: 'Выбрать на сайте' },
+  { key: 'not_user', label: 'Нет на сайте' },
+  { key: 'unknown', label: 'Неизвестен' },
+])
+
+if (chinchillaId.value) {
+  const { data } = await useAsyncData(() => $request(`chinchilla/details/${chinchillaId.value}`))
+  Object.assign(models, data.value)
+  photos.value = data.value.photos
+  avatar.value = data.value.avatar
+  birthday.value = new Date(data.value.birthday).toISOString().substring(0, 10)
+  formatBirthday.value = dateFormat(new Date(data.value.birthday), 'yyyy.MM.dd')
+}
+
+watch(birthday, (val) => {
+  formatBirthday.value = val && dateFormat(new Date(val), 'yyyy.MM.dd')
+})
+
+watch(motherSearch, (val) => {
+  search(val, 'Mother')
+  if (!val) models.mother_id = null
+})
+
+watch(fatherSearch, (val) => {
+  search(val, 'Father')
+  if (!val) models.father_id = null
+})
+
+watch(breederSearch, () => {
+  searchBreeder(breederSearch.value)
+})
+
+watch(globalSearch, () => {
+  search(motherSearch.value, 'Mother')
+  search(fatherSearch.value, 'Father')
+})
+
+onMounted(() => {
+  fetchParents()
+})
+
+const fetchParents = () => {
+  search(motherSearch.value, 'Mother')
+  search(fatherSearch.value, 'Father')
+}
+
+const saveBirthday = () => {
+  if (/^\d{1,2}.\d{1,2}.\d{4}$/.test(formatBirthday.value)) {
+    const paths = formatBirthday.value.split('.')
+    const date = new Date()
+    date.setFullYear(+paths[2], +paths[1] - 1, +paths[0])
+    birthday.value = date.toISOString().substring(0, 10)
+    models.birthday = date.getTime()
+  }
+}
+
+const onSubmit = () => {
+  models.birthday = new Date(birthday.value).getTime()
+  isLoading.value = true
+  const modelData = { ...models }
+  if (chinchillaId.value) delete modelData.status
+  if (modelData.breeder_type !== 'user') modelData.breeder_id = null
+  if (modelData.breeder_type !== 'not_user') modelData.breeder_name = ''
+  if (modelData.breeder_type === 'owner') {
+    modelData.breeder_id = +useCookie('USER_ID').value
+  }
+  $request(
+    chinchillaId.value
+      ? `chinchilla/update/${chinchillaId.value}`
+      : 'chinchilla/create',
+    {
+      method: chinchillaId.value ? 'put' : 'post',
+      body: modelData,
+    }
+  )
+    .then((data) => {
+      uploadPhotos(data.id || chinchillaId.value)
+    })
+    .catch(() => {
+      alert('Что-то пошло не так')
+      isLoading.value = false
+    })
+}
+
+const search = (val, type) => {
+  clearTimeout(timers.value[type])
+  timers.value[type] = setTimeout(() => {
+    isLoading[type] = true
+    $request(`chinchilla/search`, {
+      params: {
+        name: val || undefined,
+        sex: type === 'Mother' ? 'f' : 'm',
+        limit: 20,
+        is_owner: globalSearch.value ? undefined : true,
       },
-      userId: +this.$cookies.get('USER_ID'),
-      birthday: null,
-      formatBirthday: null,
-      isLoading: false,
-      datepicker: false,
-      isLoadingMother: false,
-      isLoadingFather: false,
-      isLoadingBreeder: false,
-      motherItems: [],
-      fatherItems: [],
-      breederItems: [],
-      motherSearch: '',
-      fatherSearch: '',
-      breederSearch: '',
-      photos: [],
-      avatar: null,
-      globalSearch: false,
-      timers: {},
-      breederTypes: [
-        {
-          key: 'owner',
-          label: 'Владелец',
-        },
-        {
-          key: 'user',
-          label: 'Выбрать на сайте',
-        },
-        {
-          key: 'not_user',
-          label: 'Нет на сайте',
-        },
-        {
-          key: 'unknown',
-          label: 'Неизвестен',
-        },
-      ],
-    }
-  },
-
-  async fetch() {
-    if (this.chinchillaId) {
-      this.models = await this.$axios.$get(
-        `chinchilla/details/${this.chinchillaId}`
-      )
-      this.photos = this.models.photos
-      this.avatar = this.models.avatar
-      this.birthday = new Date(this.models.birthday)
-        .toISOString()
-        .substring(0, 10)
-      this.formatBirthday = dateFormat(
-        new Date(this.models.birthday),
-        'yyyy.MM.dd'
-      )
-    }
-  },
-
-  watch: {
-    birthday(val) {
-      this.formatBirthday = val && dateFormat(new Date(val), 'yyyy.MM.dd')
-    },
-    motherSearch(val) {
-      this.search(val, 'Mother')
-      if (!val) this.models.mother_id = null
-    },
-    fatherSearch(val) {
-      this.search(val, 'Father')
-      if (!val) this.models.father_id = null
-    },
-    breederSearch(val) {
-      this.searchBreeder(val)
-    },
-    globalSearch() {
-      this.search(this.motherSearch, 'Mother')
-      this.search(this.fatherSearch, 'Father')
-    },
-  },
-
-  mounted() {
-    this.fetchParents()
-  },
-
-  methods: {
-    colorToString,
-    fetchParents() {
-      this.search(this.motherSearch, 'Mother')
-      this.search(this.fatherSearch, 'Father')
-    },
-    saveBirthday() {
-      if (/^[\d]{1,2}.[\d]{1,2}.[\d]{4}$/.test(this.formatBirthday)) {
-        const paths = this.formatBirthday.split('.')
-        const date = new Date()
-        date.setFullYear(+paths[2], +paths[1] - 1, +paths[0])
-        this.birthday = date.toISOString().substring(0, 10)
-        this.models.birthday = date.getTime()
+    }).then((response) => {
+      if (type === 'Mother') {
+        motherItems.value = (
+          models[type.toLowerCase()]
+            ? [models[type.toLowerCase()]]
+            : []
+        ).concat(response.data.filter((f) => f.id !== chinchillaId.value));;
+        isLoadingMother.value = false;
+      } else {
+        fatherItems.value = (
+          models[type.toLowerCase()]
+            ? [models[type.toLowerCase()]]
+            : []
+        ).concat(response.data.filter((f) => f.id !== chinchillaId.value));
+        isLoadingFather.value = false;
       }
-    },
-    onSubmit() {
-      this.models.birthday = new Date(this.birthday).getTime()
-      this.isLoading = true
-      const models = { ...this.models }
-      if (this.chinchillaId) delete models.status
-      if (models.breeder_type !== 'user') models.breeder_id = null
-      if (models.breeder_type !== 'not_user') models.breeder_name = ''
-      if (models.breeder_type === 'owner')
-        models.breeder_id = +this.$cookies.get('USER_ID')
-      this.$axios[this.chinchillaId ? '$put' : '$post'](
-        this.chinchillaId
-          ? `chinchilla/update/${this.chinchillaId}`
-          : 'chinchilla/create',
-        models
-      )
-        .then((data) => {
-          this.uploadPhotos(data.id || this.chinchillaId)
-        })
-        .catch(() => {
-          alert('Что-то пошло не так')
-          this.isLoading = false
-        })
-    },
-    search(val, type) {
-      clearTimeout(this.timers[type])
-      this.timers[type] = setTimeout(() => {
-        this['isLoading' + type] = true
-        this.$axios
-          .$get(`chinchilla/search`, {
-            params: {
-              name: val || undefined,
-              sex: type === 'Mother' ? 'f' : 'm',
-              limit: 20,
-              is_owner: this.globalSearch ? undefined : true,
-            },
-          })
-          .then((response) => {
-            this[type.toLowerCase() + 'Items'] = (
-              this.models[type.toLowerCase()]
-                ? [this.models[type.toLowerCase()]]
-                : []
-            ).concat(response.data.filter((f) => f.id !== this.chinchillaId))
-            this['isLoading' + type] = false
-          })
-      }, 500)
-    },
-    searchBreeder(val) {
-      clearTimeout(this.timers.breeder)
-      this.timers.breeder = setTimeout(() => {
-        this.isLoadingBreeder = true
-        this.$axios
-          .$get(`user/search?q=${val || ''}&perPage=20`)
+    })
+  }, 500)
+}
+
+const searchBreeder = (val) => {
+  clearTimeout(timers.value.breeder)
+  timers.value.breeder = setTimeout(() => {
+    isLoadingBreeder.value = true
+    $request(`user/search?q=${val || ''}&perPage=20`).then((data) => {
+      breederItems.value = (
+        models.breeder ? [models.breeder] : []
+      ).concat(data).map((el) => ({
+        ...el,
+        fullName: `${el.first_name} ${el.last_name} (${el.login})`,
+      }))
+      isLoadingBreeder.value = false
+    })
+  }, 500)
+}
+
+const savePhotos = (event) => {
+  for (const file of event.target.files) {
+    photos.value.push({
+      file,
+      data: URL.createObjectURL(file),
+      id: Math.random(),
+    })
+  }
+}
+
+const uploadPhotos = (id) => {
+  const requests = photos.value
+    .filter((el) => el.file)
+    .map(({ file, id: photoId }) => {
+      const formData = new FormData()
+      formData.append('photo', file)
+      return new Promise((resolve, reject) => {
+        $request(`/photo/chinchilla/${id}`, { method: 'post', body: formData })
           .then((data) => {
-            this.breederItems = (
-              this.models.breeder ? [this.models.breeder] : []
-            )
-              .concat(data)
-              .map((el) => ({
-                ...el,
-                fullName: `${el.first_name} ${el.last_name} (${el.login})`,
-              }))
-            this.isLoadingBreeder = false
+            resolve({ prevId: photoId, data })
           })
-      }, 500)
-    },
-    savePhotos(event) {
-      for (const file of event.target.files) {
-        this.photos.push({
-          file,
-          data: URL.createObjectURL(file),
-          id: Math.random(),
-        })
-      }
-    },
-    uploadPhotos(id) {
-      const requests = this.photos
-        .filter((el) => el.file)
-        .map(({ file, id: photoId }) => {
-          const formData = new FormData()
-          formData.append('photo', file)
-          return new Promise((resolve, reject) => {
-            this.$axios
-              .$post(`/photo/chinchilla/${id}`, formData)
-              .then((data) => {
-                resolve({
-                  prevId: photoId,
-                  data,
-                })
-              })
-              .catch(reject)
-          })
-        })
-      Promise.allSettled(requests).then(async (results) => {
-        if (this.avatar) {
-          const avatar = results.find(
-            (el) =>
-              el.status === 'fulfilled' && el.value.prevId === this.avatar.id
-          )
-          if (avatar) await this.photoToAvatar(avatar.id, id)
-        }
-        this.$router.push(
-          this.chinchillaId
-            ? `/profile/chinchillas/${this.chinchillaId}`
-            : `/profile/chinchillas/${id}/color`
-        )
+          .catch(reject)
       })
-    },
-    async deletePhoto(photoId) {
-      if (this.chinchillaId)
-        await this.$axios.$delete(`/photo/chinchilla/${photoId}`)
-      this.photos = this.photos.filter((el) => el.id !== photoId)
-      if (this.avatar && this.avatar.id === photoId) this.avatar = null
-    },
-    async photoToAvatar(photoId, chinchillaId) {
-      if (chinchillaId)
-        await this.$axios.$put(
-          `/chinchilla/update/${this.chinchillaId || chinchillaId}`,
-          {
-            avatar_id: photoId,
-          }
-        )
-      this.avatar = this.photos.find((el) => el.id === photoId)
-    },
-  },
+    })
 
-  validations: {
-    models: {
-      name: {
-        required,
-      },
-    },
-    birthday: {
+  Promise.allSettled(requests).then(async (results) => {
+    if (avatar.value) {
+      const avatarPhoto = results.find(
+        (el) =>
+          el.status === 'fulfilled' && el.value.prevId === avatar.value.id
+      )
+      if (avatarPhoto) await photoToAvatar(avatarPhoto.id, id)
+    }
+    router.push(
+      chinchillaId.value
+        ? `/profile/chinchillas/${chinchillaId.value}`
+        : `/profile/chinchillas/${id}/color`
+    )
+  })
+}
+
+const deletePhoto = async (photoId) => {
+  if (chinchillaId.value)
+    await $request(`/photo/chinchilla/${photoId}`, { method: 'delete' })
+  photos.value = photos.value.filter((el) => el.id !== photoId)
+  if (avatar.value && avatar.value.id === photoId) avatar.value = null
+}
+
+const photoToAvatar = async (photoId, chinchillaId) => {
+  if (chinchillaId)
+    await $request(`/chinchilla/update/${chinchillaId}`, {
+      method: 'put',
+      body: { avatar_id: photoId },
+    })
+  avatar.value = photos.value.find((el) => el.id === photoId)
+}
+
+const v$ = useVuelidate({
+  models: {
+    name: {
       required,
     },
   },
-}
+  birthday: {
+    required,
+  },
+}, reactive({
+  models,
+  birthday,
+}))
 </script>
 
 <style lang="scss" src="./ChinchillaRedact.scss"></style>

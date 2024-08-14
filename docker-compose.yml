@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   nginx:
-    image: ghcr.io/alexbidenko/chinchillas-show/nginx:latest
+    image: ghcr.io/alexbidenko/chinchillas-show/nginx:${IMAGE_VERSION}
     expose:
       - 80
     volumes:
@@ -19,7 +19,7 @@ services:
       - server
 
   application:
-    image: ghcr.io/alexbidenko/chinchillas-show/application:latest
+    image: ghcr.io/alexbidenko/chinchillas-show/application:${IMAGE_VERSION}
     expose:
       - 3333
     deploy:

@@ -116,14 +116,8 @@
 </template>
 
 <script>
-import ChinchillaCard from '../ChinchillaCard/ChinchillaCard'
-
 export default {
   name: 'PedigreeTree',
-
-  components: {
-    ChinchillaCard,
-  },
 
   props: {
     chinchilla: {

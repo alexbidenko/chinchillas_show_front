@@ -27,7 +27,7 @@
             v-model="itemModels.type"
             :items="userTypes"
             label="Тип пользователя"
-            item-text="text"
+            item-title="text"
             item-value="value"
           />
 
@@ -41,103 +41,87 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn color="darken-1" text @click="changeUser"> Сохранить </v-btn>
+          <v-btn color="darken-1" variant="text" @click="changeUser"> Сохранить </v-btn>
 
-          <v-btn color="darken-1" text @click="dialog = false"> Отмена </v-btn>
+          <v-btn color="darken-1" variant="text" @click="dialog = false"> Отмена </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'AdminUsers',
+<script setup>
+const headers = [
+  { text: 'ID', value: 'id' },
+  { text: 'Логин', value: 'login' },
+  { text: 'Имя', value: 'first_name' },
+  { text: 'Фамилия', value: 'last_name' },
+  { text: 'Отчество', value: 'patronymic' },
+  { text: 'Город', value: 'city' },
+]
 
-  layout: 'adminLayout',
+const userTypes = [
+  { text: 'Пользователь', value: 'user' },
+  { text: 'Эксперт', value: 'expert' },
+  { text: 'Модератор', value: 'moderator' },
+  { text: 'Админ', value: 'admin' },
+]
 
-  data() {
-    return {
-      headers: [
-        { text: 'ID', value: 'id' },
-        { text: 'Логин', value: 'login' },
-        { text: 'Имя', value: 'first_name' },
-        { text: 'Фамилия', value: 'last_name' },
-        { text: 'Отчество', value: 'patronymic' },
-        { text: 'Город', value: 'city' },
-      ],
-      userTypes: [
-        {
-          text: 'Пользователь',
-          value: 'user',
-        },
-        {
-          text: 'Эксперт',
-          value: 'expert',
-        },
-        {
-          text: 'Модератор',
-          value: 'moderator',
-        },
-        {
-          text: 'Админ',
-          value: 'admin',
-        },
-      ],
-      users: [],
-      page: 1,
-      perPage: 10,
-      dialog: false,
-      activeItem: null,
-      itemModels: null,
-    }
-  },
+const page = ref(1)
+const perPage = ref(10)
+const dialog = ref(false)
+const activeItem = ref(null)
+const itemModels = ref(null)
 
-  async fetch() {
-    try {
-      const response = await this.$axios.$get('admin/users')
-      this.users = Array(response.total).fill({})
-      response.data.forEach((el, index) => {
-        this.users[(response.page - 1) * 10 + index] = el
-      })
-    } catch (e) {
-      await this.$router.push('/')
-    }
-  },
+const { data: users, error } = await useAsyncData(() => $request('admin/users').then((data) => {
+  const result = Array(data.total).fill({})
+  data.data.forEach((el, index) => {
+    result[(data.page - 1) * 10 + index] = el
+  });
+  return result;
+}));
 
-  methods: {
-    async requestPage() {
-      const response = await this.$axios.$get(
-        `admin/users?page=${this.page}&perPage=${this.perPage}`
-      )
-      this.users = Array(response.total).fill({})
-      response.data.forEach((el, index) => {
-        this.users[(this.page - 1) * this.perPage + index] = el
-      })
-    },
-    updatePerPage(perPage) {
-      this.perPage = perPage
-      this.requestPage()
-    },
-    updatePage(page) {
-      this.page = page
-      this.requestPage()
-    },
-    selectUser(item) {
-      this.activeItem = item
-      this.itemModels = { ...item }
-      this.dialog = true
-    },
-    async changeUser() {
-      Object.assign(
-        this.activeItem,
-        await this.$axios.$put(`admin/user/${this.itemModels.id}`, {
-          admitted: this.itemModels.admitted,
-          type: this.itemModels.type,
-        })
-      )
-      this.dialog = false
-    },
-  },
+if (error.value) await navigateTo('/');
+
+const requestPage = async () => {
+  const response = await $request(
+    `admin/users?page=${page.value}&perPage=${perPage.value}`
+  )
+  users.value = Array(response.total).fill({})
+  response.data.forEach((el, index) => {
+    users.value[(page.value - 1) * perPage.value + index] = el
+  })
 }
+
+const updatePerPage = (newPerPage) => {
+  perPage.value = newPerPage
+  requestPage()
+}
+
+const updatePage = (newPage) => {
+  page.value = newPage
+  requestPage()
+}
+
+const selectUser = (item) => {
+  activeItem.value = item
+  itemModels.value = { ...item }
+  dialog.value = true
+}
+
+const changeUser = async () => {
+  Object.assign(
+    activeItem.value,
+    await $request(`admin/user/${itemModels.value.id}`, {
+      method: 'put',
+      body: {
+        admitted: itemModels.value.admitted,
+        type: itemModels.value.type,
+      },
+    })
+  )
+  dialog.value = false
+}
+
 </script>
+

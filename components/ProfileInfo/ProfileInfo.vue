@@ -46,72 +46,58 @@
           <v-toolbar-title>Редактирование профиля</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-toolbar-items>
-            <v-btn dark text :loading="isLoading" @click="update"
+            <v-btn dark variant="text" :loading="isLoading" @click="update"
               >Сохранить</v-btn
             >
           </v-toolbar-items>
         </v-toolbar>
         <div class="baseContainer">
           <v-list three-line subheader>
-            <v-subheader>Основные сведения</v-subheader>
+            <v-list-subheader>Основные сведения</v-list-subheader>
             <v-list-item>
-              <v-list-item-content>
-                <v-file-input
-                  accept="image/*"
-                  label="Выберите аватар"
-                  @change="models.avatar = $event"
-                />
-              </v-list-item-content>
+              <v-file-input
+                accept="image/*"
+                label="Выберите аватар"
+                @change="models.avatar = $event"
+              />
             </v-list-item>
             <v-list-item>
-              <v-list-item-content>
-                <v-text-field
-                  v-model="models.last_name"
-                  name="last_name"
-                  label="Изменить фамилию"
-                />
-              </v-list-item-content>
+              <v-text-field
+                v-model="models.last_name"
+                name="last_name"
+                label="Изменить фамилию"
+              />
             </v-list-item>
             <v-list-item>
-              <v-list-item-content>
-                <v-text-field
-                  v-model="models.first_name"
-                  name="name"
-                  label="Изменить имя"
-                />
-              </v-list-item-content>
+              <v-text-field
+                v-model="models.first_name"
+                name="name"
+                label="Изменить имя"
+              />
             </v-list-item>
             <v-list-item>
-              <v-list-item-content>
-                <v-text-field
-                  v-model="models.patronymic"
-                  name="patronymic"
-                  label="Изменить отчество"
-                />
-              </v-list-item-content>
+              <v-text-field
+                v-model="models.patronymic"
+                name="patronymic"
+                label="Изменить отчество"
+              />
             </v-list-item>
             <v-list-item>
-              <v-list-item-content>
-                <v-text-field
-                  v-model="models.country"
-                  name="country"
-                  label="Изменить страну"
-                />
-              </v-list-item-content>
+              <v-text-field
+                v-model="models.country"
+                name="country"
+                label="Изменить страну"
+              />
             </v-list-item>
             <v-list-item>
-              <v-list-item-content>
-                <v-text-field
-                  v-model="models.city"
-                  name="city"
-                  label="Изменить город"
-                />
-              </v-list-item-content>
+              <v-text-field
+                v-model="models.city"
+                name="city"
+                label="Изменить город"
+              />
             </v-list-item>
             <v-list-item>
-              <v-list-item-content>
-                <v-btn to="/profile/password">Изменить пароль</v-btn>
-              </v-list-item-content>
+              <v-btn to="/profile/password">Изменить пароль</v-btn>
             </v-list-item>
           </v-list>
         </div>
@@ -185,8 +171,7 @@ export default {
         if (key !== 'avatar' || this.models[key])
           formData.append(key, this.models[key])
       })
-      this.$axios
-        .$post('user/update', formData)
+      $request('user/update', { method: 'post', body: formData })
         .then((data) => {
           this.$emit('update', data)
           this.dialog = false

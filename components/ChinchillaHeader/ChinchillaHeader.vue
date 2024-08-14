@@ -14,7 +14,7 @@
           >
             {{ colorString || 'Стандарт' }}
           </div>
-          <Status
+          <ChinchillaHeaderStatus
             class="chinchillaHeader__name"
             :data="chinchilla"
             @updateStatuses="$emit('updateStatuses', $event)"
@@ -62,12 +62,8 @@
 </template>
 
 <script>
-import colorToString from '~/assets/scripts/colorToString'
-import Status from '~/components/ChinchillaHeader/Status/Status'
-
 export default {
   name: 'ChinchillaHeader',
-  components: { Status },
   props: {
     chinchilla: {
       type: Object,

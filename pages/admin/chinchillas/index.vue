@@ -30,7 +30,7 @@
             v-model="itemModels.conclusion"
             :items="chinchillaConclusions"
             label="Оценка окраса"
-            item-text="text"
+            item-title="text"
             item-value="value"
           />
 
@@ -64,15 +64,15 @@
         <v-card-actions>
           <v-spacer></v-spacer>
 
-          <v-btn v-if="commentText" color="darken-1" text @click="sendComment">
+          <v-btn v-if="commentText" color="darken-1" variant="text" @click="sendComment">
             Комментировать
           </v-btn>
 
-          <v-btn color="darken-1" text @click="changeChinchilla">
+          <v-btn color="darken-1" variant="text" @click="changeChinchilla">
             Сохранить
           </v-btn>
 
-          <v-btn color="darken-1" text @click="dialog = false"> Отмена </v-btn>
+          <v-btn color="darken-1" variant="text" @click="dialog = false"> Отмена </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -80,13 +80,10 @@
 </template>
 
 <script>
-import colorToString from '~/assets/scripts/colorToString'
 import chinchillaConclusions from '~/assets/datas/chinchillaConclusions.json'
 
 export default {
   name: 'AdminChinchillas',
-
-  layout: 'adminLayout',
 
   data() {
     return {
@@ -96,7 +93,6 @@ export default {
         { text: 'Владелец', value: 'ownerName' },
       ],
       chinchillaConclusions,
-      chinchillas: [],
       page: 1,
       perPage: 10,
       dialog: false,
@@ -106,21 +102,20 @@ export default {
     }
   },
 
-  async fetch() {
-    try {
-      const response = await this.$axios.$get('admin/chinchillas/1/10')
-      this.chinchillas = response.data.map((el) => ({
-        ...el,
-        ownerName: `${el.owner.first_name} ${el.owner.last_name} (${el.owner.login})`,
-      }))
-    } catch (e) {
-      await this.$router.push('/')
-    }
+  async setup() {
+    const { data: chinchillas, error } = await useAsyncData(() => $request('admin/chinchillas/1/10').then((data) => data.data.map((el) => ({
+      ...el,
+      ownerName: `${el.owner.first_name} ${el.owner.last_name} (${el.owner.login})`,
+    }))));
+
+    if (error.value) await navigateTo('/');
+
+    return { chinchillas };
   },
 
   methods: {
     async requestPage() {
-      const response = await this.$axios.$get(
+      const response = await $request(
         `admin/chinchillas/${this.page}/${this.perPage}`
       )
       response.data.forEach((el, index) => {
@@ -143,8 +138,9 @@ export default {
     async changeChinchilla() {
       Object.assign(
         this.activeItem,
-        await this.$axios.$put(`admin/chinchilla/${this.itemModels.id}`, {
-          conclusion: this.itemModels.conclusion,
+        await $request(`admin/chinchilla/${this.itemModels.id}`, {
+          method: 'put',
+          body: { conclusion: this.itemModels.conclusion },
         })
       )
       this.dialog = false
@@ -153,11 +149,13 @@ export default {
       return colorToString(color)
     },
     sendComment() {
-      this.$axios
-        .$post('admin/color/comment', {
+      $request('admin/color/comment', {
+        method: 'post',
+        body: {
           chinchillaId: this.itemModels.id,
           content: this.commentText,
-        })
+        },
+      })
         .then((data) => {
           this.activeItem.color_comments = [
             data,

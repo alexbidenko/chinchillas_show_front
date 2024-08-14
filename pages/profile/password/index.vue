@@ -28,7 +28,6 @@
 
 <script>
 export default {
-  layout: 'profileLayout',
   data: () => ({
     password: '',
     repeatPassword: '',
@@ -38,8 +37,10 @@ export default {
   methods: {
     savePassword() {
       this.request = true
-      this.$axios
-        .$post('user/password', { password: this.password })
+      $request('user/password', {
+        method: 'post',
+        body: { password: this.password },
+      })
         .then(() => {
           this.$router.push('/profile')
         })

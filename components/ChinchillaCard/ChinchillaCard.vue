@@ -44,7 +44,6 @@
 
 <script>
 import dateFormat from 'assets/scripts/dateFormat'
-import colorToString from '~/assets/scripts/colorToString'
 import dateDifference from '~/assets/scripts/dateDifference'
 
 export default {

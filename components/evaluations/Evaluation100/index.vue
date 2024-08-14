@@ -13,7 +13,7 @@
           <td>качество шерсти/quality</td>
           <td>
             <v-btn
-              text
+              variant="text"
               type="button"
               class="m-0 px-2 evaluation__button"
               @click="quality = 10"
@@ -22,7 +22,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="quality = 12"
             >
@@ -30,7 +30,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="quality = 14"
             >
@@ -38,7 +38,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="quality = 16"
             >
@@ -46,7 +46,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="quality = 17"
             >
@@ -54,7 +54,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="quality = 18"
             >
@@ -62,7 +62,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="quality = 19"
             >
@@ -70,7 +70,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="quality = 20"
             >
@@ -100,7 +100,7 @@
           <td>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="size = 10"
             >
@@ -108,7 +108,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="size = 12"
             >
@@ -116,7 +116,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="size = 14"
             >
@@ -124,7 +124,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="size = 16"
             >
@@ -132,7 +132,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="size = 17"
             >
@@ -140,7 +140,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="size = 18"
             >
@@ -148,7 +148,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="size = 19"
             >
@@ -156,7 +156,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="size = 20"
             >
@@ -181,7 +181,7 @@
           <td>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="shape = 1"
             >
@@ -189,7 +189,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="shape = 2"
             >
@@ -197,7 +197,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="shape = 3"
             >
@@ -205,7 +205,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="shape = 4"
             >
@@ -213,7 +213,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="shape = 5"
             >
@@ -221,7 +221,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="shape = 6"
             >
@@ -229,7 +229,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="shape = 7"
             >
@@ -237,7 +237,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="shape = 8"
             >
@@ -245,7 +245,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="shape = 9"
             >
@@ -253,7 +253,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="shape = 10"
             >
@@ -278,7 +278,7 @@
           <td>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="head = 1"
             >
@@ -286,7 +286,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="head = 2"
             >
@@ -294,7 +294,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="head = 3"
             >
@@ -302,7 +302,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="head = 4"
             >
@@ -310,7 +310,7 @@
             </v-btn>
             <v-btn
               type="button"
-              text
+              variant="text"
               class="m-0 px-2 evaluation__button"
               @click="head = 5"
             >

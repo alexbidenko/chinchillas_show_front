@@ -8,6 +8,7 @@
       "
       lazy-src="/assets/empty.jpg"
       class="userCard__avatar"
+      cover
     >
       <template #placeholder>
         <v-row class="fill-height ma-0" align="center" justify="center">

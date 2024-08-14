@@ -31,14 +31,8 @@
 </template>
 
 <script>
-import BaseSidenav from '../BaseSidenav/BaseSidenav.vue'
-
 export default {
   name: 'PublicHeader',
-
-  components: {
-    BaseSidenav,
-  },
 
   props: {
     user: {

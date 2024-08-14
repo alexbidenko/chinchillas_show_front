@@ -16,13 +16,13 @@
       width="400"
       height="400"
     />
-    <template v-if="!chinchilla || userId === chinchilla.owner_id">
+
+    <div v-if="!chinchilla || userId === chinchilla.owner_id" class="chinchillaPhoto__actions">
       <v-btn
         type="button"
         color="primary"
-        fab
         x-small
-        class="chinchillaPhoto__delete"
+        rounded
         @click.stop="deletePhoto(photo.id)"
       >
         X
@@ -30,14 +30,13 @@
       <v-btn
         type="button"
         color="primary"
-        fab
         x-small
-        class="chinchillaPhoto__updateAvatar"
+        rounded
         @click.stop="photoToAvatar(photo.id)"
       >
         A
       </v-btn>
-    </template>
+    </div>
   </div>
 </template>
 
@@ -94,16 +93,13 @@ export default {
     display: block;
   }
 
-  &__delete {
+  &__actions {
     position: absolute;
     top: 4px;
     right: 4px;
-  }
-
-  &__updateAvatar {
-    position: absolute;
-    top: 4px;
-    right: 40px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
 
   &_avatar {

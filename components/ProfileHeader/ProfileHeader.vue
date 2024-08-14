@@ -55,22 +55,18 @@
 </template>
 
 <script>
-import BaseSidenav from '../BaseSidenav/BaseSidenav.vue'
-import Actions from '~/store/actions.type'
+import {mapStores} from "pinia";
 
 export default {
   name: 'ProfileHeader',
 
-  components: {
-    BaseSidenav,
-  },
-
   computed: {
+    ...mapStores(useUserStore),
     user() {
-      return this.$store.state.UserModule.user
+      return this.userStore.user
     },
     isRussian() {
-      return this.$store.state.UserModule.country === 'RU'
+      return this.userStore.country === 'RU'
     },
   },
 
@@ -78,9 +74,8 @@ export default {
     logout() {
       this.$cookies.remove('TOKEN')
       this.$cookies.remove('USER_ID')
-      this.$store
-        .dispatch('UserModule/' + Actions.LOGOUT)
-        .then(() => this.$router.push('/auth'))
+      this.userStore.logout()
+      this.$router.push('/auth')
     },
   },
 }

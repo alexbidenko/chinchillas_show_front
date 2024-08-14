@@ -12,7 +12,7 @@
         solo
         label="В ряд"
         :items="gridCountItems"
-        item-text="label"
+        item-title="label"
         item-value="value"
         class="profilePage__gridCount"
       />
@@ -21,7 +21,7 @@
         solo
         label="Сортировка шиншилл"
         :items="sortItems"
-        item-text="label"
+        item-title="label"
         item-value="value"
         class="profilePage__sorting"
       />
@@ -55,26 +55,105 @@
       title="На радуге"
       :default-expand="false"
     />
-    <v-fab-transition>
-      <v-btn
-        v-if="isOwner"
-        color="primary"
-        style="background-color: #d79b00"
-        dark
-        fixed
-        bottom
-        right
-        fab
-        nuxt
-        to="/profile/chinchillas/create"
-      >
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
-    </v-fab-transition>
+    <v-fab
+      v-if="isOwner"
+      color="primary"
+      icon="mdi-plus"
+      dark
+      position="fixed"
+      location="bottom end"
+      app
+      nuxt
+      to="/profile/chinchillas/create"
+      style="bottom: 80px; left: -80px;"
+    />
   </div>
 </template>
 
-<script src="./ProfilePage.js"></script>
+<script>
+import statuses from '~/assets/datas/statuses.json'
+
+export default {
+  name: 'ProfilePage',
+
+  props: {
+    userId: {
+      type: Number,
+      required: true,
+    },
+    user: {
+      type: Object,
+      required: true,
+    },
+    chinchillas: {
+      type: Object,
+      required: true,
+    },
+    soldChinchillas: {
+      type: Array,
+      required: true,
+    },
+  },
+
+  data() {
+    return {
+      isOwner: this.userId === +this.$cookies.get('USER_ID'),
+      statuses: [
+        { key: 'm', label: 'Самцы' },
+        { key: 'f', label: 'Самки' },
+        ...statuses,
+      ],
+      gridCountItems: [
+        {
+          label: '2 карточки',
+          value: 'default',
+        },
+        {
+          label: '4 карточки',
+          value: 'more',
+        },
+      ],
+      sortItems: [
+        {
+          label: 'По алфавиту',
+          value: 'default',
+        },
+        {
+          label: 'По дате рождения',
+          value: 'birthday',
+        },
+      ],
+      gridCountValue: this.$cookies.get('grid_count_value') || 'default',
+      sortValue: this.$cookies.get('sort_value') || 'default',
+    }
+  },
+
+  watch: {
+    gridCountValue(val) {
+      const date = new Date()
+      date.setFullYear(date.getFullYear() + 200)
+      this.$cookies.set('grid_count_value', val, { expires: date })
+    },
+    sortValue(val) {
+      const date = new Date()
+      date.setFullYear(date.getFullYear() + 200)
+      this.$cookies.set('sort_value', val, { expires: date })
+    },
+  },
+
+  computed: {
+    sortedChinchillas() {
+      const result = {}
+      Object.entries(this.chinchillas).forEach(([key, value]) => {
+        const field = this.sortValue === 'birthday' ? 'birthday' : 'name'
+        result[key] = value.sort((a, b) => (a[field] > b[field] ? 1 : -1))
+      })
+      return result
+    },
+  },
+}
+
+</script>
 
 <style lang="scss">
 .profilePage {

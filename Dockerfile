@@ -1,20 +1,31 @@
-FROM node:20-alpine as dependencies
+FROM node:lts-alpine As base
+
+RUN npm i --global --no-cache --no-update-notifier --no-fund pnpm
+
+FROM base as dependencies
+
+WORKDIR /app
+COPY package.json pnpm-lock.yaml .npmrc ./
+
+RUN pnpm install --frozen-lockfile
+
+FROM base as build
+
+WORKDIR /app
+COPY --from=dependencies /app/node_modules ./node_modules
+COPY . .
+
+RUN pnpm build
+
+FROM node:lts-alpine
 
 WORKDIR /app
 
-COPY package.json yarn.lock ./
-
-RUN yarn install --frozen-lockfile
-
-FROM node:20-alpine as builder
-
-WORKDIR /app
-
-COPY --from=dependencies --chown=node:node /app/node_modules ./node_modules
-COPY --chown=node:node . .
-
-RUN yarn build
+COPY --from=build --chown=node:node /app/.output ./
 
 USER node
 
-CMD ["yarn", "start"]
+ENV PORT=3333
+EXPOSE 3333
+
+CMD ["node", "server/index.mjs"]

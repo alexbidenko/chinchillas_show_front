@@ -14,13 +14,13 @@ body,
 body {
   --column-space: 24px;
 
-  @include mq("tablet") {
-    --column-space: 16px;
-  }
-
   background-color: #fff;
   font-family: 'Roboto', sans-serif;
   color: #000;
+
+  @include mq("tablet") {
+    --column-space: 16px;
+  }
 }
 
 .page-enter-active, .page-leave-active {

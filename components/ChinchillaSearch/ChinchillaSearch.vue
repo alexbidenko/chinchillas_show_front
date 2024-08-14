@@ -1,6 +1,6 @@
 <template>
   <label class="chinchillaSearch">
-    <v-icon color="white">search</v-icon>
+    <v-icon color="white" icon="search" />
     <input
       v-model="models.search"
       class="chinchillaSearch__input"
@@ -10,19 +10,16 @@
       <v-btn icon @click="dialog = true">
         <v-icon color="white">settings</v-icon>
       </v-btn>
-      <v-fab-transition>
-        <v-btn
+        <v-fab
           color="primary"
           dark
-          fixed
-          bottom
-          right
-          fab
+          position="fixed"
+          location="bottom end"
+          app
           @click="dialog = true"
-        >
-          <v-icon>settings</v-icon>
-        </v-btn>
-      </v-fab-transition>
+          icon="settings"
+          style="bottom: 80px; left: -80px;"
+        />
     </span>
 
     <v-dialog v-model="dialog" width="500">
@@ -36,7 +33,7 @@
             v-model="models.sex"
             :items="sexItems"
             label="Пол"
-            item-text="label"
+            item-title="label"
             item-value="value"
           />
           <v-select
@@ -44,7 +41,7 @@
             v-model="models.status"
             :items="statuses"
             label="Статус"
-            item-text="label"
+            item-title="label"
             item-value="key"
           />
         </v-card-text>
@@ -60,8 +57,8 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn text @click="dialog = false"> Закрыть </v-btn>
-          <v-btn color="primary" text @click="apply"> Применить </v-btn>
+          <v-btn variant="text" @click="dialog = false"> Закрыть </v-btn>
+          <v-btn color="primary" variant="text" @click="apply"> Применить </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -84,7 +81,7 @@
             class="chinchillaSearch__label"
             :name="item.name"
             :items="item.variants"
-            item-text="label"
+            item-title="label"
             item-value="value"
             :label="item.label"
             clearable
@@ -96,8 +93,8 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn text @click="colorDialog = false"> Закрыть </v-btn>
-          <v-btn color="primary" text @click="saveColors"> Сохранить </v-btn>
+          <v-btn variant="text" @click="colorDialog = false"> Закрыть </v-btn>
+          <v-btn color="primary" variant="text" @click="saveColors"> Сохранить </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -107,7 +104,7 @@
 <script>
 import colorConfig from '~/assets/datas/colorConfig.json'
 import statuses from '~/assets/datas/statuses.json'
-import colorToString from '~/assets/scripts/colorToString'
+import {mapStores} from "pinia";
 
 export default {
   name: 'ChinchillaSearch',
@@ -156,8 +153,9 @@ export default {
   },
 
   computed: {
+    ...mapStores(useUserStore),
     isRussian() {
-      return this.$store.state.UserModule.country === 'RU'
+      return this.userStore.country === 'RU'
     },
     stringColor() {
       return Object.keys(this.models.colors).length

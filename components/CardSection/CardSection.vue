@@ -29,14 +29,8 @@
 </template>
 
 <script>
-import ChinchillaCard from '../ChinchillaCard/ChinchillaCard'
-
 export default {
   name: 'CardSection',
-
-  components: {
-    ChinchillaCard,
-  },
 
   props: {
     items: {

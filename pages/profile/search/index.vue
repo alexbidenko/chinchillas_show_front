@@ -8,7 +8,7 @@
         solo
         label="В ряд"
         :items="gridCountItems"
-        item-text="label"
+        item-title="label"
         item-value="value"
         class="searchPage__gridCount"
       />
@@ -31,36 +31,27 @@
 </template>
 
 <script>
-import ChinchillaCard from '~/components/ChinchillaCard/ChinchillaCard.vue'
-import BaseSpinner from '~/components/BaseSpinner/BaseSpinner.vue'
-import Actions from '~/store/actions.type'
-import ChinchillaSearch from '~/components/ChinchillaSearch/ChinchillaSearch.vue'
+import {mapStores} from "pinia";
 
 export default {
   name: 'SearchPage',
 
-  components: {
-    ChinchillaSearch,
-    BaseSpinner,
-    ChinchillaCard,
-  },
+  async setup() {
+    const route = useRoute()
+    const userStore = useUserStore();
+    const chinchillaStore = useChinchillaStore();
 
-  layout: 'profileLayout',
+    if (!chinchillaStore.chinchillas.length) {
+      const isRussian = userStore.country === 'RU'
+      const params = { ...route.params, status: isRussian ? route.params.status : 'sale' }
 
-  async asyncData({
-    params,
-    app: {
-      store: { state, dispatch },
-    },
-  }) {
-    if (!state.ChinchillaModule.chinchillas.length) {
-      const isRussian = state.UserModule.country === 'RU'
-      params.status = isRussian ? params.status : 'sale'
-      await dispatch('ChinchillaModule/' + Actions.FETCH_CHINCHILLAS, {
-        reset: true,
-        isRussian,
-        params,
-      })
+      onServerPrefetch(async () => {
+        await chinchillaStore.fetchChinchillas({
+          reset: true,
+          isRussian,
+          params,
+        })
+      });
     }
   },
 
@@ -87,14 +78,15 @@ export default {
   },
 
   computed: {
+    ...mapStores(useUserStore, useChinchillaStore),
     isRussian() {
-      return this.$store.state.UserModule.country === 'RU'
+      return this.userStore.country === 'RU'
     },
     chinchillas() {
-      return this.$store.state.ChinchillaModule.chinchillas
+      return this.chinchillaStore.chinchillas
     },
     isLoading() {
-      return this.$store.state.ChinchillaModule.isLoading
+      return this.chinchillaStore.isLoading
     },
   },
 

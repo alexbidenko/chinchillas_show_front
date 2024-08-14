@@ -4,62 +4,41 @@
   </div>
 </template>
 
-<script>
-import UserCard from '~/components/UserCard/UserCard'
+<script setup>
+const users = useState(() => [])
+const page = useState(() => 1)
+const perPage = useState(() => 10)
+const isLoading = useState(() => false)
+const isFinish = useState(() => false)
 
-export default {
-  name: 'UsersPage',
-  components: { UserCard },
-  layout: 'profileLayout',
+const onRequest = async () => {
+  if (!isLoading.value && !isFinish.value) {
+    isLoading.value = true
+    const newUsers = await $request(`user/search/${page.value}/${perPage.value}`)
+    users.value = users.value.concat(newUsers)
+    page.value++
+    isLoading.value = false
+    if (newUsers.length < perPage.value) isFinish.value = true;
+  }
 
-  data() {
-    return {
-      users: [],
-      page: 1,
-      perPage: 10,
-      isLoading: false,
-      isFinish: false,
-    }
-  },
-
-  async fetch() {
-    await this.onRequest()
-  },
-
-  mounted() {
-    if (typeof window !== 'undefined')
-      window.addEventListener('scroll', this.onScroll)
-  },
-
-  beforeDestroy() {
-    if (typeof window !== 'undefined')
-      window.addEventListener('scroll', this.onScroll)
-  },
-
-  methods: {
-    onScroll() {
-      if (
-        window.innerHeight + window.scrollY >=
-        document.body.offsetHeight - 500
-      ) {
-        this.onRequest()
-      }
-    },
-    onRequest() {
-      if (!this.isLoading && !this.isFinish) {
-        this.isLoading = true
-        return this.$axios
-          .$get(`user/search/${this.page}/${this.perPage}`)
-          .then((users) => {
-            this.page++
-            this.users = this.users.concat(users)
-            this.isLoading = false
-            if (users.length < this.perPage) this.isFinish = true
-          })
-      }
-    },
-  },
+  return 'users';
 }
+
+const onScroll = () => {
+  if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+    onRequest()
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', onScroll)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', onScroll)
+})
+
+await useAsyncData(() => onRequest());
 </script>
 
 <style lang="scss">

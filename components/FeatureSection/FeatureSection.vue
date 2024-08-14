@@ -18,14 +18,8 @@
 </template>
 
 <script>
-import WaterButton from '~/components/WaterButton/WaterButton.vue'
-
 export default {
   name: 'FeatureSection',
-
-  components: {
-    WaterButton,
-  },
 
   props: {
     image: {
