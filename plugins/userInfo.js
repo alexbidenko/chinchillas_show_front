@@ -1,3 +1,5 @@
+import { getRequestIP } from 'h3';
+
 export default defineNuxtPlugin(async ({ $cookies, ssrContext }) => {
   const userStore = useUserStore();
 
