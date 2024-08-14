@@ -1,15 +1,15 @@
-FROM node:lts-alpine As base
+FROM node:lts-alpine AS base
 
 RUN npm i --global --no-cache --no-update-notifier --no-fund pnpm
 
-FROM base as dependencies
+FROM base AS dependencies
 
 WORKDIR /app
-COPY package.json pnpm-lock.yaml .npmrc ./
+COPY package.json pnpm-lock.yaml ./
 
 RUN pnpm install --frozen-lockfile
 
-FROM base as build
+FROM base AS build
 
 WORKDIR /app
 COPY --from=dependencies /app/node_modules ./node_modules
