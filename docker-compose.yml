@@ -18,7 +18,7 @@ services:
       - application
       - server
 
-  application:
+  nuxt-app:
     image: ghcr.io/alexbidenko/chinchillas-show/application:${IMAGE_VERSION}
     expose:
       - 3333
