@@ -1,3 +1,176 @@
+<script>
+import {mapStores} from "pinia";
+
+const CURRENCIES = {
+  RUB: '₽',
+  EUR: '€',
+}
+
+export default {
+  async setup() {
+    const route = useRoute()
+    const handleError = useError()
+
+    try {
+      const data = await $request(`chinchilla/details/${route.params.id}`)
+      return { data }
+    } catch (err) {
+      handleError({
+        statusCode: 404,
+        message: 'Запрашиваемая шиншилла не найдена',
+      })
+    }
+  },
+
+  data() {
+    return {
+      chinchillaId: +this.$route.params.id,
+      userId: +this.$cookies.get('USER_ID'),
+      isOpenPhotos: false,
+      photosHeight: 500,
+      activePhoto: 0,
+      fab: false,
+      CURRENCIES,
+    }
+  },
+
+  computed: {
+    ...mapStores(useUserStore),
+    isPrinting() {
+      return (
+        this.data.owner_id === +this.$cookies.get('USER_ID') ||
+        this.data.breeder_id === +this.$cookies.get('USER_ID')
+      )
+    },
+    user() {
+      return this.userStore.user
+    },
+    colorString() {
+      return this.data ? colorToString(this.data.color) : ''
+    },
+    birthdayDate() {
+      return dateFormat(this.data.birthday, 'yyyy.MM.dd')
+    },
+    dateDifference() {
+      return dateDifference(this.data.birthday)
+    },
+    activeStatus() {
+      const status = {
+        ...(this.data.statuses[0] || {}),
+        prices: [],
+      }
+      if (
+        this.data.price_rub &&
+        this.data.price_rub.status_id === status.id &&
+        (this.data.owner_id === this.userId || this.userStore.fullAccess)
+      )
+        status.prices.push(this.data.price_rub)
+      if (
+        this.data.price_eur &&
+        this.data.price_eur.status_id === status.id &&
+        (this.data.owner_id === this.userId || !this.userStore.fullAccess)
+      )
+        status.prices.push(this.data.price_eur)
+      return status
+    },
+  },
+
+  watch: {
+    isOpenPhotos() {
+      setTimeout(this.updatePhotosHeight, 100)
+    },
+  },
+
+  created() {
+    if (
+      !(
+        this.userStore.fullAccess ||
+        this.data.owner_id === this.userId ||
+        this.data.children.some((el) => el.owner_id === this.userId) ||
+        this.data.statuses.some((el) => el.name === 'sale')
+      )
+    ) {
+      this.$router.push('/profile')
+    }
+  },
+
+  mounted() {
+    window.addEventListener('resize', this.updatePhotosHeight)
+    this.updatePhotosHeight()
+  },
+
+  beforeDestroy() {
+    window.removeEventListener('resize', this.updatePhotosHeight)
+  },
+
+  methods: {
+    async updateUser() {
+      this.data = await $request(
+        `chinchilla/details/${this.$route.params.id}`
+      )
+    },
+    uploadPhotos(event) {
+      const requests = [...event.target.files].map(async (file) => {
+        const resizedFile = await resizeImage(file)
+        const formData = new FormData()
+        formData.append('photo', resizedFile)
+        return $request(`/photo/chinchilla/${this.data.id}`, {
+          method: 'post',
+          body: formData,
+        })
+      })
+      Promise.allSettled(requests).then((data) => {
+        this.data.photos = this.data.photos.concat(
+          data.filter((el) => el.value).map((el) => el.value)
+        )
+      })
+    },
+    deletePhoto(photoId) {
+      $request(`/photo/chinchilla/${photoId}`, { method: 'delete' }).then(() => {
+        this.data.photos = this.data.photos.filter((el) => el.id !== photoId)
+      })
+    },
+    photoToAvatar(photoId) {
+      $request(`/chinchilla/update/${this.data.id}`, {
+        method: 'put',
+        body: {
+          avatar_id: photoId,
+        },
+      })
+        .then(() => {
+          this.data.avatar = this.data.photos.find((el) => el.id === photoId)
+        })
+    },
+    updatePhotosHeight() {
+      if (this.$refs.photosDialog && this.$refs.photosHeader)
+        this.photosHeight =
+          this.$refs.photosDialog.$el.clientHeight -
+          this.$refs.photosHeader.$el.clientHeight
+    },
+    toggleHideChinchilla() {
+      $request(`admin/chinchilla/${this.data.id}/hidden`, {
+        method: 'put',
+        body: {
+          hidden: !this.data.hidden,
+        },
+      })
+        .then(() => {
+          this.data.hidden = !this.data.hidden
+        })
+    },
+    deleteChinchilla() {
+      if (
+        confirm(`Вы уверены что хотите удалить шиншиллу ${this.data.name}?`)
+      ) {
+        $request(`admin/chinchilla/${this.data.id}`, { method: 'delete' }).then(() => {
+          this.$router.back()
+        })
+      }
+    },
+  },
+}
+</script>
+
 <template>
   <div class="viewPage">
     <template v-if="data">
@@ -9,7 +182,7 @@
       />
       <div class="baseContainer viewPage__photos pb-6">
         <v-card
-          v-if="['admin', 'moderator'].includes(user ? user.type : '')"
+          v-if="userStore.isModerator"
           class="mb-8"
         >
           <v-card-text>
@@ -98,7 +271,7 @@
             "
           />
           <label v-if="userId === data.owner_id" class="viewPage__uploadPhoto">
-            <v-icon size="40px" color="white">mdi-plus</v-icon>
+            <v-icon size="40px" color="white">add</v-icon>
             <input
               type="file"
               multiple
@@ -119,7 +292,9 @@
         </a>
       </div>
       <div style="overflow-x: auto">
-        <PedigreeTree :chinchilla="data" />
+        <ClientOnly>
+          <PedigreeTree :chinchilla="data" />
+        </ClientOnly>
       </div>
       <CardSection
         v-if="data.children.length"
@@ -137,9 +312,7 @@
       <v-speed-dial
         v-if="userId === data.owner_id"
         v-model="fab"
-        bottom
-        right
-        fixed
+        location="top right"
       >
         <template #activator="{ props }">
           <v-fab
@@ -149,11 +322,11 @@
             location="bottom end"
             app
             @click="fab = !fab"
-            :icon="fab ? 'mdi-close' : 'mdi-pencil'"
-            style="bottom: 80px; left: -80px;"
+            :icon="fab ? 'close' : 'edit'"
             v-bind="props"
           />
         </template>
+
         <v-btn
           dark
           small
@@ -186,7 +359,7 @@
           <v-toolbar ref="photosHeader" dark color="primary">
             <v-spacer />
             <v-btn icon dark @click="isOpenPhotos = false">
-              <v-icon>mdi-close</v-icon>
+              <v-icon>close</v-icon>
             </v-btn>
           </v-toolbar>
           <v-carousel v-model="activePhoto" continuous :height="photosHeight">
@@ -202,185 +375,6 @@
     <BaseSpinner v-else />
   </div>
 </template>
-
-<script>
-import resizeImage from '~/assets/scripts/resizeImage'
-import dateFormat from '~/assets/scripts/dateFormat'
-import dateDifference from '~/assets/scripts/dateDifference'
-import {mapStores} from "pinia";
-
-const CURRENCIES = {
-  RUB: '₽',
-  EUR: '€',
-}
-
-export default {
-  async setup() {
-    const route = useRoute()
-    const handleError = useError()
-
-    try {
-      const data = await $request(`chinchilla/details/${route.params.id}`)
-      return { data }
-    } catch (err) {
-      handleError({
-        statusCode: 404,
-        message: 'Запрашиваемая шиншилла не найдена',
-      })
-    }
-  },
-
-  data() {
-    return {
-      chinchillaId: +this.$route.params.id,
-      userId: +this.$cookies.get('USER_ID'),
-      isOpenPhotos: false,
-      photosHeight: 500,
-      activePhoto: 0,
-      fab: false,
-      CURRENCIES,
-    }
-  },
-
-  computed: {
-    ...mapStores(useUserStore),
-    isPrinting() {
-      return (
-        this.data.owner_id === +this.$cookies.get('USER_ID') ||
-        this.data.breeder_id === +this.$cookies.get('USER_ID')
-      )
-    },
-    user() {
-      return this.userStore.user
-    },
-    colorString() {
-      return this.data ? colorToString(this.data.color) : ''
-    },
-    birthdayDate() {
-      return dateFormat(this.data.birthday, 'yyyy.MM.dd')
-    },
-    isRussian() {
-      return this.userStore.country === 'RU'
-    },
-    dateDifference() {
-      return dateDifference(this.data.birthday)
-    },
-    activeStatus() {
-      const status = {
-        ...(this.data.statuses[0] || {}),
-        prices: [],
-      }
-      if (
-        this.data.price_rub &&
-        this.data.price_rub.status_id === status.id &&
-        (this.data.owner_id === this.userId || this.isRussian)
-      )
-        status.prices.push(this.data.price_rub)
-      if (
-        this.data.price_eur &&
-        this.data.price_eur.status_id === status.id &&
-        (this.data.owner_id === this.userId || !this.isRussian)
-      )
-        status.prices.push(this.data.price_eur)
-      return status
-    },
-  },
-
-  watch: {
-    isOpenPhotos() {
-      setTimeout(this.updatePhotosHeight, 100)
-    },
-  },
-
-  created() {
-    if (
-      !(
-        this.isRussian ||
-        this.data.owner_id === this.userId ||
-        this.data.children.some((el) => el.owner_id === this.userId) ||
-        this.data.statuses.some((el) => el.name === 'sale')
-      )
-    ) {
-      this.$router.push('/profile')
-    }
-  },
-
-  mounted() {
-    window.addEventListener('resize', this.updatePhotosHeight)
-    this.updatePhotosHeight()
-  },
-
-  beforeDestroy() {
-    window.removeEventListener('resize', this.updatePhotosHeight)
-  },
-
-  methods: {
-    async updateUser() {
-      this.data = await $request(
-        `chinchilla/details/${this.$route.params.id}`
-      )
-    },
-    uploadPhotos(event) {
-      const requests = [...event.target.files].map(async (file) => {
-        const resizedFile = await resizeImage(file)
-        const formData = new FormData()
-        formData.append('photo', resizedFile)
-        return $request(`/photo/chinchilla/${this.data.id}`, {
-          method: 'post',
-          body: formData,
-        })
-      })
-      Promise.allSettled(requests).then((data) => {
-        this.data.photos = this.data.photos.concat(
-          data.filter((el) => el.value).map((el) => el.value)
-        )
-      })
-    },
-    deletePhoto(photoId) {
-      $request(`/photo/chinchilla/${photoId}`, { method: 'delete' }).then(() => {
-        this.data.photos = this.data.photos.filter((el) => el.id !== photoId)
-      })
-    },
-    photoToAvatar(photoId) {
-      $request(`/chinchilla/update/${this.data.id}`, {
-        method: 'put',
-        body: {
-          avatar_id: photoId,
-        },
-      })
-        .then(() => {
-          this.data.avatar = this.data.photos.find((el) => el.id === photoId)
-        })
-    },
-    updatePhotosHeight() {
-      if (this.$refs.photosDialog && this.$refs.photosHeader)
-        this.photosHeight =
-          this.$refs.photosDialog.$el.clientHeight -
-          this.$refs.photosHeader.$el.clientHeight
-    },
-    toggleHideChinchilla() {
-      $request(`admin/chinchilla/${this.data.id}/hidden`, {
-        method: 'put',
-        body: {
-          hidden: !this.data.hidden,
-        },
-      })
-        .then(() => {
-          this.data.hidden = !this.data.hidden
-        })
-    },
-    deleteChinchilla() {
-      if (
-        confirm(`Вы уверены что хотите удалить шиншиллу ${this.data.name}?`)
-      ) {
-        $request(`admin/chinchilla/${this.data.id}`, { method: 'delete' }).then(() => {
-          this.$router.back()
-        })
-      }
-    },
-  },
-}
-</script>
 
 <style lang="scss">
 .viewPage {

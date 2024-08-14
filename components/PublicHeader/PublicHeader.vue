@@ -1,47 +1,41 @@
+<script setup lang="ts">
+const userStore = useUserStore();
+</script>
+
 <template>
   <header class="publicHeader">
     <div class="publicHeader__logo paddingLeft">Chinchillas - show</div>
     <nav class="publicHeader__nav paddingRight">
       <nuxt-link
-        v-if="user && ['admin', 'moderator'].includes(user.type)"
+        v-if="userStore.isModerator"
         class="publicHeader__link"
         to="/admin"
-        >Админ</nuxt-link
       >
+        Админ
+      </nuxt-link>
       <nuxt-link class="publicHeader__link" to="/">Главная</nuxt-link>
       <nuxt-link class="publicHeader__link" to="/raech">РАЭШ</nuxt-link>
       <nuxt-link class="publicHeader__link" to="/auction">Аукцион</nuxt-link>
+
       <BaseSidenav>
         <nuxt-link
-          v-if="user && ['admin', 'moderator'].includes(user.type)"
+          v-if="userStore.isModerator"
           class="publicHeader__sidenavLink"
           to="/admin"
-          >Админ</nuxt-link
         >
+          Админ
+        </nuxt-link>
         <nuxt-link class="publicHeader__sidenavLink" to="/">Главная</nuxt-link>
-        <nuxt-link class="publicHeader__sidenavLink" to="/raech"
-          >РАЭШ</nuxt-link
-        >
-        <nuxt-link class="publicHeader__sidenavLink" to="/auction"
-          >Аукцион</nuxt-link
-        >
+        <nuxt-link class="publicHeader__sidenavLink" to="/raech">
+          РАЭШ
+        </nuxt-link>
+        <nuxt-link class="publicHeader__sidenavLink" to="/auction">
+          Аукцион
+        </nuxt-link>
       </BaseSidenav>
     </nav>
   </header>
 </template>
-
-<script>
-export default {
-  name: 'PublicHeader',
-
-  props: {
-    user: {
-      type: Object,
-      default: null,
-    },
-  },
-}
-</script>
 
 <style lang="scss">
 .publicHeader {

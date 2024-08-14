@@ -1,4 +1,3 @@
-//@import "@mdi/font/css/materialdesignicons.css";
 @import "material-design-icons-iconfont/dist/material-design-icons.css";
 
 @import "./reset.scss";
@@ -635,5 +634,10 @@ body {
   .v-application .warning--text.text--darken-4 {
     color: #802700 !important;
     caret-color: #802700 !important;
+  }
+
+  .v-fab__container {
+    bottom: 58px !important;
+    right: 48px !important;
   }
 }

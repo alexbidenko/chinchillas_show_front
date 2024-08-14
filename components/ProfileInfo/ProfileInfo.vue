@@ -41,7 +41,7 @@
       <v-card>
         <v-toolbar dark color="primary">
           <v-btn icon dark @click="dialog = false">
-            <v-icon>mdi-close</v-icon>
+            <v-icon>close</v-icon>
           </v-btn>
           <v-toolbar-title>Редактирование профиля</v-toolbar-title>
           <v-spacer></v-spacer>

@@ -1,5 +1,5 @@
 import moment from 'moment'
-import wordFormat from './wordFormat'
+import wordFormat from './wordFormat.js'
 
 export default (dateStart, dateEnd = new Date(), size = 'md') => {
   moment.locale('ru')

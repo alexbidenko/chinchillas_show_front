@@ -1,22 +1,22 @@
+import type {UserType} from "~/types/common";
+
 export default defineNuxtRouteMiddleware(async (to) => {
   const app = useNuxtApp();
   const userStore = useUserStore();
 
-  if (!app.$cookies.get('TOKEN') || !app.$cookies.get('USER_ID')) {
+  if (!userStore.token || !userStore.userId) {
     return navigateTo('/auth')
   }
 
-  const check = async (user) => {
+  const check = async (user?: UserType) => {
     if (!user) {
-      app.$cookies.remove('TOKEN')
-      app.$cookies.remove('USER_ID')
       userStore.logout();
       return navigateTo('/auth')
     } else if (to.path.startsWith('/profile') && !user.admitted)
       return navigateTo('/await')
     else if (
       to.path.startsWith('/admin') &&
-      !(user && ['admin', 'moderator'].includes(user.type))
+      !(user && userStore.isModerator)
     )
       return navigateTo('/')
   }

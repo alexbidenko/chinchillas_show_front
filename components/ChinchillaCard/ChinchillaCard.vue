@@ -19,7 +19,7 @@
       />
       <div class="chinchillaCard__bubbleContainer" @click.stop.prevent>
         <div class="chinchillaCard__infoBubble">
-          <v-icon>info</v-icon>
+          <v-icon icon="info" color="white" />
         </div>
       </div>
       <div class="chinchillaCard__info">
@@ -43,9 +43,6 @@
 </template>
 
 <script>
-import dateFormat from 'assets/scripts/dateFormat'
-import dateDifference from '~/assets/scripts/dateDifference'
-
 export default {
   name: 'ChinchillaCard',
 

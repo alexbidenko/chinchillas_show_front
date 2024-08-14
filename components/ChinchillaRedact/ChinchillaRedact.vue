@@ -153,7 +153,7 @@
             @delete="deletePhoto"
           />
           <label class="chinchillaRedact__uploadPhoto">
-            <v-icon size="40px" color="white">mdi-plus</v-icon>
+            <v-icon size="40px" color="white">add</v-icon>
             <input type="file" multiple accept="image/*" @change="savePhotos" />
           </label>
         </div>
@@ -165,7 +165,6 @@
 <script setup>
 import { required } from '@vuelidate/validators'
 import useVuelidate from '@vuelidate/core'
-import dateFormat from '~/assets/scripts/dateFormat'
 
 const route = useRoute()
 const router = useRouter()

@@ -1,4 +1,4 @@
-import pad from './pad'
+import pad from './pad.js'
 
 const dateFormat = (date, format) => {
   const d = new Date(date)

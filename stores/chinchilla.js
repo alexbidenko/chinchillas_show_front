@@ -1,14 +1,14 @@
-import {$request} from "~/utils/request.js";
-
 const PER_PAGE_COUNT = 40;
 
 export const useChinchillaStore = defineStore('chinchilla', () => {
+  const userStore = useUserStore();
+
   const chinchillas = ref([]);
   const isLoading = ref(false);
   const isFinish = ref(false);
   const offset = ref(0);
 
-  const fetchChinchillas = async ({ reset, isRussian, params }) => {
+  const fetchChinchillas = async ({ reset, params }) => {
     if (reset) isFinish.value = false;
     if (isLoading.value || isFinish.value) return
 
@@ -18,7 +18,7 @@ export const useChinchillaStore = defineStore('chinchilla', () => {
       params: {
         name: params.search || undefined,
         sex: params.sex || undefined,
-        status: isRussian ? params.status || undefined : 'sale',
+        status: userStore.fullAccess ? params.status || undefined : 'sale',
         offset: reset ? 0 : offset.value,
         limit: PER_PAGE_COUNT,
 

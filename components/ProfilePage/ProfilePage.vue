@@ -58,14 +58,13 @@
     <v-fab
       v-if="isOwner"
       color="primary"
-      icon="mdi-plus"
+      icon="add"
       dark
       position="fixed"
       location="bottom end"
       app
       nuxt
       to="/profile/chinchillas/create"
-      style="bottom: 80px; left: -80px;"
     />
   </div>
 </template>

@@ -18,7 +18,6 @@
         app
         @click="dialog = true"
         icon="settings"
-        style="bottom: 80px; left: -80px;"
       />
     </span>
 
@@ -37,7 +36,7 @@
             item-value="value"
           />
           <v-select
-            v-if="isRussian"
+            v-if="userStore.fullAccess"
             v-model="models.status"
             :items="statuses"
             label="Статус"
@@ -154,9 +153,6 @@ export default {
 
   computed: {
     ...mapStores(useUserStore),
-    isRussian() {
-      return this.userStore.country === 'RU'
-    },
     stringColor() {
       return Object.keys(this.models.colors).length
         ? colorToString(this.models.colors)

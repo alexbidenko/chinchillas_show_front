@@ -12,7 +12,7 @@
           </h3>
           <v-btn icon>
             <v-icon>{{
-              expand ? 'mdi-chevron-up' : 'mdi-chevron-down'
+              expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
             }}</v-icon>
           </v-btn>
         </div>

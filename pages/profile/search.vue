@@ -42,13 +42,11 @@ export default {
     const chinchillaStore = useChinchillaStore();
 
     if (!chinchillaStore.chinchillas.length) {
-      const isRussian = userStore.country === 'RU'
-      const params = { ...route.params, status: isRussian ? route.params.status : 'sale' }
+      const params = { ...route.params, status: userStore.fullAccess ? route.params.status : 'sale' }
 
       await useAsyncData(async () => {
         await chinchillaStore.fetchChinchillas({
           reset: true,
-          isRussian,
           params,
         });
 
@@ -81,9 +79,6 @@ export default {
 
   computed: {
     ...mapStores(useUserStore, useChinchillaStore),
-    isRussian() {
-      return this.userStore.country === 'RU'
-    },
     chinchillas() {
       return this.chinchillaStore.chinchillas
     },
@@ -115,7 +110,6 @@ export default {
         document.body.scrollHeight
       ) {
         this.chinchillaStore.fetchChinchillas({
-          isRussian: this.isRussian,
           params: this.params,
         });
       }
@@ -125,7 +119,6 @@ export default {
       this.params = parameters
       this.chinchillaStore.fetchChinchillas({
         reset: true,
-        isRussian: this.isRussian,
         params: this.params,
       });
     },

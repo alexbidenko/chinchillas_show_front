@@ -21,21 +21,17 @@
       <v-btn
         type="button"
         color="primary"
-        x-small
-        rounded
+        size="x-small"
+        icon="close"
         @click.stop="deletePhoto(photo.id)"
-      >
-        X
-      </v-btn>
+      />
       <v-btn
         type="button"
         color="primary"
-        x-small
-        rounded
+        size="x-small"
+        icon="account_circle"
         @click.stop="photoToAvatar(photo.id)"
-      >
-        A
-      </v-btn>
+      />
     </div>
   </div>
 </template>

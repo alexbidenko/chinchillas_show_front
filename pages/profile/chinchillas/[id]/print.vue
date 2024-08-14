@@ -36,7 +36,9 @@
         </v-card>
       </div>
       <div class="viewPage__tree">
-        <PedigreeTree :chinchilla="data" for-print style="padding-bottom: 0" />
+        <ClientOnly>
+          <PedigreeTree :chinchilla="data" for-print style="padding-bottom: 0" />
+        </ClientOnly>
       </div>
       <div class="baseContainer viewPage__photos">
         <v-card class="mb-8">
@@ -52,8 +54,6 @@
 </template>
 
 <script>
-import dateFormat from '~/assets/scripts/dateFormat'
-import dateDifference from '~/assets/scripts/dateDifference'
 import {mapStores} from "pinia";
 
 const CURRENCIES = {
@@ -91,9 +91,6 @@ export default {
     birthdayDate() {
       return dateFormat(this.data.birthday, 'yyyy.MM.dd')
     },
-    isRussian() {
-      return this.userStore.country === 'RU'
-    },
     dateDifference() {
       return dateDifference(this.data.birthday)
     },
@@ -105,13 +102,13 @@ export default {
       if (
         this.data.price_rub &&
         this.data.price_rub.status_id === status.id &&
-        (this.data.owner_id === this.userId || this.isRussian)
+        (this.data.owner_id === this.userId || this.userStore.fullAccess)
       )
         status.prices.push(this.data.price_rub)
       if (
         this.data.price_eur &&
         this.data.price_eur.status_id === status.id &&
-        (this.data.owner_id === this.userId || !this.isRussian)
+        (this.data.owner_id === this.userId || !this.userStore.fullAccess)
       )
         status.prices.push(this.data.price_eur)
       return status
@@ -121,7 +118,7 @@ export default {
   created() {
     if (
       !(
-        this.isRussian ||
+        this.userStore.fullAccess ||
         this.data.owner_id === this.userId ||
         this.data.children.some((el) => el.owner_id === this.userId) ||
         this.data.statuses.some((el) => el.name === 'sale')

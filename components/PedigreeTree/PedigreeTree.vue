@@ -115,60 +115,45 @@
   </section>
 </template>
 
-<script>
-export default {
-  name: 'PedigreeTree',
-
-  props: {
-    chinchilla: {
-      type: Object,
-      required: true,
-    },
-    forPrint: {
-      type: Boolean,
-      default: false,
-    },
+<script setup>
+const props = defineProps({
+  chinchilla: {
+    type: Object,
+    required: true,
   },
-
-  data() {
-    return {
-      scale: 1,
-      margin: 0,
-    }
+  forPrint: {
+    type: Boolean,
+    default: false,
   },
+})
 
-  mounted() {
-    import('~/assets/scripts/zoomElement').then((zoomElement) => {
-      // zoomElement.default(this.$refs.container)
-      this.review()
-    })
-    window.addEventListener('resize', this.review)
-  },
+const scale = ref(1)
+const margin = ref(0)
 
-  beforeDestroy() {
-    window.removeEventListener('resize', this.review)
-  },
-
-  methods: {
-    review() {
-      const width = document.body.scrollWidth
-      width < 1100
-        ? (this.scale = Math.max(width / 1100, 0.2))
-        : (this.scale = 1)
-      this.scale === 1
-        ? (this.margin = 0)
-        : (this.margin = -(((1 - this.scale) * 1100) / 2))
-    },
-    getParent(steps) {
-      return steps
-        .split('.')
-        .reduce(
-          (c, s) => c && c[s === 'm' ? 'mother' : 'father'],
-          this.chinchilla
-        )
-    },
-  },
+const review = () => {
+  const width = document.body.scrollWidth
+  scale.value = width < 1100 ? Math.max(width / 1100, 0.2) : 1
+  margin.value = scale.value === 1 ? 0 : -(((1 - scale.value) * 1100) / 2)
 }
+
+const getParent = (steps) => {
+  return steps.split('.').reduce(
+    (c, s) => c && c[s === 'm' ? 'mother' : 'father'],
+    props.chinchilla
+  )
+}
+
+onMounted(() => {
+  import('~/utils/zoomElement.js').then((zoomElement) => {
+    // zoomElement.default(this.$refs.container)
+    review()
+  })
+  window.addEventListener('resize', review)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', review)
+})
 </script>
 
 <style lang="scss">

@@ -37,7 +37,7 @@
           <v-text-field
             v-model="signIn.password"
             placeholder="Пароль"
-            :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            :append-inner-icon="showPassword ? 'visibility' : 'visibility_off'"
             :type="showPassword ? 'text' : 'password'"
             class="authPage__input"
             name="password"
@@ -137,7 +137,7 @@
             v-model="v$.signUp.password.$model"
             :error="v$.signUp.password.$error"
             label="Пароль"
-            :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            :append-inner-icon="showPassword ? 'visibility' : 'visibility_off'"
             :type="showPassword ? 'text' : 'password'"
             class="authPage__input"
             name="password"

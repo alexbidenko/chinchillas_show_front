@@ -1,85 +1,85 @@
+<script lang="ts" setup>
+import {NuxtLink} from "#components";
+
+const router = useRouter();
+const userStore = useUserStore();
+
+const logout = () => {
+  userStore.logout();
+  router.push('/auth');
+};
+
+const menu = computed(() => [
+  {
+    label: 'Профиль',
+    to: '/profile',
+  },
+  {
+    label: 'РАЭШ',
+    to: '/raech',
+  },
+  {
+    label: 'Аукцион',
+    to: '/auction',
+  },
+  {
+    label: 'Люди',
+    to: '/profile/users',
+    disabled: !(userStore.user && userStore.fullAccess),
+  },
+  {
+    label: 'Шиншиллы',
+    to: '/profile/search',
+  },
+  {
+    label: 'Админ',
+    to: '/admin',
+    disabled: !userStore.isModerator,
+  },
+  {
+    label: 'Выход',
+    command: logout,
+  },
+]);
+</script>
+
 <template>
   <header class="profileHeader">
-    <nuxt-link class="profileHeader__logo paddingLeft" to="/"
-      >Chinchillas - show</nuxt-link
-    >
+    <nuxt-link class="profileHeader__logo paddingLeft" to="/">
+      Chinchillas - show
+    </nuxt-link>
+
     <nav class="profileHeader__nav paddingRight">
-      <nuxt-link v-if="user" class="profileHeader__link" to="/profile"
-        >Профиль</nuxt-link
-      >
-      <nuxt-link class="profileHeader__link" to="/raech">РАЭШ</nuxt-link>
-      <nuxt-link class="profileHeader__link" to="/auction">Аукцион</nuxt-link>
-      <nuxt-link
-        v-if="user && isRussian"
-        class="profileHeader__link"
-        to="/profile/users"
-        >Люди</nuxt-link
-      >
-      <nuxt-link class="profileHeader__link" to="/profile/search"
-        >Шиншиллы</nuxt-link
-      >
-      <!--<nuxt-link v-if="user" class="profileHeader__link" to="/auction"-->
-      <!--  >Калькулятор</nuxt-link-->
-      <!--&gt;-->
-      <button v-if="user" class="profileHeader__link" @click="logout">
-        Выход
-      </button>
+      <template v-for="item in menu">
+        <component
+          v-if="!item.disabled"
+          :key="item.label"
+          :is="item.to ? NuxtLink : 'button'"
+          :to="item.to"
+          @click="item.command"
+          class="profileHeader__link"
+        >
+          {{ item.label }}
+        </component>
+      </template>
+
       <BaseSidenav>
-        <nuxt-link v-if="user" class="profileHeader__sidenavLink" to="/profile"
-          >Профиль</nuxt-link
-        >
-        <nuxt-link class="profileHeader__sidenavLink" to="/raech"
-          >РАЭШ</nuxt-link
-        >
-        <nuxt-link class="profileHeader__sidenavLink" to="/auction"
-          >Аукцион</nuxt-link
-        >
-        <nuxt-link
-          v-if="user && isRussian"
-          class="profileHeader__sidenavLink"
-          to="/profile/users"
-          >Люди</nuxt-link
-        >
-        <nuxt-link class="profileHeader__sidenavLink" to="/profile/search"
-          >Шиншиллы</nuxt-link
-        >
-        <!--<nuxt-link v-if="user" class="profileHeader__sidenavLink" to="/auction"-->
-        <!--  >Калькулятор</nuxt-link-->
-        <!--&gt;-->
-        <button v-if="user" class="profileHeader__sidenavLink" @click="logout">
-          Выход
-        </button>
+        <template v-for="item in menu">
+          <component
+            v-if="!item.disabled"
+            :key="item.label"
+            :is="item.to ? NuxtLink : 'button'"
+            :to="item.to"
+            @click="item.command"
+            class="profileHeader__sidenavLink"
+          >
+            {{ item.label }}
+          </component>
+        </template>
       </BaseSidenav>
     </nav>
   </header>
 </template>
-
-<script>
-import {mapStores} from "pinia";
-
-export default {
-  name: 'ProfileHeader',
-
-  computed: {
-    ...mapStores(useUserStore),
-    user() {
-      return this.userStore.user
-    },
-    isRussian() {
-      return this.userStore.country === 'RU'
-    },
-  },
-
-  methods: {
-    logout() {
-      this.$cookies.remove('TOKEN')
-      this.$cookies.remove('USER_ID')
-      this.userStore.logout()
-      this.$router.push('/auth')
-    },
-  },
-}
-</script>
 
 <style lang="scss">
 .profileHeader {

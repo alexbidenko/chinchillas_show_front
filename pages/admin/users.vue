@@ -50,7 +50,9 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import {type PaginationType, type UserType, UserTypeVariant} from "~/types/common";
+
 const headers = [
   { text: 'ID', value: 'id' },
   { text: 'Логин', value: 'login' },
@@ -61,30 +63,32 @@ const headers = [
 ]
 
 const userTypes = [
-  { text: 'Пользователь', value: 'user' },
-  { text: 'Эксперт', value: 'expert' },
-  { text: 'Модератор', value: 'moderator' },
-  { text: 'Админ', value: 'admin' },
+  { text: 'Пользователь', value: UserTypeVariant.user },
+  { text: 'Эксперт', value: UserTypeVariant.expert },
+  { text: 'Модератор', value: UserTypeVariant.moderator },
+  { text: 'Админ', value: UserTypeVariant.admin },
 ]
 
 const page = ref(1)
 const perPage = ref(10)
 const dialog = ref(false)
-const activeItem = ref(null)
-const itemModels = ref(null)
+const activeItem = ref<UserType>()
+const itemModels = ref<UserType>()
 
-const { data: users, error } = await useAsyncData(() => $request('admin/users').then((data) => {
+const { data: users, error } = await useAsyncData<UserType[]>(() => $request<PaginationType<UserType>>('admin/users').then((data) => {
   const result = Array(data.total).fill({})
   data.data.forEach((el, index) => {
     result[(data.page - 1) * 10 + index] = el
   });
   return result;
-}));
+}), { default: () => [] });
 
-if (error.value) await navigateTo('/');
+if (error.value) {
+  await navigateTo('/');
+}
 
 const requestPage = async () => {
-  const response = await $request(
+  const response = await $request<PaginationType<UserType>>(
     `admin/users?page=${page.value}&perPage=${perPage.value}`
   )
   users.value = Array(response.total).fill({})
@@ -93,33 +97,36 @@ const requestPage = async () => {
   })
 }
 
-const updatePerPage = (newPerPage) => {
+const updatePerPage = (newPerPage: number) => {
   perPage.value = newPerPage
   requestPage()
 }
 
-const updatePage = (newPage) => {
+const updatePage = (newPage: number) => {
   page.value = newPage
   requestPage()
 }
 
-const selectUser = (item) => {
+const selectUser = (item: UserType) => {
   activeItem.value = item
   itemModels.value = { ...item }
   dialog.value = true
 }
 
 const changeUser = async () => {
-  Object.assign(
-    activeItem.value,
-    await $request(`admin/user/${itemModels.value.id}`, {
-      method: 'put',
-      body: {
-        admitted: itemModels.value.admitted,
-        type: itemModels.value.type,
-      },
-    })
-  )
+  if (activeItem.value && itemModels.value) {
+    Object.assign(
+      activeItem.value,
+      await $request(`admin/user/${itemModels.value.id}`, {
+        method: 'put',
+        body: {
+          admitted: itemModels.value.admitted,
+          type: itemModels.value.type,
+        },
+      })
+    )
+  }
+
   dialog.value = false
 }
 
