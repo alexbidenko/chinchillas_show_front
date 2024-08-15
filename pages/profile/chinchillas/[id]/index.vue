@@ -183,10 +183,10 @@ export default {
       <div class="baseContainer viewPage__photos pb-6">
         <v-card
           v-if="userStore.isModerator"
+          title="Панель модератора"
           class="mb-8"
         >
           <v-card-text>
-            <div class="display-1 text--primary mb-4">Панель модератора</div>
             <div class="mb-4">
               <v-btn @click="toggleHideChinchilla"
                 >{{ data.hidden ? 'Показать' : 'Скрыть' }} шиншиллу</v-btn
@@ -207,12 +207,26 @@ export default {
             </div>
           </v-card-text>
         </v-card>
+        <v-card v-if="userId === data.owner_id" title="Действия" class="mb-8">
+          <v-card-text>
+            <div class="mb-4">
+              <v-btn :to="`/profile/chinchillas/${chinchillaId}/color`" nuxt>
+                Редактировать окрас
+              </v-btn>
+            </div>
+            <div>
+              <v-btn :to="`/profile/chinchillas/${chinchillaId}/redact`" nuxt>
+                Редактировать параметры
+              </v-btn>
+            </div>
+          </v-card-text>
+        </v-card>
         <v-card
           v-if="activeStatus.name === 'sale' && data.price_rub"
+          title="Шиншилла на продажу"
           class="mb-8"
         >
           <v-card-text class="pb-0">
-            <div class="display-1 text--primary mb-4">Шиншилла на продажу</div>
             <p class="pb-4 mb-0">
               Цена шиншиллы:
               {{
@@ -224,9 +238,8 @@ export default {
             </p>
           </v-card-text>
         </v-card>
-        <v-card class="mb-8">
+        <v-card title="Информация шиншиллы" class="mb-8">
           <v-card-text class="pb-0">
-            <div class="display-1 text--primary mb-4">Информация шиншиллы</div>
             <p class="pb-4 mb-0">Идентификатор: {{ data.id }}</p>
             <p v-if="data.breeder" class="pb-4 mb-0">
               Заводчик:
@@ -308,46 +321,6 @@ export default {
         section-key="relatives"
         :items="data.relatives"
       />
-
-      <v-speed-dial
-        v-if="userId === data.owner_id"
-        v-model="fab"
-        location="top right"
-      >
-        <template #activator="{ props }">
-          <v-fab
-            color="primary"
-            dark
-            position="fixed"
-            location="bottom end"
-            app
-            :icon="fab ? 'close' : 'edit'"
-            v-bind="props"
-            @click="fab = !fab"
-          />
-        </template>
-
-        <v-btn
-          dark
-          small
-          color="primary"
-          rounded
-          :to="`/profile/chinchillas/${chinchillaId}/color`"
-          nuxt
-        >
-          Редактировать окрас
-        </v-btn>
-        <v-btn
-          dark
-          small
-          color="primary"
-          rounded
-          :to="`/profile/chinchillas/${chinchillaId}/redact`"
-          nuxt
-        >
-          Редактировать параметры
-        </v-btn>
-      </v-speed-dial>
 
       <v-dialog
         v-model="isOpenPhotos"

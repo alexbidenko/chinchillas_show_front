@@ -1,3 +1,46 @@
+<script setup lang="ts">
+type StatisticsType = {
+  totalChinchillas: number;
+  totalUsers: number;
+  activeSales: number;
+  totalSold: number;
+};
+
+const { data: statistics } = await useAsyncData(() => $request<StatisticsType>('site/statistics'));
+
+const FEATURES = [
+  {
+    title: 'Лучшая генетическая база шиншилл',
+    text: 'Заполняйте информацию о своих питомцах, отслеживайте родословные покупаемых шиншилл получите полный информационный контроль над своими и не только животными',
+    action: 'Перейти в профиль',
+    url: '/profile',
+    image: '/assets/head_image_babies.jpg',
+  },
+  {
+    title: 'Экспертиза шиншилл онлайн',
+    text: 'Вся информация о проводимой в текущий момент выставке в режиме реального времени с вашего компьютреа или телефона в любой точке мира',
+    action: 'Посетить РАЭШ',
+    url: '/raech',
+    image: '/assets/head_image_raesh.jpg',
+  },
+  {
+    title: 'Аукцион лучших шиншилл',
+    text: 'Покупайте и продавайте лучших зверей со своего персонального компьютера с минимальными усилиями и по лучшим ценам',
+    action: 'Зайти на аукцион',
+    url: '/auction',
+    image: '/assets/head_image_purchases.jpg',
+  },
+];
+
+definePageMeta({
+  middleware: () => {
+    const userStore = useUserStore();
+
+    if (userStore.authorized) return navigateTo('/profile');
+  },
+});
+</script>
+
 <template>
   <div class="mainPage">
     <div class="mainPage__headerContainer">
@@ -17,19 +60,6 @@
           <WaterButton class="mainPage__auth" to="/profile"
             >Перейти в личный кабинет</WaterButton
           >
-          <div class="mainPage__social">
-            <nuxt-link
-              v-for="item in socials"
-              :key="item.icon"
-              class="mainPage__socialLink"
-              aria-label="social link"
-              to=""
-            >
-              <svg class="mainPage__socialIcon">
-                <use :xlink:href="item.icon" />
-              </svg>
-            </nuxt-link>
-          </div>
         </div>
       </section>
       <h1 class="mainPage__siteName">CHINCHILLAS-SHOW</h1>
@@ -38,29 +68,29 @@
         :class="{ 'mainPage__infoContainer--show': statistics }"
       >
         <div class="mainPage__infoGroup">
-          <span class="mainPage__count">{{
-            statistics ? statistics.totalChinchillas : ''
-          }}</span>
+          <span class="mainPage__count">
+            {{ statistics?.totalChinchillas }}
+          </span>
           <p class="mainPage__label">
             Всего зарегистрированных<br >шиншилл на сайте
           </p>
         </div>
         <div class="mainPage__infoGroup">
-          <span class="mainPage__count">{{
-            statistics ? statistics.totalUsers : ''
-          }}</span>
+          <span class="mainPage__count">
+            {{ statistics?.totalUsers }}
+          </span>
           <p class="mainPage__label">Активных пользователей<br >на сайте</p>
         </div>
         <div class="mainPage__infoGroup">
-          <span class="mainPage__count">{{
-            statistics ? statistics.activeSales : ''
-          }}</span>
+          <span class="mainPage__count">
+            {{ statistics?.activeSales }}
+          </span>
           <p class="mainPage__label">На продажу сейчас<br >шиншилл</p>
         </div>
         <div class="mainPage__infoGroup">
-          <span class="mainPage__count">{{
-            statistics ? statistics.totalSold : ''
-          }}</span>
+          <span class="mainPage__count">
+            {{ statistics?.totalSold }}
+          </span>
           <p class="mainPage__label">Успешных сделок<br >совершенных ранее</p>
         </div>
       </div>
@@ -68,7 +98,7 @@
 
     <div class="mainPage__features">
       <FeatureSection
-        v-for="(item, index) in features"
+        v-for="(item, index) in FEATURES"
         :key="item.url"
         :title="item.title"
         :text="item.text"
@@ -80,69 +110,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import sprite from '~/assets/sprites/common.svg'
-
-export default {
-
-  async setup() {
-    const { data: statistics } = await useAsyncData(() => $request('site/statistics'));
-
-    return { statistics };
-  },
-  data() {
-    return {
-      socials: [
-        {
-          icon: `${sprite}#icon-twitter`,
-          href: '#',
-        },
-        {
-          icon: `${sprite}#icon-vk`,
-          href: '#',
-        },
-        {
-          icon: `${sprite}#icon-fb`,
-          href: '#',
-        },
-        {
-          icon: `${sprite}#icon-instagram`,
-          href: '#',
-        },
-        {
-          icon: `${sprite}#icon-youtube`,
-          href: '#',
-        },
-      ],
-      features: [
-        {
-          title: 'Лучшая генетическая база шиншилл',
-          text: 'Заполняйте информацию о своих питомцах, отслеживайте родословные покупаемых шиншилл получите полный информационный контроль над своими и не только животными',
-          action: 'Перейти в профиль',
-          url: '/profile',
-          image: '/assets/head_image_babies.jpg',
-        },
-        {
-          title: 'Экспертиза шиншилл онлайн',
-          text: 'Вся информация о проводимой в текущий момент выставке в режиме реального времени с вашего компьютреа или телефона в любой точке мира',
-          action: 'Посетить РАЭШ',
-          url: '/raech',
-          image:
-            'https://pp.userapi.com/c846524/v846524738/1e6669/6T9gXET5WnU.jpg',
-        },
-        {
-          title: 'Аукцион лучших шиншилл',
-          text: 'Покупайте и продавайте лучших зверей со своего персонального компьютера с минимальными усилиями и по лучшим ценам',
-          action: 'Зайти на аукцион',
-          url: '/auction',
-          image: '/assets/head_image_purchases.jpg',
-        },
-      ],
-    }
-  },
-}
-</script>
 
 <style lang="scss">
 .mainPage {
@@ -408,59 +375,6 @@ export default {
       text-align: center;
       align-self: initial;
     }
-  }
-
-  &__social {
-    display: flex;
-    margin-top: 40px;
-
-    @include mq('tablet-small') {
-      margin-left: 0;
-      margin-top: 14px;
-    }
-  }
-
-  &__socialLink {
-    display: block;
-    flex-shrink: 0;
-    height: 45px;
-    position: relative;
-    width: 46px;
-    cursor: auto;
-
-    @include mq('desktop', 'tablet') {
-      height: 40px;
-      width: 40px;
-    }
-
-    @include mq('tablet') {
-      height: 35px;
-      width: 35px;
-    }
-
-    & + & {
-      margin-left: 9px;
-
-      @include mq('desktop') {
-        margin-left: 10px;
-      }
-
-      @include mq('desktop-small') {
-        padding-bottom: 5px;
-        margin-left: 4px;
-      }
-    }
-  }
-
-  &__socialIcon {
-    height: 100%;
-    fill: rgba(165, 173, 239, 0.3);
-    left: 0;
-    position: absolute;
-    top: 0;
-    transition: 0.3s fill ease;
-    width: 100%;
-    z-index: 1;
   }
 
   @keyframes show-statistics {

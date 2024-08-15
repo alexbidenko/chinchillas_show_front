@@ -17,13 +17,15 @@
           </v-btn>
         </div>
       </header>
-      <main v-if="expand" class="cardSection__list baseContainer">
-        <ChinchillaCard
-          v-for="item in items"
-          :key="item.id"
-          :chinchilla="item"
-        />
-      </main>
+      <div v-auto-animate style="overflow: hidden">
+        <main v-if="expand" class="cardSection__list baseContainer">
+          <ChinchillaCard
+            v-for="item in items"
+            :key="item.id"
+            :chinchilla="item"
+          />
+        </main>
+      </div>
     </div>
   </section>
 </template>

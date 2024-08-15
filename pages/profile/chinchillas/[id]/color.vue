@@ -4,17 +4,17 @@
       <h1 class="text-h4 my-4">{{ data.name }}</h1>
       <p>{{ colorName }}</p>
       <form class="colorPage__form" @submit.prevent="onSubmit">
-        <v-combobox
+        <v-select
           v-for="item in config"
           :key="item.name"
-          :value="item.variants.find((el) => el.value === models[item.name])"
+          :model-value="item.variants.find((el) => el.value === models[item.name])?.value"
           class="colorPage__label"
           :name="item.name"
           :items="item.variants"
           item-title="label"
           item-value="value"
           :label="item.label"
-          @change="models[item.name] = $event.value"
+          @update:model-value="models[item.name] = $event"
         />
         <v-btn color="primary" type="submit">Сохранить</v-btn>
       </form>

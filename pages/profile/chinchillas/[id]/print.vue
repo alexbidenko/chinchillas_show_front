@@ -2,9 +2,8 @@
   <div class="viewPage">
     <template v-if="data">
       <div class="baseContainer viewPage__photos">
-        <v-card>
+        <v-card title="Родословная шиншиллы">
           <v-card-text class="pb-0">
-            <div class="display-1 text--primary mb-4">Родословная шиншиллы</div>
             <div class="viewPage__infoGrid">
               <p class="pb-4 mb-0">Идентификатор: {{ data.id }}</p>
               <p class="pb-4 mb-0">Имя: {{ data.name }}</p>

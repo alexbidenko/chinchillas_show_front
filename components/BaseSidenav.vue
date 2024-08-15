@@ -1,9 +1,7 @@
 <template>
   <div class="baseSidenav">
     <button class="baseSidenav__button" @click="isOpen = !isOpen">
-      <svg>
-        <use xlink:href="~/assets/sprites/common.svg#icon_hamburger" />
-      </svg>
+      <v-icon icon="menu" />
     </button>
 
     <transition name="fade">

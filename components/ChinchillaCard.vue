@@ -1,7 +1,7 @@
 <template>
   <nuxt-link
     class="chinchillaCard"
-    :class="{ chinchillaCard__opened: opened }"
+    :class="{ chinchillaCard__forPrint: forPrint }"
     :to="`/profile/chinchillas/${chinchilla.id}`"
   >
     <div class="chinchillaCard__container">
@@ -30,13 +30,16 @@
           {{ colorString || 'стандарт' }}
         </p>
         <p class="chinchillaCard__infoRow">
-          {{ opened ? birthdayDate : dateDifference }}
+          {{ forPrint ? birthdayDate : dateDifference }}
         </p>
       </div>
     </div>
     <div class="chinchillaCard__titleContainer">
       <h4 class="chinchillaCard__title">
-        {{ chinchilla.name }} <span v-if="!chinchilla.color">(без окраса)</span>
+        <span class="chinchillaCard__name">
+        {{ chinchilla.name }}
+          <span v-if="!chinchilla.color">(без окраса)</span>
+        </span>
       </h4>
     </div>
   </nuxt-link>
@@ -51,7 +54,7 @@ export default {
       type: Object,
       required: true,
     },
-    opened: {
+    forPrint: {
       type: Boolean,
       default: false,
     },
@@ -152,17 +155,6 @@ export default {
     }
   }
 
-  &__opened,
-  &:hover {
-    #{$self}__info {
-      transform: translateY(0);
-    }
-
-    #{$self}__infoBubble {
-      transform: translateY(-50px);
-    }
-  }
-
   & &__infoRow {
     font-size: 14px;
     color: #797979;
@@ -196,7 +188,13 @@ export default {
     text-align: center;
     color: #fff;
     border-top: 1px solid #fff;
-    line-height: 33px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+
+  &__name {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -206,13 +204,18 @@ export default {
     }
 
     @include mq('desktop-small') {
-      line-height: 23px;
-      font-size: 18px;
+      line-height: 21px;
+      font-size: 16px;
+    }
+
+    @include mq('tablet') {
+      line-height: 18px;
+      font-size: 14px;
     }
 
     @include mq('tablet-small') {
-      line-height: 19px;
-      font-size: 14px;
+      line-height: 15px;
+      font-size: 12px;
     }
   }
 
@@ -236,9 +239,35 @@ export default {
     align-items: center;
     justify-content: center;
     display: none;
+    width: 100%;
+    height: 100%;
 
     @include mq('tablet') {
       display: flex;
+    }
+
+    & > * {
+      @include mq('tablet-small') {
+        font-size: 100% !important;
+        min-width: initial !important;
+        width: 100% !important;
+        height: 100% !important;
+      }
+    }
+  }
+
+  &__forPrint &__infoRow {
+    color: #000;
+  }
+
+  &__forPrint,
+  &:hover {
+    #{$self}__info {
+      transform: translateY(0);
+    }
+
+    #{$self}__infoBubble {
+      transform: translateY(-50px);
     }
   }
 }
@@ -246,9 +275,15 @@ export default {
 .gridCount__more .chinchillaCard {
   &__bubbleContainer {
     @include mq('tablet-small') {
-      padding: 8px;
-      width: 40px;
-      height: 40px;
+      padding: 4px;
+      width: 24px;
+      height: 24px;
+    }
+
+    @include mq('phone') {
+      padding: 2px;
+      width: 20px;
+      height: 20px;
     }
   }
 

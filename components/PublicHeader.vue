@@ -4,7 +4,9 @@ const userStore = useUserStore();
 
 <template>
   <header class="publicHeader">
-    <div class="publicHeader__logo paddingLeft">Chinchillas - show</div>
+    <nuxt-link to="/" class="publicHeader__logo paddingLeft">
+      Chinchillas - show
+    </nuxt-link>
     <nav class="publicHeader__nav paddingRight">
       <nuxt-link
         v-if="userStore.isModerator"
@@ -61,6 +63,7 @@ const userStore = useUserStore();
     align-items: center;
     color: #d79b00;
     padding-right: 24px;
+    text-decoration: none;
 
     @include mq('tablet-small') {
       height: 24px;

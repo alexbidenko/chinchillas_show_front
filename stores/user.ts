@@ -14,6 +14,7 @@ export const useUserStore = defineStore('user', () => {
   const user = ref<UserType | null>(null);
   const country = ref<string | null>(null);
 
+  const authorized = computed(() => !!user.value);
   const isAdmin = computed(() => ADMIN_ACCESSES.includes(user.value?.type))
   const isModerator = computed(() => MODERATOR_ACCESSES.includes(user.value?.type))
 
@@ -37,6 +38,7 @@ export const useUserStore = defineStore('user', () => {
     country,
     token,
 
+    authorized,
     isAdmin,
     isModerator,
     isRussian,

@@ -256,19 +256,18 @@ export default {
             <v-col>
               <p class="font-weight-bold py-2 my-0">История статусов</p>
             </v-col>
-            <v-spacer />
             <v-col cols="auto">
               <v-btn :icon="showTimeline ? 'keyboard_arrow_up' : 'keyboard_arrow_down'" variant="text" @click="showTimeline = !showTimeline" />
             </v-col>
           </v-row>
 
           <v-expand-transition>
-            <v-timeline v-show="showTimeline" align-top dense>
+            <v-timeline v-show="showTimeline" align="start" density="compact">
               <template v-for="s in data.statuses">
                 <v-timeline-item
                   v-if="statuses.find((el) => el.key === s.name)"
                   :key="s.timestamp"
-                  small
+                  size="small"
                   dot-color="primary"
                 >
                   <div>

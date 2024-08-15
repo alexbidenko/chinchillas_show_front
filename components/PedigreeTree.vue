@@ -51,14 +51,14 @@ onBeforeUnmount(() => {
           <ChinchillaCard
             v-if="getParent('m')"
             :chinchilla="getParent('m')"
-            :opened="forPrint"
+            :for-print="forPrint"
           />
         </div>
         <div class="pedigreeTree__cell">
           <ChinchillaCard
             v-if="getParent('f')"
             :chinchilla="getParent('f')"
-            :opened="forPrint"
+            :for-print="forPrint"
           />
         </div>
       </div>
@@ -67,28 +67,28 @@ onBeforeUnmount(() => {
           <ChinchillaCard
             v-if="getParent('m.m')"
             :chinchilla="getParent('m.m')"
-            :opened="forPrint"
+            :for-print="forPrint"
           />
         </div>
         <div class="pedigreeTree__cell">
           <ChinchillaCard
             v-if="getParent('m.f')"
             :chinchilla="getParent('m.f')"
-            :opened="forPrint"
+            :for-print="forPrint"
           />
         </div>
         <div class="pedigreeTree__cell pedigreeTree__cell--pair">
           <ChinchillaCard
             v-if="getParent('f.m')"
             :chinchilla="getParent('f.m')"
-            :opened="forPrint"
+            :for-print="forPrint"
           />
         </div>
         <div class="pedigreeTree__cell">
           <ChinchillaCard
             v-if="getParent('f.f')"
             :chinchilla="getParent('f.f')"
-            :opened="forPrint"
+            :for-print="forPrint"
           />
         </div>
       </div>
@@ -97,28 +97,28 @@ onBeforeUnmount(() => {
           <ChinchillaCard
             v-if="getParent('m.m.m')"
             :chinchilla="getParent('m.m.m')"
-            :opened="forPrint"
+            :for-print="forPrint"
           />
         </div>
         <div class="pedigreeTree__cell">
           <ChinchillaCard
             v-if="getParent('m.f.m')"
             :chinchilla="getParent('m.f.m')"
-            :opened="forPrint"
+            :for-print="forPrint"
           />
         </div>
         <div class="pedigreeTree__cell">
           <ChinchillaCard
             v-if="getParent('f.m.m')"
             :chinchilla="getParent('f.m.m')"
-            :opened="forPrint"
+            :for-print="forPrint"
           />
         </div>
         <div class="pedigreeTree__cell">
           <ChinchillaCard
             v-if="getParent('f.f.m')"
             :chinchilla="getParent('f.f.m')"
-            :opened="forPrint"
+            :for-print="forPrint"
           />
         </div>
       </div>
@@ -127,28 +127,28 @@ onBeforeUnmount(() => {
           <ChinchillaCard
             v-if="getParent('m.m.f')"
             :chinchilla="getParent('m.m.f')"
-            :opened="forPrint"
+            :for-print="forPrint"
           />
         </div>
         <div class="pedigreeTree__cell">
           <ChinchillaCard
             v-if="getParent('m.f.f')"
             :chinchilla="getParent('m.f.f')"
-            :opened="forPrint"
+            :for-print="forPrint"
           />
         </div>
         <div class="pedigreeTree__cell">
           <ChinchillaCard
             v-if="getParent('f.m.f')"
             :chinchilla="getParent('f.m.f')"
-            :opened="forPrint"
+            :for-print="forPrint"
           />
         </div>
         <div class="pedigreeTree__cell">
           <ChinchillaCard
             v-if="getParent('f.f.f')"
             :chinchilla="getParent('f.f.f')"
-            :opened="forPrint"
+            :for-print="forPrint"
           />
         </div>
       </div>

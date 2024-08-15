@@ -180,6 +180,10 @@ export default {
       font-size: 14px;
     }
 
+    @include mq('tablet-small') {
+      padding: 0 16px;
+    }
+
     &:first-of-type {
       top: 15%;
       left: 60%;
@@ -216,6 +220,12 @@ export default {
         top: 45%;
         left: 75%;
         padding-left: 35%;
+      }
+
+      @include mq('tablet-small') {
+        top: 68%;
+        left: 35%;
+        padding-left: 55%;
       }
     }
   }
