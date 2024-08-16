@@ -132,6 +132,7 @@ export default {
       section-key="extra-sold"
       :items="soldChinchillas"
       :default-expand="false"
+      :class="`gridCount__${gridCountValue}`"
     />
     <CardSection
       v-if="sortedChinchillas.dead && sortedChinchillas.dead.length"
@@ -139,6 +140,7 @@ export default {
       section-key="extra-dead"
       title="На радуге"
       :default-expand="false"
+      :class="`gridCount__${gridCountValue}`"
     />
     <v-fab
       v-if="isOwner"

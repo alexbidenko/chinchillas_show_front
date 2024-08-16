@@ -1,14 +1,94 @@
+<script setup lang="ts">
+import {type PaginationType, type UserType, UserTypeVariant} from "~/types/common";
+
+const headers = [
+  { title: 'ID', value: 'id' },
+  { title: 'Логин', value: 'login' },
+  { title: 'Имя', value: 'first_name' },
+  { title: 'Фамилия', value: 'last_name' },
+  { title: 'Отчество', value: 'patronymic' },
+  { title: 'Город', value: 'city' },
+  { title: 'Действия', value: 'actions', align: 'end' },
+]
+
+const userTypes = [
+  { title: 'Пользователь', value: UserTypeVariant.user },
+  { title: 'Эксперт', value: UserTypeVariant.expert },
+  { title: 'Модератор', value: UserTypeVariant.moderator },
+  { title: 'Админ', value: UserTypeVariant.admin },
+]
+
+const dialog = ref(false)
+const activeItem = ref<UserType>()
+const itemModels = ref<UserType>()
+const totalCount = useState(() => 0);
+const loading = ref(false);
+
+const prepareData = (data: PaginationType<UserType>) => {
+  totalCount.value = data.total;
+
+  return data.data;
+}
+
+const { data: users, error } = await useAsyncData(() => $request<PaginationType<UserType>>('admin/users').then(prepareData), { default: () => [] });
+
+if (error.value) {
+  await navigateTo('/');
+}
+
+const requestPage = async (options: { page: number, itemsPerPage: number }) => {
+  loading.value = true;
+  const response = await $request<PaginationType<UserType>>(
+    `admin/users?page=${options.page}&perPage=${options.itemsPerPage}`
+  )
+  users.value = prepareData(response);
+  loading.value = false;
+}
+
+const selectUser = (item: UserType) => {
+  activeItem.value = item
+  itemModels.value = { ...item }
+  dialog.value = true
+}
+
+const changeUser = async () => {
+  if (!itemModels.value || !activeItem.value) return;
+
+  Object.assign(
+    activeItem.value,
+    await $request(`admin/user/${itemModels.value.id}`, {
+      method: 'put',
+      body: {
+        admitted: itemModels.value.admitted,
+        type: itemModels.value.type,
+      },
+    })
+  )
+
+  dialog.value = false
+}
+
+</script>
+
 <template>
   <div>
-    <v-data-table
+    <v-data-table-server
       :headers="headers"
       :items="users"
-      :items-per-page="perPage"
-      class="elevation-1"
-      @update:items-per-page="updatePerPage"
-      @update:page="updatePage"
-      @click:row="selectUser"
-    />
+      item-value="id"
+      :items-length="totalCount"
+      :loading="loading"
+      @update:options="requestPage"
+    >
+      <template v-slot:item.actions="{ item }">
+        <v-btn
+          @click="selectUser(item)"
+          icon="edit"
+          size="small"
+          variant="text"
+        />
+      </template>
+    </v-data-table-server>
 
     <v-dialog v-model="dialog" max-width="290">
       <v-card v-if="activeItem && itemModels">
@@ -27,7 +107,7 @@
             v-model="itemModels.type"
             :items="userTypes"
             label="Тип пользователя"
-            item-title="text"
+            item-title="title"
             item-value="value"
           />
 
@@ -49,86 +129,3 @@
     </v-dialog>
   </div>
 </template>
-
-<script setup lang="ts">
-import {type PaginationType, type UserType, UserTypeVariant} from "~/types/common";
-
-const headers = [
-  { text: 'ID', value: 'id' },
-  { text: 'Логин', value: 'login' },
-  { text: 'Имя', value: 'first_name' },
-  { text: 'Фамилия', value: 'last_name' },
-  { text: 'Отчество', value: 'patronymic' },
-  { text: 'Город', value: 'city' },
-]
-
-const userTypes = [
-  { text: 'Пользователь', value: UserTypeVariant.user },
-  { text: 'Эксперт', value: UserTypeVariant.expert },
-  { text: 'Модератор', value: UserTypeVariant.moderator },
-  { text: 'Админ', value: UserTypeVariant.admin },
-]
-
-const page = ref(1)
-const perPage = ref(10)
-const dialog = ref(false)
-const activeItem = ref<UserType>()
-const itemModels = ref<UserType>()
-
-const { data: users, error } = await useAsyncData<UserType[]>(() => $request<PaginationType<UserType>>('admin/users').then((data) => {
-  const result = Array(data.total).fill({})
-  data.data.forEach((el, index) => {
-    result[(data.page - 1) * 10 + index] = el
-  });
-  return result;
-}), { default: () => [] });
-
-if (error.value) {
-  await navigateTo('/');
-}
-
-const requestPage = async () => {
-  const response = await $request<PaginationType<UserType>>(
-    `admin/users?page=${page.value}&perPage=${perPage.value}`
-  )
-  users.value = Array(response.total).fill({})
-  response.data.forEach((el, index) => {
-    users.value[(page.value - 1) * perPage.value + index] = el
-  })
-}
-
-const updatePerPage = (newPerPage: number) => {
-  perPage.value = newPerPage
-  requestPage()
-}
-
-const updatePage = (newPage: number) => {
-  page.value = newPage
-  requestPage()
-}
-
-const selectUser = (item: UserType) => {
-  activeItem.value = item
-  itemModels.value = { ...item }
-  dialog.value = true
-}
-
-const changeUser = async () => {
-  if (activeItem.value && itemModels.value) {
-    Object.assign(
-      activeItem.value,
-      await $request(`admin/user/${itemModels.value.id}`, {
-        method: 'put',
-        body: {
-          admitted: itemModels.value.admitted,
-          type: itemModels.value.type,
-        },
-      })
-    )
-  }
-
-  dialog.value = false
-}
-
-</script>
-

@@ -1,29 +1,12 @@
 <template>
   <v-app class="defaultLayout">
-    <PublicHeader :user="user" />
+    <PublicHeader />
     <main class="defaultLayout__content">
       <NuxtPage />
     </main>
     <PublicFooter />
   </v-app>
 </template>
-
-<script>
-import {mapStores} from "pinia";
-
-export default {
-  computed: {
-    ...mapStores(useUserStore),
-    user() {
-      return this.userStore.user
-    },
-  },
-
-  created() {
-    this.userStore.checkUser();
-  },
-}
-</script>
 
 <style lang="scss">
 .defaultLayout {

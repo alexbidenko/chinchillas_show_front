@@ -142,7 +142,7 @@ if (
     data.value.statuses.some((el) => el.name === 'sale')
   )
 ) {
-  navigateTo('/profile')
+  await navigateTo('/profile')
 }
 
 onMounted(() => {

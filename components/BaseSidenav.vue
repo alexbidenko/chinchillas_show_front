@@ -50,6 +50,8 @@ export default {
     padding: 12px;
     display: none;
     stroke: white;
+    align-items: center;
+    justify-content: center;
 
     svg {
       width: 100%;
