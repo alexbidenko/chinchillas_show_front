@@ -1,5 +1,5 @@
 export const dataURLtoFile = (dataUrl: string, filename: string, type: string) =>
-  new Promise((resolve, reject) => {
+  new Promise<File>((resolve, reject) => {
     fetch(dataUrl)
       .then((res) => res.blob())
       .then((blob) => resolve(new File([blob], filename, { type })))
@@ -7,7 +7,7 @@ export const dataURLtoFile = (dataUrl: string, filename: string, type: string) =
   })
 
 export default (file: File) =>
-  new Promise((resolve, reject) => {
+  new Promise<File>((resolve, reject) => {
     const img = document.createElement('img')
     img.src = URL.createObjectURL(file)
     img.onload = () => {

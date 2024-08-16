@@ -7,6 +7,7 @@ export enum UserTypeVariant {
 
 export type UserType = {
   id: number;
+  login: string;
   first_name: string;
   last_name: string;
   type: UserTypeVariant;
@@ -30,6 +31,48 @@ export type ColorInfoType = {
   german: string;
   blue: string;
   fur: string;
+};
+
+export type ChinchillaStatusType = {
+  id: number;
+  name: 'growing' | 'breeding' | 'sale' | 'sold' | 'reserved' | 'dead';
+}
+
+export type PhotoType = {
+  id: number;
+  name: string;
+}
+
+export type ChinchillaPriceType = {
+  status_id: number;
+  currency: 'RUB' | 'EUR';
+  value: number;
+}
+
+export type ChinchillaType = {
+  id: number;
+  name: string;
+  color: ColorInfoType;
+  birthday: string;
+  owner_id: number;
+  breeder_id: number;
+  breeder_name: string;
+  sex: 'f' | 'm';
+  weight: string;
+  brothers: string;
+  description: string;
+  breeder: UserType;
+  avatar?: PhotoType;
+  photos: PhotoType[];
+  statuses: ChinchillaStatusType[];
+  mother: ChinchillaType;
+  father: ChinchillaType;
+  children: ChinchillaType[];
+  relatives: ChinchillaType[];
+  price_rub: ChinchillaPriceType;
+  price_eur: ChinchillaPriceType;
+  hidden: boolean;
+  conclusion: 'disagree' | 'overvalue';
 };
 
 export type PaginationType<T> = {

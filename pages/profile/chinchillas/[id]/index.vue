@@ -1,174 +1,158 @@
-<script>
-import {mapStores} from "pinia";
+<script lang="ts" setup>
+import type {ChinchillaPriceType, ChinchillaType, PhotoType} from "~/types/common";
 
 const CURRENCIES = {
   RUB: '₽',
   EUR: '€',
 }
 
-export default {
-  async setup() {
-    const route = useRoute()
-    const handleError = useError()
+const userStore = useUserStore();
+const route = useRoute()
+const router = useRouter()
 
-    try {
-      const data = await $request(`chinchilla/details/${route.params.id}`)
-      return { data }
-    } catch {
-      handleError({
-        statusCode: 404,
-        message: 'Запрашиваемая шиншилла не найдена',
-      })
-    }
-  },
+const { data, error } = await useAsyncData<ChinchillaType>(() => $request(`chinchilla/details/${route.params.id}`), { default: () => ({} as ChinchillaType) });
 
-  data() {
-    return {
-      chinchillaId: +this.$route.params.id,
-      userId: +this.$cookies.get('USER_ID'),
-      isOpenPhotos: false,
-      photosHeight: 500,
-      activePhoto: 0,
-      fab: false,
-      CURRENCIES,
-    }
-  },
-
-  computed: {
-    ...mapStores(useUserStore),
-    isPrinting() {
-      return (
-        this.data.owner_id === +this.$cookies.get('USER_ID') ||
-        this.data.breeder_id === +this.$cookies.get('USER_ID')
-      )
-    },
-    user() {
-      return this.userStore.user
-    },
-    colorString() {
-      return this.data ? colorToString(this.data.color) : ''
-    },
-    birthdayDate() {
-      return dateFormat(this.data.birthday, 'yyyy.MM.dd')
-    },
-    dateDifference() {
-      return dateDifference(this.data.birthday)
-    },
-    activeStatus() {
-      const status = {
-        ...(this.data.statuses[0] || {}),
-        prices: [],
-      }
-      if (
-        this.data.price_rub &&
-        this.data.price_rub.status_id === status.id &&
-        (this.data.owner_id === this.userId || this.userStore.fullAccess)
-      )
-        status.prices.push(this.data.price_rub)
-      if (
-        this.data.price_eur &&
-        this.data.price_eur.status_id === status.id &&
-        (this.data.owner_id === this.userId || !this.userStore.fullAccess)
-      )
-        status.prices.push(this.data.price_eur)
-      return status
-    },
-  },
-
-  watch: {
-    isOpenPhotos() {
-      setTimeout(this.updatePhotosHeight, 100)
-    },
-  },
-
-  created() {
-    if (
-      !(
-        this.userStore.fullAccess ||
-        this.data.owner_id === this.userId ||
-        this.data.children.some((el) => el.owner_id === this.userId) ||
-        this.data.statuses.some((el) => el.name === 'sale')
-      )
-    ) {
-      this.$router.push('/profile')
-    }
-  },
-
-  mounted() {
-    window.addEventListener('resize', this.updatePhotosHeight)
-    this.updatePhotosHeight()
-  },
-
-  beforeUnmount() {
-    window.removeEventListener('resize', this.updatePhotosHeight)
-  },
-
-  methods: {
-    async updateUser() {
-      this.data = await $request(
-        `chinchilla/details/${this.$route.params.id}`
-      )
-    },
-    uploadPhotos(event) {
-      const requests = [...event.target.files].map(async (file) => {
-        const resizedFile = await resizeImage(file)
-        const formData = new FormData()
-        formData.append('photo', resizedFile)
-        return $request(`/photo/chinchilla/${this.data.id}`, {
-          method: 'post',
-          body: formData,
-        })
-      })
-      Promise.allSettled(requests).then((data) => {
-        this.data.photos = this.data.photos.concat(
-          data.filter((el) => el.value).map((el) => el.value)
-        )
-      })
-    },
-    deletePhoto(photoId) {
-      $request(`/photo/chinchilla/${photoId}`, { method: 'delete' }).then(() => {
-        this.data.photos = this.data.photos.filter((el) => el.id !== photoId)
-      })
-    },
-    photoToAvatar(photoId) {
-      $request(`/chinchilla/update/${this.data.id}`, {
-        method: 'put',
-        body: {
-          avatar_id: photoId,
-        },
-      })
-        .then(() => {
-          this.data.avatar = this.data.photos.find((el) => el.id === photoId)
-        })
-    },
-    updatePhotosHeight() {
-      if (this.$refs.photosDialog && this.$refs.photosHeader)
-        this.photosHeight =
-          this.$refs.photosDialog.$el.clientHeight -
-          this.$refs.photosHeader.$el.clientHeight
-    },
-    toggleHideChinchilla() {
-      $request(`admin/chinchilla/${this.data.id}/hidden`, {
-        method: 'put',
-        body: {
-          hidden: !this.data.hidden,
-        },
-      })
-        .then(() => {
-          this.data.hidden = !this.data.hidden
-        })
-    },
-    deleteChinchilla() {
-      if (
-        confirm(`Вы уверены что хотите удалить шиншиллу ${this.data.name}?`)
-      ) {
-        $request(`admin/chinchilla/${this.data.id}`, { method: 'delete' }).then(() => {
-          this.$router.back()
-        })
-      }
-    },
-  },
+if (error.value) {
+  throw createError({
+    statusCode: 404,
+    message: 'Запрашиваемая шиншилла не найдена',
+  })
 }
+
+const isOpenPhotos = ref(false);
+const photosHeight = ref(500);
+const activePhoto = ref(0);
+const photosDialog = ref();
+const photosHeader = ref();
+
+const isPrinting = computed(() => (
+  data.value.owner_id === userStore.userId ||
+  data.value.breeder_id === userStore.userId
+));
+const colorString = computed(() => colorToString(data.value.color));
+const birthdayDate = computed(() => dateFormat(data.value.birthday, 'yyyy.MM.dd'));
+const dateDifference = computed(() => getDateDifference(data.value.birthday));
+const activeStatus = computed(() => {
+  const status = {
+    ...(data.value.statuses[0] || {}),
+    prices: [] as ChinchillaPriceType[],
+  }
+  if (
+    data.value.price_rub &&
+    data.value.price_rub.status_id === status.id &&
+    (data.value.owner_id === userStore.userId || userStore.fullAccess)
+  )
+    status.prices.push(data.value.price_rub)
+  if (
+    data.value.price_eur &&
+    data.value.price_eur.status_id === status.id &&
+    (data.value.owner_id === userStore.userId || !userStore.fullAccess)
+  )
+    status.prices.push(data.value.price_eur)
+  return status;
+});
+
+const updateUser = async () => {
+  data.value = await $request(
+    `chinchilla/details/${route.params.id}`
+  )
+}
+
+const uploadPhotos = (event: Event) => {
+  const files = (event.target as HTMLInputElement).files;
+  if (!files) return;
+
+  const requests = [...files].map(async (file) => {
+    const resizedFile = await resizeImage(file)
+    const formData = new FormData()
+    formData.append('photo', resizedFile)
+    return $request<PhotoType>(`/photo/chinchilla/${data.value.id}`, {
+      method: 'post',
+      body: formData,
+    })
+  })
+
+  Promise.allSettled(requests).then((response) => {
+    data.value.photos = data.value.photos.concat(
+      response.filter((el) => el.status === 'fulfilled').map((el) => el.value)
+    )
+  })
+}
+
+const deletePhoto = (photoId: number) => {
+  $request(`/photo/chinchilla/${photoId}`, { method: 'delete' }).then(() => {
+    data.value.photos = data.value.photos.filter((el) => el.id !== photoId)
+  })
+}
+
+const photoToAvatar = (photoId: number) => {
+  $request(`/chinchilla/update/${data.value.id}`, {
+    method: 'put',
+    body: {
+      avatar_id: photoId,
+    },
+  })
+    .then(() => {
+      data.value.avatar = data.value.photos.find((el) => el.id === photoId)
+    })
+}
+
+const updatePhotosHeight = () => {
+  if (photosDialog.value && photosHeader.value)
+    photosHeight.value =
+      photosDialog.value.$el.clientHeight -
+      photosHeader.value.$el.clientHeight
+}
+
+const toggleHideChinchilla = () => {
+  $request(`admin/chinchilla/${data.value.id}/hidden`, {
+    method: 'put',
+    body: {
+      hidden: !data.value.hidden,
+    },
+  })
+    .then(() => {
+      data.value.hidden = !data.value.hidden
+    })
+}
+
+const deleteChinchilla = () => {
+  if (
+    confirm(`Вы уверены что хотите удалить шиншиллу ${data.value.name}?`)
+  ) {
+    $request(`admin/chinchilla/${data.value.id}`, { method: 'delete' }).then(() => {
+      router.back()
+    })
+  }
+};
+
+const openDocument = () => {
+  window.open('https://docs.google.com/document/d/1s_YV9SWVg0_kL2nLJPPbt_ZUHYN7pd0qDghlMcpMrYY/edit', '_blank');
+};
+
+watch(isOpenPhotos, () => {
+  setTimeout(updatePhotosHeight, 100)
+});
+
+if (
+  !(
+    userStore.fullAccess ||
+    data.value.owner_id === userStore.userId ||
+    data.value.children.some((el) => el.owner_id === userStore.userId) ||
+    data.value.statuses.some((el) => el.name === 'sale')
+  )
+) {
+  navigateTo('/profile')
+}
+
+onMounted(() => {
+  window.addEventListener('resize', updatePhotosHeight)
+  updatePhotosHeight()
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updatePhotosHeight)
+})
 </script>
 
 <template>
@@ -181,44 +165,36 @@ export default {
         @update-owner="updateUser"
       />
       <div class="baseContainer viewPage__photos pb-6">
-        <v-card
-          v-if="userStore.isModerator"
-          title="Панель модератора"
-          class="mb-8"
-        >
+        <v-card v-if="userStore.userId === data.owner_id" title="Действия" class="mb-8">
           <v-card-text>
-            <div class="mb-4">
-              <v-btn @click="toggleHideChinchilla"
-                >{{ data.hidden ? 'Показать' : 'Скрыть' }} шиншиллу</v-btn
-              >
-            </div>
-            <div class="mb-4">
-              <v-btn @click="deleteChinchilla">Удалить шиншиллу</v-btn>
-            </div>
-            <div>
-              <a
-                href="https://docs.google.com/document/d/1s_YV9SWVg0_kL2nLJPPbt_ZUHYN7pd0qDghlMcpMrYY/edit"
-                target="_blank"
-                rel="noopener"
-                style="text-decoration: none"
-              >
-                <v-btn>Умная родословная</v-btn>
-              </a>
-            </div>
-          </v-card-text>
-        </v-card>
-        <v-card v-if="userId === data.owner_id" title="Действия" class="mb-8">
-          <v-card-text>
-            <div class="mb-4">
-              <v-btn :to="`/profile/chinchillas/${chinchillaId}/color`" nuxt>
+            <div class="mb-3">
+              <v-btn :to="`/profile/chinchillas/${data.id}/color`" nuxt variant="tonal">
                 Редактировать окрас
               </v-btn>
             </div>
             <div>
-              <v-btn :to="`/profile/chinchillas/${chinchillaId}/redact`" nuxt>
+              <v-btn :to="`/profile/chinchillas/${data.id}/redact`" nuxt variant="tonal">
                 Редактировать параметры
               </v-btn>
             </div>
+            <v-menu v-if="userStore.isModerator">
+              <template v-slot:activator="{ props }">
+                <v-btn variant="tonal" class="mt-3" v-bind="props">
+                  Действия модератора
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item @click="toggleHideChinchilla">
+                  <v-list-item-title>{{ data.hidden ? 'Показать' : 'Скрыть' }} шиншиллу</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="deleteChinchilla">
+                  <v-list-item-title>Удалить шиншиллу</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="openDocument">
+                  <v-list-item-title>Умная родословная</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </v-card-text>
         </v-card>
         <v-card
@@ -273,7 +249,7 @@ export default {
           <ChinchillaPhoto
             v-for="(photo, index) in data.photos"
             :key="photo.id"
-            :user-id="userId"
+            :user-id="userStore.userId"
             :chinchilla="data"
             :photo="photo"
             @to-avatar="photoToAvatar"
@@ -283,7 +259,7 @@ export default {
               activePhoto = index;
             "
           />
-          <label v-if="userId === data.owner_id" class="viewPage__uploadPhoto">
+          <label v-if="userStore.userId === data.owner_id" class="viewPage__uploadPhoto">
             <v-icon size="40px" color="white">add</v-icon>
             <input
               type="file"
@@ -331,9 +307,7 @@ export default {
         <v-card ref="photosDialog">
           <v-toolbar ref="photosHeader" dark color="primary">
             <v-spacer />
-            <v-btn icon dark @click="isOpenPhotos = false">
-              <v-icon>close</v-icon>
-            </v-btn>
+            <v-btn icon="close" dark @click="isOpenPhotos = false" />
           </v-toolbar>
           <v-carousel v-model="activePhoto" continuous :height="photosHeight">
             <v-carousel-item

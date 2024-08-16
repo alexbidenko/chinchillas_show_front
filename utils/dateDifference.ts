@@ -1,7 +1,7 @@
 import moment from 'moment'
 import wordFormat from './wordFormat.js'
 
-export default (dateStart: string | Date, dateEnd = new Date(), size = 'md') => {
+export const getDateDifference = (dateStart: string | Date, dateEnd = new Date(), size = 'md') => {
   moment.locale('ru')
   const start = dateStart instanceof Date ? dateStart : new Date(dateStart)
 
@@ -17,8 +17,8 @@ export default (dateStart: string | Date, dateEnd = new Date(), size = 'md') => 
         size === 'md'
           ? wordFormat(years, ['год', 'года', 'лет'])
           : years >= 5
-          ? 'л.'
-          : 'г.'
+            ? 'л.'
+            : 'г.'
       }`
     )
   if (months)

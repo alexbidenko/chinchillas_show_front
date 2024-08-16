@@ -1,25 +1,23 @@
-<script setup>
-const props = defineProps({
-  chinchilla: {
-    type: Object,
-    required: true,
-  },
-  forPrint: {
-    type: Boolean,
-    default: false,
-  },
-})
+<script lang="ts" setup>
+import type {ChinchillaType} from "~/types/common";
+
+const props = defineProps<{
+  chinchilla: ChinchillaType;
+  forPrint?: boolean;
+}>();
 
 const scale = ref(1)
 const margin = ref(0)
 
 const review = () => {
   const width = document.body.scrollWidth
-  scale.value = width < 1100 ? Math.max(width / 1100, 0.2) : 1
-  margin.value = scale.value === 1 ? 0 : -(((1 - scale.value) * 1100) / 2)
+  const preparedScale = width < 1100 ? Math.max(width / 1100, 0.2) : 1
+  scale.value = props.forPrint ? (preparedScale * 1.4) : preparedScale;
+  const preparedMargin = scale.value === 1 ? 0 : -(((1 - scale.value) * 1100) / 2);
+  margin.value = props.forPrint ? (preparedMargin / 2.4) : preparedMargin;
 }
 
-const getParent = (steps) => {
+const getParent = (steps: string) => {
   return steps.split('.').reduce(
     (c, s) => c && c[s === 'm' ? 'mother' : 'father'],
     props.chinchilla
@@ -43,9 +41,8 @@ onBeforeUnmount(() => {
   <section
     class="pedigreeTree"
     :class="{ pedigreeTree__forPrint: forPrint }"
-    :style="{ transform: `scale(${scale})`, margin: `${margin}px` }"
   >
-    <div ref="container" class="pedigreeTree__container">
+    <div ref="container" class="pedigreeTree__container" :style="{ transform: `scale(${scale})`, margin: `${margin}px` }">
       <div class="pedigreeTree__row">
         <div class="pedigreeTree__cell">
           <ChinchillaCard
@@ -164,6 +161,8 @@ onBeforeUnmount(() => {
   min-width: 1100px;
   overflow: hidden;
   padding-bottom: 40px;
+  display: flex;
+  justify-content: center;
 
   &__container {
     min-width: 1100px;

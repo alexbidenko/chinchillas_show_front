@@ -91,7 +91,7 @@ export default {
       return dateFormat(this.data.birthday, 'yyyy.MM.dd')
     },
     dateDifference() {
-      return dateDifference(this.data.birthday)
+      return getDateDifference(this.data.birthday)
     },
     activeStatus() {
       const status = {

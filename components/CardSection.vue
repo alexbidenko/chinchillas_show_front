@@ -141,6 +141,8 @@ export default {
     }
 
     @include mq('tablet-small') {
+      grid-column-gap: 12px;
+      grid-row-gap: 16px;
       grid-template-columns: repeat(2, 1fr);
     }
   }

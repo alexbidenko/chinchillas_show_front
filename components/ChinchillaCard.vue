@@ -65,7 +65,7 @@ export default {
       return colorToString(this.chinchilla.color)
     },
     dateDifference() {
-      return dateDifference(this.chinchilla.birthday, new Date(), 'sm')
+      return getDateDifference(this.chinchilla.birthday, new Date(), 'sm')
     },
     birthdayDate() {
       return dateFormat(this.chinchilla.birthday, 'yyyy.MM.dd')
@@ -106,7 +106,7 @@ export default {
   &__titleContainer {
     position: absolute;
     background-color: #828282;
-    padding: 0 16px;
+    padding: 0 12px;
     height: 34px;
     width: 100%;
     left: 0;
@@ -117,7 +117,12 @@ export default {
     }
 
     @include mq('tablet-small') {
+      padding: 0 8px;
       height: 20px;
+    }
+
+    @include mq('phone') {
+      padding: 0 4px;
     }
   }
 
@@ -192,6 +197,9 @@ export default {
     align-items: center;
     justify-content: center;
     height: 100%;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto;
   }
 
   &__name {

@@ -9,7 +9,7 @@ export const useUserStore = defineStore('user', () => {
 
   const { value: token } = toRefs(tokenStore);
 
-  const userId = useCookie('USER_ID', { path: '/' });
+  const userId = useCookie<number | null>('USER_ID', { path: '/' });
 
   const user = ref<UserType | null>(null);
   const country = ref<string | null>(null);
