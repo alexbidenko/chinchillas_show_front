@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - master
+      - develop
+
+env:
+  DOCKER_IMAGE_VERSION: ${{ github.ref == 'refs/heads/master' && 'latest' || 'dev' }}
+  PROJECT_NAME: ${{ github.ref == 'refs/heads/master' && 'chinchillas-show-frontend' || 'chinchillas-show-dev-frontend' }}
 
 jobs:
   build-application:
@@ -28,11 +33,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          build-args: |
-            SITE_ENVIRONMENT=production
-            NUXT_DADATA_TOKEN=${{ secrets.NUXT_DADATA_TOKEN }}
           push: true
-          tags: ghcr.io/alexbidenko/chinchillas-show/application:latest
+          tags: ghcr.io/alexbidenko/chinchillas-show/application:${{ env.DOCKER_IMAGE_VERSION }}
 
   build-nginx:
     name: Build Nginx
@@ -57,7 +59,7 @@ jobs:
         with:
           context: .nginx
           push: true
-          tags: ghcr.io/alexbidenko/chinchillas-show/nginx:latest
+          tags: ghcr.io/alexbidenko/chinchillas-show/nginx:${{ env.DOCKER_IMAGE_VERSION }}
 
   deploy:
     name: Deploy
@@ -84,6 +86,8 @@ jobs:
           chmod 400 ~/.ssh/id_rsa
 
       - name: Deploy 🚀
-        run: docker stack deploy --prune --with-registry-auth -c docker-compose.yml chinchillas-show-frontend
+        run: |
+          env IMAGE_VERSION=${{ env.DOCKER_IMAGE_VERSION }} \
+          docker stack deploy --prune --with-registry-auth -c docker-compose.yml ${{ env.PROJECT_NAME }}
         env:
           DOCKER_HOST: ssh://${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}

@@ -3,15 +3,19 @@
   padding-right: 80px;
 
   @include mq("desktop", "tablet") {
-    padding-right: 45px;
+    padding-right: 40px;
   }
 
-  @include mq("tablet", "phone") {
-    padding-right: 30px;
+  @include mq("tablet", "tablet-small") {
+    padding-right: 24px;
+  }
+
+  @include mq("tablet-small", "phone") {
+    padding-right: 12px;
   }
 
   @include mq("phone") {
-    padding-right: 16px;
+    padding-right: 8px;
   }
 }
 
@@ -20,15 +24,19 @@
   padding-left: 80px;
 
   @include mq("desktop", "tablet") {
-    padding-left: 45px;
+    padding-left: 40px;
   }
 
-  @include mq("tablet", "phone") {
-    padding-left: 30px;
+  @include mq("tablet", "tablet-small") {
+    padding-left: 24px;
+  }
+
+  @include mq("tablet-small", "phone") {
+    padding-left: 12px;
   }
 
   @include mq("phone") {
-    padding-left: 16px;
+    padding-left: 8px;
   }
 }
 

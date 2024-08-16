@@ -1,3 +1,5 @@
+@import "material-design-icons-iconfont/dist/material-design-icons.css";
+
 @import "./reset.scss";
 @import "./settings.scss";
 @import "./common/baseContainer.scss";
@@ -14,13 +16,13 @@ body,
 body {
   --column-space: 24px;
 
-  @include mq("tablet") {
-    --column-space: 16px;
-  }
-
   background-color: #fff;
   font-family: 'Roboto', sans-serif;
   color: #000;
+
+  @include mq("tablet") {
+    --column-space: 16px;
+  }
 }
 
 .page-enter-active, .page-leave-active {
@@ -632,5 +634,10 @@ body {
   .v-application .warning--text.text--darken-4 {
     color: #802700 !important;
     caret-color: #802700 !important;
+  }
+
+  .v-fab__container {
+    bottom: 58px !important;
+    right: 48px !important;
   }
 }
