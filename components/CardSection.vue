@@ -10,11 +10,7 @@
           <h3 class="cardSection__title paddingLeft">
             {{ title }} ({{ items.length }})
           </h3>
-          <v-btn icon>
-            <v-icon>{{
-              expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
-            }}</v-icon>
-          </v-btn>
+          <v-btn :icon="expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'" />
         </div>
       </header>
       <div v-auto-animate style="overflow: hidden">

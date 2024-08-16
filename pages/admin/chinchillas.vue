@@ -1,14 +1,109 @@
+<script lang="ts" setup>
+import chinchillaConclusions from '~/assets/datas/chinchillaConclusions.json'
+import type {ChinchillaType, ColorCommentType, ColorInfoType, PaginationType} from "~/types/common";
+
+const headers = [
+  { title: 'ID', value: 'id' },
+  { title: 'Кличка', value: 'name' },
+  { title: 'Владелец', value: 'ownerName' },
+  { title: 'Действия', value: 'actions', align: 'end' },
+]
+
+const dialog = ref(false)
+const activeItem = ref<ChinchillaType | null>(null)
+const itemModels = ref<ChinchillaType | null>(null)
+const commentText = ref('')
+const totalCount = useState(() => 0);
+const loading = ref(false);
+
+const prepareData = (data: PaginationType<ChinchillaType>) => {
+  return data.data.map((el) => ({
+    ...el,
+    ownerName: `${el.owner.first_name} ${el.owner.last_name} (${el.owner.login})`,
+  }));
+}
+
+const { data: chinchillas, error } = await useAsyncData('admin-chinchillas', () =>
+  $request<PaginationType<ChinchillaType>>('admin/chinchillas/1/10').then((data) => {
+    totalCount.value = data.total;
+
+    return prepareData(data);
+  }),
+  { default: () => [] },
+)
+
+if (error.value) await navigateTo('/')
+
+const requestPage = async (options: { page: number, itemsPerPage: number }) => {
+  loading.value = true;
+  const response = await $request<PaginationType<ChinchillaType>>(
+    `admin/chinchillas/${options.page}/${options.itemsPerPage}`
+  )
+  chinchillas.value = prepareData(response);
+  loading.value = false;
+}
+
+const selectChinchilla = (item: ChinchillaType) => {
+  activeItem.value = item
+  console.log(item);
+  itemModels.value = { ...item }
+  dialog.value = true
+}
+
+const changeChinchilla = async () => {
+  if (!itemModels.value || !activeItem.value) return;
+
+  const updatedItem = await $request(`admin/chinchilla/${itemModels.value.id}`, {
+    method: 'put',
+    body: { conclusion: itemModels.value.conclusion },
+  })
+  Object.assign(activeItem.value, updatedItem)
+  dialog.value = false
+}
+
+const colorString = (color: ColorInfoType) => {
+  return colorToString(color)
+}
+
+const sendComment = () => {
+  if (!itemModels.value) return;
+
+  $request<ColorCommentType>('admin/color/comment', {
+    method: 'post',
+    body: {
+      chinchillaId: itemModels.value.id,
+      content: commentText.value,
+    },
+  }).then((data) => {
+    if (!activeItem.value) return;
+
+    activeItem.value.color_comments = [
+      data,
+      ...activeItem.value.color_comments,
+    ]
+  })
+}
+</script>
+
 <template>
   <div>
-    <v-data-table
+    <v-data-table-server
       :headers="headers"
       :items="chinchillas"
-      :items-per-page="perPage"
-      class="elevation-1"
-      @update:items-per-page="updatePerPage"
-      @update:page="updatePage"
-      @click:row="selectUser"
-    />
+      item-value="id"
+      :items-length="totalCount"
+      :loading="loading"
+      @update:options="requestPage"
+    >
+      <template v-slot:item.actions="{ item }">
+        <v-btn
+          @click="selectChinchilla(item)"
+          icon="edit"
+          size="small"
+          variant="text"
+        />
+      </template>
+    </v-data-table-server>
 
     <v-dialog v-model="dialog" max-width="800">
       <v-card v-if="activeItem && itemModels">
@@ -78,94 +173,6 @@
     </v-dialog>
   </div>
 </template>
-
-<script>
-import chinchillaConclusions from '~/assets/datas/chinchillaConclusions.json'
-
-export default {
-  name: 'AdminChinchillas',
-
-  async setup() {
-    const { data: chinchillas, error } = await useAsyncData(() => $request('admin/chinchillas/1/10').then((data) => data.data.map((el) => ({
-      ...el,
-      ownerName: `${el.owner.first_name} ${el.owner.last_name} (${el.owner.login})`,
-    }))));
-
-    if (error.value) await navigateTo('/');
-
-    return { chinchillas };
-  },
-
-  data() {
-    return {
-      headers: [
-        { text: 'ID', value: 'id' },
-        { text: 'Кличка', value: 'name' },
-        { text: 'Владелец', value: 'ownerName' },
-      ],
-      chinchillaConclusions,
-      page: 1,
-      perPage: 10,
-      dialog: false,
-      activeItem: null,
-      itemModels: null,
-      commentText: '',
-    }
-  },
-
-  methods: {
-    async requestPage() {
-      const response = await $request(
-        `admin/chinchillas/${this.page}/${this.perPage}`
-      )
-      response.data.forEach((el, index) => {
-        this.chinchillas[(this.page - 1) * this.perPage + index] = el
-      })
-    },
-    updatePerPage(perPage) {
-      this.perPage = perPage
-      this.requestPage()
-    },
-    updatePage(page) {
-      this.page = page
-      this.requestPage()
-    },
-    selectUser(item) {
-      this.activeItem = item
-      this.itemModels = { ...item }
-      this.dialog = true
-    },
-    async changeChinchilla() {
-      Object.assign(
-        this.activeItem,
-        await $request(`admin/chinchilla/${this.itemModels.id}`, {
-          method: 'put',
-          body: { conclusion: this.itemModels.conclusion },
-        })
-      )
-      this.dialog = false
-    },
-    colorString(color) {
-      return colorToString(color)
-    },
-    sendComment() {
-      $request('admin/color/comment', {
-        method: 'post',
-        body: {
-          chinchillaId: this.itemModels.id,
-          content: this.commentText,
-        },
-      })
-        .then((data) => {
-          this.activeItem.color_comments = [
-            data,
-            ...this.activeItem.color_comments,
-          ]
-        })
-    },
-  },
-}
-</script>
 
 <style lang="scss">
 .adminChinchillas {

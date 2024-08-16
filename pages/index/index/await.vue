@@ -33,8 +33,6 @@ export default {
 
   methods: {
     logout() {
-      this.$cookies.remove('TOKEN')
-      this.$cookies.remove('USER_ID')
       this.userStore.logout()
       this.$router.push('/auth')
     },

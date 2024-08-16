@@ -33,6 +33,11 @@ export type ColorInfoType = {
   fur: string;
 };
 
+export type ColorCommentType = {
+  id: number;
+  content: string;
+};
+
 export type ChinchillaStatusType = {
   id: number;
   name: 'growing' | 'breeding' | 'sale' | 'sold' | 'reserved' | 'dead';
@@ -61,6 +66,7 @@ export type ChinchillaType = {
   weight: string;
   brothers: string;
   description: string;
+  owner: UserType;
   breeder: UserType;
   avatar?: PhotoType;
   photos: PhotoType[];
@@ -72,6 +78,7 @@ export type ChinchillaType = {
   price_rub: ChinchillaPriceType;
   price_eur: ChinchillaPriceType;
   hidden: boolean;
+  color_comments: ColorCommentType[];
   conclusion: 'disagree' | 'overvalue';
 };
 

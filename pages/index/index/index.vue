@@ -57,9 +57,9 @@ definePageMeta({
           </ul>
         </div>
         <div class="mainPage__headerRight">
-          <WaterButton class="mainPage__auth" to="/profile"
-            >Перейти в личный кабинет</WaterButton
-          >
+          <WaterButton class="mainPage__auth" to="/profile">
+            Перейти в личный кабинет
+          </WaterButton>
         </div>
       </section>
       <h1 class="mainPage__siteName">CHINCHILLAS-SHOW</h1>
