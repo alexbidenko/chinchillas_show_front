@@ -745,13 +745,13 @@ export default {
   th {
     padding: 1px 3px;
     border: 1px solid black;
-    variant="text"-align: center;
+    text-align: center;
     font-size: 16px;
   }
   input {
     border: 0;
     width: 40%;
-    variant="text"-align: center;
+    text-align: center;
     display: inline-block;
   }
   p {
