@@ -1,3 +1,122 @@
+<script>
+import { required, email, minLength } from '@vuelidate/validators'
+import {mapStores} from "pinia";
+import useVuelidate from "@vuelidate/core";
+
+export default {
+  setup () {
+    const loading = ref(false);
+
+    return { v$: useVuelidate(), loading }
+  },
+
+  data() {
+    return {
+      mode: 'signIn',
+      email: '',
+      signIn: {
+        email: '',
+        password: '',
+      },
+      signUp: {
+        login: '',
+        email: '',
+        phone: '',
+        first_name: '',
+        last_name: '',
+        patronymic: '',
+        country: '',
+        city: '',
+        password: '',
+      },
+      repeatPassword: '',
+      showPassword: false,
+      dialog: false,
+    }
+  },
+
+  computed: {
+    ...mapStores(useTokenStore),
+  },
+
+  methods: {
+    // TODO: нет логики
+    submitRemind() {},
+    submitSignIn() {
+      this.loading = true;
+
+      $request('login', {
+        method: 'post',
+        body: this.signIn,
+      }).then((data) => {
+        const date = new Date()
+        date.setFullYear(date.getFullYear() + 200)
+        this.$cookies.set('TOKEN', data.token, { expires: date })
+        this.$cookies.set('USER_ID', data.user.id, { expires: date })
+        this.tokenStore.value = data.token;
+        this.$router.push('/profile')
+      }).finally(() => {
+        this.loading = false;
+      })
+    },
+    submitSignUp() {
+      this.loading = true;
+
+      $request('register', {
+        method: 'post',
+        body: this.signUp,
+      }).then((data) => {
+        const date = new Date()
+        date.setFullYear(date.getFullYear() + 200)
+        this.$cookies.set('TOKEN', data.token, { expires: date })
+        this.$cookies.set('USER_ID', data.user.id, { expires: date })
+        this.tokenStore.value = data.token;
+        this.$router.push('/profile')
+      }).finally(() => {
+        this.loading = false;
+      })
+    },
+  },
+
+  validations() {
+    return {
+      signUp: {
+        login: {
+          required,
+          minLength: minLength(6),
+        },
+        email: {
+          required,
+          email,
+        },
+        password: {
+          required,
+          minLength: minLength(8),
+        },
+        first_name: {
+          required,
+        },
+        last_name: {
+          required,
+        },
+        patronymic: {
+          required,
+        },
+        phone: {
+          required,
+        },
+        country: {
+          required,
+        },
+        city: {
+          required,
+        },
+      },
+    };
+  },
+}
+</script>
+
 <template>
   <div class="authPage baseContainer">
     <article class="authPage__card">
@@ -51,7 +170,7 @@
           >
             Забыли пароль?
           </button>
-          <button type="submit" class="authPage__submit">Войти</button>
+          <Button type="submit" label="Войти" :loading="loading" rounded class="ml-auto !px-8" />
         </form>
         <form
           v-else-if="mode === 'signUp'"
@@ -147,14 +266,15 @@
 
           <v-dialog v-model="dialog">
             <template #activator="{ props }">
-              <button
+              <Button
                 type="submit"
-                class="authPage__submit"
+                label="Зарегистрироваться"
+                :loading="loading"
                 :disabled="v$.$invalid"
+                rounded
+                class="ml-auto !px-8"
                 v-bind="props"
-              >
-                Зарегистрироваться
-              </button>
+              />
             </template>
 
             <v-card>
@@ -208,115 +328,6 @@
     </article>
   </div>
 </template>
-
-<script>
-import { required, email, minLength } from '@vuelidate/validators'
-import {mapStores} from "pinia";
-import useVuelidate from "@vuelidate/core";
-
-export default {
-
-  setup () {
-    return { v$: useVuelidate() }
-  },
-  data() {
-    return {
-      mode: 'signIn',
-      email: '',
-      signIn: {
-        email: '',
-        password: '',
-      },
-      signUp: {
-        login: '',
-        email: '',
-        phone: '',
-        first_name: '',
-        last_name: '',
-        patronymic: '',
-        country: '',
-        city: '',
-        password: '',
-      },
-      repeatPassword: '',
-      showPassword: false,
-      dialog: false,
-    }
-  },
-
-  computed: {
-    ...mapStores(useTokenStore),
-  },
-
-  methods: {
-    // TODO: нет логики
-    submitRemind() {},
-    submitSignIn() {
-      $request('login', {
-        method: 'post',
-        body: this.signIn,
-      }).then((data) => {
-        const date = new Date()
-        date.setFullYear(date.getFullYear() + 200)
-        this.$cookies.set('TOKEN', data.token, { expires: date })
-        this.$cookies.set('USER_ID', data.user.id, { expires: date })
-        this.tokenStore.value = data.token;
-        this.$router.push('/profile')
-      })
-    },
-    submitSignUp() {
-      $request('register', {
-        method: 'post',
-        body: this.signUp,
-      }).then((data) => {
-        const date = new Date()
-        date.setFullYear(date.getFullYear() + 200)
-        this.$cookies.set('TOKEN', data.token, { expires: date })
-        this.$cookies.set('USER_ID', data.user.id, { expires: date })
-        this.tokenStore.value = data.token;
-        this.$router.push('/profile')
-      })
-    },
-  },
-
-  validations() {
-    return {
-      signUp: {
-        login: {
-          required,
-          minLength: minLength(6),
-        },
-        email: {
-          required,
-          email,
-        },
-        password: {
-          required,
-          minLength: minLength(8),
-        },
-        first_name: {
-          required,
-        },
-        last_name: {
-          required,
-        },
-        patronymic: {
-          required,
-        },
-        phone: {
-          required,
-        },
-        country: {
-          required,
-        },
-        city: {
-          required,
-        },
-      },
-    };
-  },
-}
-</script>
 
 <style lang="scss">
 .authPage {

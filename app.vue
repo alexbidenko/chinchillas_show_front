@@ -1,5 +1,9 @@
+<script lang="ts" setup>
+const settingsStore = useSettingsStore();
+</script>
+
 <template>
-  <Html lang="ru" />
+  <Html lang="ru" :style="`font-size: ${settingsStore.interfaceScale}px`" />
   <Head>
     <Link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <Link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -13,6 +17,10 @@
   <VitePwaManifest />
   <NuxtLoadingIndicator />
   <NuxtPage />
+
+  <ClientOnly>
+    <ConfirmDialog />
+  </ClientOnly>
 </template>
 
 <style lang="scss">

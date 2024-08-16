@@ -112,7 +112,7 @@ export default {
 
     <div
       class="searchPage__list baseGrid"
-      :class="`gridCount__${gridCountValue}`"
+      :class="[`gridCount__${gridCountValue}`, { 'text-sm md:text-md': gridCountValue === 'more' }]"
     >
       <ChinchillaCard
         v-for="chinchilla in chinchillas"

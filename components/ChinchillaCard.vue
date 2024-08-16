@@ -19,7 +19,7 @@ const birthdayDate = computed(() => dateFormat(props.chinchilla.birthday, 'yyyy.
     class="contents"
     :to="`/profile/chinchillas/${chinchilla.id}`"
   >
-    <Card class="group/card !rounded-xl !bg-surface-100 hover:shadow-lg transition" :pt="{ body: { class: '!p-2' } }">
+    <Card class="group/card !rounded-xl !bg-surface-100 hover:shadow-lg transition" :pt="{ body: { class: '!p-1 md:!p-2' } }">
       <template #header>
         <div class="overflow-hidden relative aspect-square !rounded-xl">
           <NuxtImg
@@ -41,7 +41,7 @@ const birthdayDate = computed(() => dateFormat(props.chinchilla.birthday, 'yyyy.
             </div>
           </div>
 
-          <div class="absolute top-0 left-0 right-0 bottom-0 transition translate-y-full group-hover:info:translate-y-0 group-hover/card:translate-y-0 bg-surface-200/75 p-2">
+          <div class="absolute top-0 left-0 right-0 bottom-0 transition translate-y-full group-hover:info:translate-y-0 group-hover/card:translate-y-0 bg-surface-200/75 p-1 md:p-2">
             <ul class="list-none m-0 p-0">
               <li class="px-0 py-1 flex justify-between gap-1 items-center">
                 <span class="text-900 font-medium text-xs">{{ chinchilla.sex === 'f' ? 'Самка' : 'Самец' }}</span>
@@ -63,17 +63,17 @@ const birthdayDate = computed(() => dateFormat(props.chinchilla.birthday, 'yyyy.
             <span class="text-600 font-medium text-xs">Без окраса</span>
           </li>
           <li class="px-0 py-1 flex justify-between gap-1 items-center">
-            <span class="text-600 font-medium text-xs">Кличка</span>
-            <span class="text-900 font-medium text-xs">{{ chinchilla.name }}</span>
+            <span class="text-600 font-medium text-xs hidden md:inline-block">Кличка</span>
+            <span class="text-900 font-medium text-xs md:text-right">{{ chinchilla.name }}</span>
           </li>
           <template v-if="withParent">
             <li v-if="chinchilla.mother" class="px-0 py-1 flex justify-between gap-1 items-center border-t border-surface-900">
-              <span class="text-600 font-medium text-xs">Мать</span>
-              <span class="text-900 font-medium text-xs">{{ chinchilla.mother.name }}</span>
+              <span class="text-600 font-medium text-xs hidden md:inline-block">Мать</span>
+              <span class="text-900 font-medium text-xs md:text-right">{{ chinchilla.mother.name }}</span>
             </li>
             <li v-if="chinchilla.father" class="px-0 py-1 flex justify-between gap-1 items-center border-t border-surface-900">
-              <span class="text-600 font-medium text-xs">Отец</span>
-              <span class="text-900 font-medium text-xs">{{ chinchilla.father.name }}</span>
+              <span class="text-600 font-medium text-xs hidden md:inline-block">Отец</span>
+              <span class="text-900 font-medium text-xs md:text-right">{{ chinchilla.father.name }}</span>
             </li>
           </template>
         </ul>

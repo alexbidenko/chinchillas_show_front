@@ -3,10 +3,21 @@ import {NuxtLink} from "#components";
 
 const router = useRouter();
 const userStore = useUserStore();
+const settingsStore = useSettingsStore();
+const confirm = useConfirm();
+
+const isSettingsVisible = ref(false);
 
 const logout = () => {
-  userStore.logout();
-  router.push('/auth');
+  confirm.require({
+    header: 'Вы уверены, что хотите выйти из аккаунта?',
+    acceptLabel: 'Подтвердить',
+    rejectLabel: 'Отменить',
+    accept: () => {
+      userStore.logout();
+      router.push('/auth');
+    },
+  })
 };
 
 const menu = computed(() => [
@@ -37,8 +48,8 @@ const menu = computed(() => [
     disabled: !userStore.isModerator,
   },
   {
-    label: 'Выход',
-    command: logout,
+    label: 'Настройки',
+    command: () => isSettingsVisible.value = true,
   },
 ]);
 </script>
@@ -78,6 +89,26 @@ const menu = computed(() => [
         </template>
       </BaseSidenav>
     </nav>
+
+    <Dialog
+      v-model:visible="isSettingsVisible"
+      header="Настройки"
+      modal
+      class="min-w-72 max-w-full"
+    >
+      <label>
+        <span class="text-md mb-4 block">Масштаб интерфейса</span>
+        <Slider v-model="settingsStore.interfaceScale" :min="11" :max="21" />
+      </label>
+
+      <Divider />
+
+      <Button @click="logout" label="Выйти из аккаунт" severity="danger" outlined class="w-full" />
+
+      <template #footer>
+        <Button @click="isSettingsVisible = false" label="Закрыть" />
+      </template>
+    </Dialog>
   </header>
 </template>
 

@@ -182,7 +182,7 @@ export default {
 
   & &__gridCount {
     display: none;
-    max-width: 120px;
+    max-width: 142px;
 
     @include mq('tablet-small') {
       display: block;
