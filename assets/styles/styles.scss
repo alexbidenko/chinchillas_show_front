@@ -1,4 +1,5 @@
 @import "material-design-icons-iconfont/dist/material-design-icons.css";
+@import 'primeicons/primeicons.css';
 
 @import "./reset.scss";
 @import "./settings.scss";
@@ -63,6 +64,8 @@ input[type=file] {
 
   @include mq('tablet-small') {
     grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 8px;
+    grid-row-gap: 12px;
   }
 }
 

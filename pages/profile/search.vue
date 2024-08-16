@@ -1,35 +1,3 @@
-<template>
-  <div class="searchPage baseContainer">
-    <ChinchillaSearch :parameters="params" @change="apply" />
-
-    <div class="searchPage__settings">
-      <v-select
-        v-model="gridCountValue"
-        solo
-        label="В ряд"
-        :items="gridCountItems"
-        item-title="label"
-        item-value="value"
-        class="searchPage__gridCount"
-      />
-    </div>
-
-    <div
-      class="searchPage__list baseGrid"
-      :class="`gridCount__${gridCountValue}`"
-    >
-      <ChinchillaCard
-        v-for="chinchilla in chinchillas"
-        :key="chinchilla.id"
-        :chinchilla="chinchilla"
-      />
-    </div>
-    <div v-if="isLoading" class="searchPage__loaderContainer">
-      <BaseSpinner />
-    </div>
-  </div>
-</template>
-
 <script>
 import {mapStores} from "pinia";
 
@@ -125,6 +93,39 @@ export default {
   },
 }
 </script>
+
+<template>
+  <div class="searchPage baseContainer">
+    <ChinchillaSearch :parameters="params" @change="apply" />
+
+    <div class="searchPage__settings">
+      <v-select
+        v-model="gridCountValue"
+        solo
+        label="В ряд"
+        :items="gridCountItems"
+        item-title="label"
+        item-value="value"
+        class="searchPage__gridCount"
+      />
+    </div>
+
+    <div
+      class="searchPage__list baseGrid"
+      :class="`gridCount__${gridCountValue}`"
+    >
+      <ChinchillaCard
+        v-for="chinchilla in chinchillas"
+        :key="chinchilla.id"
+        :chinchilla="chinchilla"
+        with-parent
+      />
+    </div>
+    <div v-if="isLoading" class="searchPage__loaderContainer">
+      <BaseSpinner />
+    </div>
+  </div>
+</template>
 
 <style lang="scss">
 .searchPage {

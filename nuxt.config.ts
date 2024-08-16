@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     'nuxt-security',
     '@vite-pwa/nuxt',
     '@nuxt/eslint',
+    '@primevue/nuxt-module',
   ],
   app: {
     pageTransition: { name: 'page', mode: 'out-in' },
@@ -92,6 +93,10 @@ export default defineNuxtConfig({
       type: 'module',
     },
   },
+  primevue: {
+    importTheme: { from: '@/theme.ts' },
+    options: { ripple: true },
+  },
   vuetify: {
     vuetifyOptions: {
       theme: {
@@ -110,6 +115,13 @@ export default defineNuxtConfig({
       },
     },
   },
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {}
+    }
+  },
+  css: ['./assets/styles/tailwind.scss', './assets/styles/styles.scss', './assets/styles/reset.scss'],
   security: {
     rateLimiter: false,
     headers: {

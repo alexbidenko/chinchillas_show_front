@@ -4,7 +4,7 @@
     :class="{ chinchillaPhoto_avatar: isAvatar }"
     @click="$emit('click', $event)"
   >
-    <nuxt-img
+    <NuxtImg
       class="chinchillaPhoto__image"
       format="webp"
       placeholder="/assets/empty.jpg"

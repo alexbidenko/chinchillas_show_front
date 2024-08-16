@@ -8,14 +8,12 @@
     <Meta name="msapplication-TileColor" content="#d79b00" />
     <Meta name="theme-color" content="#ffffff" />
   </Head>
+  <Body class="p-light" />
 
   <VitePwaManifest />
   <NuxtLoadingIndicator />
   <NuxtPage />
 </template>
-
-<style lang="scss" src="~/assets/styles/reset.scss" />
-<style lang="scss" src="~/assets/styles/styles.scss" />
 
 <style lang="scss">
 .page-enter-active,
