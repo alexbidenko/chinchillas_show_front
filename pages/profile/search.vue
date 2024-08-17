@@ -49,7 +49,7 @@ onBeforeUnmount(() => {
     <ChinchillaSearch :parameters="params" @change="apply" />
 
     <div
-      class="searchPage__list grid sm:grid-cols-4 md:grid-cols-6 xl:grid-cols-8 sm:gap-2 md:gap-3 lg:gap-4 py-4 baseContainer"
+      class="searchPage__list grid sm:grid-cols-4 md:grid-cols-6 xl:grid-cols-8 sm:gap-2 md:gap-3 lg:gap-4 py-4"
       :class="settingsStore.gridCountValue === 'more' ? 'grid-cols-4 gap-1' : 'grid-cols-2 gap-2'"
     >
       <ChinchillaCard

@@ -8,7 +8,7 @@ export const useSettingsStore = defineStore('settings', () => {
     }
   });
 
-  const gridCountValue = computed(() => interfaceScale.value < 16 ? 'more' : 'default');
+  const gridCountValue = computed(() => interfaceScale.value < 15 ? 'more' : 'default');
 
   return { interfaceScale, gridCountValue };
 });
