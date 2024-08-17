@@ -14,7 +14,7 @@ const review = () => {
   const preparedScale = width < 1100 ? Math.max(width / 1100, 0.2) : 1
   scale.value = props.forPrint ? (preparedScale * 1.4) : preparedScale;
   const preparedMargin = scale.value === 1 ? 0 : -(((1 - scale.value) * 1100) / 2);
-  margin.value = props.forPrint ? (preparedMargin / 2.4) : preparedMargin;
+  margin.value = props.forPrint ? (preparedMargin / 2.4) : (preparedMargin / 0.8);
 }
 
 const getParent = (steps: string) => {
@@ -180,7 +180,7 @@ onBeforeUnmount(() => {
   &__cell {
     z-index: 2;
     width: 240px;
-    height: 280px;
+    aspect-ratio: 1 / 1.13;
     margin: 32px 16px;
     position: relative;
     background-color: #828282;

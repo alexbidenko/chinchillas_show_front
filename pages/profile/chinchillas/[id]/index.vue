@@ -32,6 +32,7 @@ const isPrinting = computed(() => (
 const colorString = computed(() => colorToString(data.value.color));
 const birthdayDate = computed(() => dateFormat(data.value.birthday, 'yyyy.MM.dd'));
 const dateDifference = computed(() => getDateDifference(data.value.birthday));
+
 const activeStatus = computed(() => {
   const status = {
     ...(data.value.statuses[0] || {}),
@@ -51,18 +52,19 @@ const activeStatus = computed(() => {
     status.prices.push(data.value.price_eur)
   return status;
 });
+
 const infoData = computed(() => [
   {
     label: 'Идентификатор',
     value: data.value.id,
   },
   {
-    enabled: !!data.value.breeder,
+    disabled: !data.value.breeder,
     label: 'Заводчик',
     value: `${data.value.breeder.first_name} ${data.value.breeder.last_name} (${data.value.breeder.login})`,
   },
   {
-    enabled: !data.value.breeder && data.value.breeder_name,
+    disabled: data.value.breeder || !data.value.breeder_name,
     label: 'Заводчик',
     value: data.value.breeder_name,
   },
@@ -72,32 +74,32 @@ const infoData = computed(() => [
   },
   {
     label: 'Дата рождения',
-    value: birthdayDate,
+    value: birthdayDate.value,
   },
   {
     label: 'Возраст',
-    value: dateDifference,
+    value: dateDifference.value,
   },
   {
     label: 'Окрас',
-    value: colorString,
+    value: colorString.value,
   },
   {
-    enabled: data.value.weight,
+    disabled: !data.value.weight,
     label: 'Вес при рождении',
     value: data.value.weight,
   },
   {
-    enabled: data.value.brothers,
+    disabled: !data.value.brothers,
     label: 'Щенков в помете',
     value: data.value.brothers,
   },
   {
-    enabled: data.value.description,
+    disabled: !data.value.description,
     label: 'Комментарий',
     value: data.value.description,
   },
-].filter((el) => el.enabled));
+].filter((el) => !el.disabled));
 
 const updateUser = async () => {
   data.value = await $request(
@@ -262,13 +264,13 @@ onBeforeUnmount(() => {
           </v-card-text>
         </v-card>
 
-        <section class="bg-white p-4 md:p-5 lg:p-6 shadow-md rounded-lg mb-7">
-          <div class="font-medium text-3xl text-surface-900 mb-5">О шиншилле</div>
+        <section class="bg-white !p-4 md:p-5 lg:p-6 shadow-md rounded-lg !mb-7">
+          <div class="font-medium text-3xl text-surface-900 !mb-5">О шиншилле</div>
           <ul class="list-none p-0 m-0 border-t">
             <li
               v-for="(item, index) in infoData"
               :key="item.label"
-              class="flex items-center py-3 px-2 flex-wrap"
+              class="flex items-center !py-2 sm:!py-3 !px-2 flex-wrap"
               :class="{ 'bg-surface-100': index % 2 === 0 }"
             >
               <div class="text-surface-500 w-full md:w-52 font-medium">{{ item.label }}</div>
@@ -293,7 +295,7 @@ onBeforeUnmount(() => {
               activePhoto = index;
             "
           />
-          <label v-if="userStore.userId === data.owner_id" class="viewPage__uploadPhoto">
+          <label v-if="userStore.userId === data.owner_id" class="viewPage__uploadPhoto shadow-lg hover:shadow-sm rounded-lg">
             <v-icon size="40px" color="white">add</v-icon>
             <input
               type="file"
@@ -389,15 +391,10 @@ onBeforeUnmount(() => {
     align-items: center;
     justify-content: center;
     background-color: #828282;
-    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
     transition: box-shadow 0.3s ease;
 
     & input {
       display: none;
-    }
-
-    &:hover {
-      box-shadow: none;
     }
 
     &::before {

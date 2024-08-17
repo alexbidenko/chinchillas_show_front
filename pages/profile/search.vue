@@ -50,7 +50,12 @@ onBeforeUnmount(() => {
 
     <div
       class="searchPage__list grid sm:grid-cols-4 md:grid-cols-6 xl:grid-cols-8 sm:gap-2 md:gap-3 lg:gap-4 py-4"
-      :class="settingsStore.gridCountValue === 'more' ? 'grid-cols-4 gap-1' : 'grid-cols-2 gap-2'"
+      :class="{
+        'grid-cols-4 gap-1': settingsStore.gridCountValue === 'sm',
+        'grid-cols-3 gap-2': settingsStore.gridCountValue === 'md',
+        'grid-cols-2 gap-2': settingsStore.gridCountValue === 'lg',
+        'grid-cols-1 gap-3': settingsStore.gridCountValue === 'xl',
+      }"
     >
       <ChinchillaCard
         v-for="chinchilla in chinchillas"

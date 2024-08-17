@@ -5,14 +5,14 @@ const props = defineProps<{
   items: ChinchillaType[];
   title: string | null;
   sectionKey: string;
-  defaultExpand: boolean;
+  defaultExpand?: boolean;
 }>();
 
 const settingsStore = useSettingsStore();
 
 const expanded = useCookie<boolean>(
   `section_expanded:${props.sectionKey}`,
-  { path: '/', expires: getEternalCookieExpired(), default: () => props.defaultExpand, },
+  { path: '/', expires: getEternalCookieExpired(), default: () => !!props.defaultExpand, },
 );
 </script>
 

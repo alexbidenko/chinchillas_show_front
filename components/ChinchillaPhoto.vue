@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative transition aspect-square hover:shadow-lg rounded-lg cursor-pointer"
+    class="relative transition aspect-square shadow-lg hover:shadow-sm rounded-lg cursor-pointer"
     :class="{ chinchillaPhoto_avatar: isAvatar }"
     @click="$emit('click', $event)"
   >

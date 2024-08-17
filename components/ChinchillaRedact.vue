@@ -152,7 +152,7 @@
             @to-avatar="photoToAvatar"
             @delete="deletePhoto"
           />
-          <label class="chinchillaRedact__uploadPhoto">
+          <label class="chinchillaRedact__uploadPhoto shadow-lg hover:shadow-sm rounded-lg">
             <v-icon size="40px" color="white">add</v-icon>
             <input type="file" multiple accept="image/*" @change="savePhotos" >
           </label>
@@ -447,15 +447,10 @@ const v$ = useVuelidate({
     align-items: center;
     justify-content: center;
     background-color: #828282;
-    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
     transition: box-shadow 0.3s ease;
 
     & input {
       display: none;
-    }
-
-    &:hover {
-      box-shadow: none;
     }
 
     &::before {

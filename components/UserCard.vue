@@ -8,7 +8,7 @@ defineProps<{
 
 <template>
   <nuxt-link class="contents" :to="`/profile/${user.id}`">
-    <Card class="!rounded-2xl !bg-surface-100 hover:shadow-lg transition">
+    <Card class="!rounded-2xl !bg-surface-100 !shadow-lg hover:!shadow-sm transition">
       <template #header>
         <NuxtImg
           :src="
