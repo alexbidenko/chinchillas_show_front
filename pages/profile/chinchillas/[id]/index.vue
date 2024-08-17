@@ -264,20 +264,52 @@ onBeforeUnmount(() => {
           </v-card-text>
         </v-card>
 
-        <section class="bg-white !p-4 md:p-5 lg:p-6 shadow-md rounded-lg !mb-7">
-          <div class="font-medium text-3xl text-surface-900 !mb-5">О шиншилле</div>
-          <ul class="list-none p-0 m-0 border-t">
-            <li
-              v-for="(item, index) in infoData"
-              :key="item.label"
-              class="flex items-center !py-2 sm:!py-3 !px-2 flex-wrap"
-              :class="{ 'bg-surface-100': index % 2 === 0 }"
-            >
-              <div class="text-surface-500 w-full md:w-52 font-medium">{{ item.label }}</div>
-              <div class="text-surface-900 index">{{ item.value }}</div>
-            </li>
-          </ul>
-        </section>
+        <v-card title="Информация шиншиллы" class="mb-8">
+          <v-card-text class="pb-0">
+            <p class="pb-3 mb-0">Идентификатор: {{ data.id }}</p>
+            <p v-if="data.breeder" class="pb-3 mb-0">
+              Заводчик:
+              {{
+                `${data.breeder.first_name} ${data.breeder.last_name} (${data.breeder.login})`
+              }}
+            </p>
+            <p v-else-if="data.breeder_name">
+              Заводчик: {{ data.breeder_name }}
+            </p>
+            <p class="pb-3 mb-0">
+              Пол: {{ data.sex === 'f' ? 'самка' : 'самец' }}
+            </p>
+            <p class="pb-3 mb-0">Дата рождения: {{ birthdayDate }}</p>
+            <p class="pb-3 mb-0">Возраст: {{ dateDifference }}</p>
+            <p class="pb-3 mb-0 viewPage--phoneOnly">
+              Окрас: {{ colorString }}
+            </p>
+            <p v-if="data.weight" class="pb-3 mb-0">
+              Вес при рождении: {{ data.weight }} г.
+            </p>
+            <p v-if="data.brothers" class="pb-3 mb-0">
+              Щенков в помете: {{ data.brothers }}
+            </p>
+            <p v-if="data.description" class="pb-3 mb-0">
+              Комментарий: {{ data.description }}
+            </p>
+          </v-card-text>
+        </v-card>
+
+<!--        <section class="bg-white !p-4 md:p-5 lg:p-6 shadow-md rounded-lg !mb-7">-->
+<!--          <div class="font-medium text-3xl text-surface-900 !mb-5">О шиншилле</div>-->
+<!--          <ul class="list-none p-0 m-0 border-t">-->
+<!--            <li-->
+<!--              v-for="(item, index) in infoData"-->
+<!--              :key="item.label"-->
+<!--              class="flex items-center !py-2 sm:!py-3 !px-2 flex-wrap"-->
+<!--              :class="{ 'bg-surface-100': index % 2 === 0 }"-->
+<!--            >-->
+<!--              <div class="text-surface-500 w-full md:w-52 font-medium">{{ item.label }}</div>-->
+<!--              <div class="text-surface-900 index">{{ item.value }}</div>-->
+<!--            </li>-->
+<!--          </ul>-->
+<!--        </section>-->
 
         <div class="font-medium text-3xl text-surface-900 mb-5">Фотографии</div>
 
