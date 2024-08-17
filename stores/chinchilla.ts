@@ -1,20 +1,22 @@
+import type {ChinchillaType, ColorInfoType, PaginationType} from "~/types/common";
+
 const PER_PAGE_COUNT = 40;
 
 export const useChinchillaStore = defineStore('chinchilla', () => {
   const userStore = useUserStore();
 
-  const chinchillas = ref([]);
+  const chinchillas = ref<ChinchillaType[]>([]);
   const isLoading = ref(false);
   const isFinish = ref(false);
   const offset = ref(0);
 
-  const fetchChinchillas = async ({ reset, params }) => {
+  const fetchChinchillas = async ({ reset, params }: { reset?: boolean; params: { search?: string; sex?: string; status?: string; colors?: Partial<ColorInfoType> } }) => {
     if (reset) isFinish.value = false;
     if (isLoading.value || isFinish.value) return
 
     isLoading.value = true;
 
-    const {data} = await $request('chinchilla/search', {
+    const {data} = await $request<PaginationType<ChinchillaType>>('chinchilla/search', {
       params: {
         name: params.search || undefined,
         sex: params.sex || undefined,
@@ -41,7 +43,7 @@ export const useChinchillaStore = defineStore('chinchilla', () => {
     offset.value = (reset ? 0 : offset.value) + PER_PAGE_COUNT;
   };
 
-  const setChinchillas = (data) => {
+  const setChinchillas = (data: { chinchillas?: ChinchillaType[]; isLoading?: boolean; isFinish?: boolean; offset?: number }) => {
     chinchillas.value = data.chinchillas ?? chinchillas.value;
     isLoading.value = data.isLoading ?? isLoading.value;
     isFinish.value = data.isFinish ?? isFinish.value;

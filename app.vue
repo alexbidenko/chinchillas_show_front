@@ -1,5 +1,9 @@
+<script lang="ts" setup>
+const settingsStore = useSettingsStore();
+</script>
+
 <template>
-  <Html lang="ru" />
+  <Html lang="ru" :style="`font-size: ${settingsStore.interfaceScale}px`" />
   <Head>
     <Link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <Link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -8,14 +12,16 @@
     <Meta name="msapplication-TileColor" content="#d79b00" />
     <Meta name="theme-color" content="#ffffff" />
   </Head>
+  <Body class="p-light" />
 
   <VitePwaManifest />
   <NuxtLoadingIndicator />
   <NuxtPage />
-</template>
 
-<style lang="scss" src="~/assets/styles/reset.scss" />
-<style lang="scss" src="~/assets/styles/styles.scss" />
+  <ClientOnly>
+    <ConfirmDialog />
+  </ClientOnly>
+</template>
 
 <style lang="scss">
 .page-enter-active,

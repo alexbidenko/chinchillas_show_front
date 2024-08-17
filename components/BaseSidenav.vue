@@ -1,3 +1,13 @@
+<script lang="ts" setup>
+const route = useRoute();
+
+const isOpen = ref(false);
+
+watch(() => route.fullPath, () => {
+  isOpen.value = false;
+})
+</script>
+
 <template>
   <div class="baseSidenav">
     <button class="baseSidenav__button" @click="isOpen = !isOpen">
@@ -20,24 +30,6 @@
     </nav>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'BaseSidenav',
-
-  data() {
-    return {
-      isOpen: false,
-    }
-  },
-
-  watch: {
-    $route() {
-      this.isOpen = false
-    },
-  },
-}
-</script>
 
 <style lang="scss">
 .baseSidenav {

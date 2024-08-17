@@ -1,18 +1,12 @@
+<script lang="ts" setup>
+defineProps<{
+  isLight?: boolean;
+}>();
+</script>
+
 <template>
   <span class="baseSpinner" :class="{ 'baseSpinner--light': isLight }" />
 </template>
-<script>
-export default {
-  name: 'BaseSpinner',
-
-  props: {
-    isLight: {
-      type: Boolean,
-      default: false,
-    },
-  },
-}
-</script>
 
 <style lang="scss">
 .baseSpinner {

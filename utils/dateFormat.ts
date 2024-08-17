@@ -1,4 +1,4 @@
-const dateFormat = (date: string, format?: 'yyyy.MM.dd' | 'yyyy.MM.dd hh:mm'): string => {
+const dateFormat = (date: string | Date, format?: 'yyyy.MM.dd' | 'yyyy.MM.dd hh:mm'): string => {
   const d = new Date(date)
 
   switch (format) {

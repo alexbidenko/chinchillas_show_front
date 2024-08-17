@@ -1,27 +1,67 @@
+<script setup lang="ts">
+import type {ChinchillaType, ColorInfoType} from '~/types/common';
+
+const route = useRoute();
+
+const userStore = useUserStore();
+const chinchillaStore = useChinchillaStore();
+const settingsStore = useSettingsStore();
+
+const params = ref({
+  search: '',
+  sex: '',
+  status: (route.query.status || '') as string,
+  colors: {} as ColorInfoType,
+});
+
+const chinchillas = computed<ChinchillaType[]>(() => chinchillaStore.chinchillas);
+const isLoading = computed<boolean>(() => chinchillaStore.isLoading);
+
+const onScroll = () => {
+  if (window.scrollY + window.innerHeight + 500 > document.body.scrollHeight) {
+    chinchillaStore.fetchChinchillas({ params: params.value });
+  }
+};
+
+const apply = (parameters: typeof params.value) => {
+  params.value = parameters;
+  chinchillaStore.fetchChinchillas({ reset: true, params: params.value });
+};
+
+onMounted(() => {
+  window.addEventListener('scroll', onScroll);
+
+  if (!chinchillaStore.chinchillas.length) {
+    const fetchParams = { ...route.params, status: userStore.fullAccess ? (route.params.status as string) : 'sale' };
+
+    chinchillaStore.fetchChinchillas({ reset: true, params: fetchParams });
+  }
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', onScroll);
+});
+</script>
+
+
 <template>
   <div class="searchPage baseContainer">
     <ChinchillaSearch :parameters="params" @change="apply" />
 
-    <div class="searchPage__settings">
-      <v-select
-        v-model="gridCountValue"
-        solo
-        label="В ряд"
-        :items="gridCountItems"
-        item-title="label"
-        item-value="value"
-        class="searchPage__gridCount"
-      />
-    </div>
-
     <div
-      class="searchPage__list baseGrid"
-      :class="`gridCount__${gridCountValue}`"
+      class="searchPage__list grid sm:grid-cols-4 md:grid-cols-6 xl:grid-cols-8 sm:gap-2 md:gap-3 lg:gap-4 py-4"
+      :class="{
+        'grid-cols-4 gap-1': settingsStore.gridCountValue === 'sm',
+        'grid-cols-3 gap-2': settingsStore.gridCountValue === 'md',
+        'grid-cols-2 gap-2': settingsStore.gridCountValue === 'lg',
+        'grid-cols-1 gap-3': settingsStore.gridCountValue === 'xl',
+      }"
     >
       <ChinchillaCard
         v-for="chinchilla in chinchillas"
         :key="chinchilla.id"
         :chinchilla="chinchilla"
+        with-parent
       />
     </div>
     <div v-if="isLoading" class="searchPage__loaderContainer">
@@ -29,102 +69,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import {mapStores} from "pinia";
-
-export default {
-  name: 'SearchPage',
-
-  async setup() {
-    const route = useRoute()
-    const userStore = useUserStore();
-    const chinchillaStore = useChinchillaStore();
-
-    if (!chinchillaStore.chinchillas.length) {
-      const params = { ...route.params, status: userStore.fullAccess ? route.params.status : 'sale' }
-
-      await useAsyncData(async () => {
-        await chinchillaStore.fetchChinchillas({
-          reset: true,
-          params,
-        });
-
-        return 'search-chinchillas';
-      });
-    }
-  },
-
-  data() {
-    return {
-      gridCountItems: [
-        {
-          label: '2 карточки',
-          value: 'default',
-        },
-        {
-          label: '4 карточки',
-          value: 'more',
-        },
-      ],
-      gridCountValue: this.$cookies.get('grid_count_value') || 'default',
-      params: {
-        search: '',
-        sex: '',
-        status: this.$route.query.status || '',
-        colors: {},
-      },
-    }
-  },
-
-  computed: {
-    ...mapStores(useUserStore, useChinchillaStore),
-    chinchillas() {
-      return this.chinchillaStore.chinchillas
-    },
-    isLoading() {
-      return this.chinchillaStore.isLoading
-    },
-  },
-
-  watch: {
-    gridCountValue(val) {
-      const date = new Date()
-      date.setFullYear(date.getFullYear() + 200)
-      this.$cookies.set('grid_count_value', val, { expires: date })
-    },
-  },
-
-  mounted() {
-    window.addEventListener('scroll', this.onScroll)
-  },
-
-  beforeUnmount() {
-    window.removeEventListener('scroll', this.onScroll)
-  },
-
-  methods: {
-    onScroll() {
-      if (
-        window.scrollY + window.innerHeight + 500 >
-        document.body.scrollHeight
-      ) {
-        this.chinchillaStore.fetchChinchillas({
-          params: this.params,
-        });
-      }
-    },
-    apply(parameters) {
-      this.dialog = false
-      this.params = parameters
-      this.chinchillaStore.fetchChinchillas({
-        reset: true,
-        params: this.params,
-      });
-    },
-  },
-}
-</script>
 
 <style lang="scss">
 .searchPage {
@@ -149,21 +93,6 @@ export default {
     .baseSpinner {
       height: 44px;
       width: 44px;
-    }
-  }
-
-  &__settings {
-    & > *:first-child {
-      @include mq('tablet') {
-        display: none;
-      }
-    }
-    & > *:last-child {
-      display: none;
-
-      @include mq('tablet') {
-        display: block;
-      }
     }
   }
 

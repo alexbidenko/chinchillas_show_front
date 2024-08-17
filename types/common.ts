@@ -10,8 +10,15 @@ export type UserType = {
   login: string;
   first_name: string;
   last_name: string;
+  patronymic: string;
+  email: string;
+  phone: string;
+  avatar: string | null;
+  country: string;
+  city: string;
   type: UserTypeVariant;
   admitted: boolean;
+  chinchillasCount: number;
 };
 
 export type ColorInfoType = {

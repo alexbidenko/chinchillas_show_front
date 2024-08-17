@@ -1,20 +1,42 @@
+<script setup lang="ts">
+import type {ChinchillaType} from "~/types/common";
+
+const props = defineProps<{
+  items: ChinchillaType[];
+  title: string | null;
+  sectionKey: string;
+  defaultExpand?: boolean;
+}>();
+
+const settingsStore = useSettingsStore();
+
+const expanded = useCookie<boolean>(
+  `section_expanded:${props.sectionKey}`,
+  { path: '/', expires: getEternalCookieExpired(), default: () => !!props.defaultExpand, },
+);
+</script>
+
 <template>
   <section class="cardSection">
     <div class="cardSection__container">
       <header
         v-if="title"
         class="cardSection__header"
-        @click="expand = !expand"
+        @click="expanded = !expanded"
       >
         <div class="cardSection__headerCard paddingRight">
           <h3 class="cardSection__title paddingLeft">
             {{ title }} ({{ items.length }})
           </h3>
-          <v-btn :icon="expand ? 'keyboard_arrow_up' : 'keyboard_arrow_down'" />
+          <v-btn :icon="expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'" />
         </div>
       </header>
       <div v-auto-animate style="overflow: hidden">
-        <main v-if="expand" class="cardSection__list baseContainer">
+        <main
+          v-if="expanded"
+          class="grid sm:grid-cols-4 md:grid-cols-6 xl:grid-cols-8 sm:gap-2 md:gap-3 lg:gap-4 py-4 baseContainer"
+          :class="settingsStore.gridCountValue === 'more' ? 'grid-cols-4 gap-1' : 'grid-cols-2 gap-2'"
+        >
           <ChinchillaCard
             v-for="item in items"
             :key="item.id"
@@ -25,51 +47,6 @@
     </div>
   </section>
 </template>
-
-<script>
-export default {
-  name: 'CardSection',
-
-  props: {
-    items: {
-      type: Array,
-      default: () => [],
-    },
-    title: {
-      type: String,
-      default: null,
-    },
-    sectionKey: {
-      type: String,
-      required: true,
-    },
-    defaultExpand: {
-      type: Boolean,
-      default: true,
-    },
-  },
-
-  data() {
-    let expand = this.defaultExpand
-    const value = this.$cookies.get(`section_expanded:${this.sectionKey}`)
-    if (typeof value === 'boolean') expand = value
-
-    return {
-      expand,
-    }
-  },
-
-  watch: {
-    expand(val) {
-      const date = new Date()
-      date.setFullYear(date.getFullYear() + 200)
-      this.$cookies.set(`section_expanded:${this.sectionKey}`, val, {
-        expires: date,
-      })
-    },
-  },
-}
-</script>
 
 <style lang="scss">
 .cardSection {
@@ -111,44 +88,6 @@ export default {
     @include mq('tablet-small') {
       height: 40px;
     }
-  }
-
-  &__list {
-    padding-top: 40px;
-    padding-bottom: 40px;
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    grid-column-gap: 16px;
-    grid-row-gap: 24px;
-
-    @include mq('desktop', 'desktop-small') {
-      grid-column-gap: 12px;
-      grid-row-gap: 18px;
-    }
-
-    @include mq('desktop-small', 'tablet') {
-      grid-template-columns: repeat(6, 1fr);
-    }
-
-    @include mq('tablet', 'tablet-small') {
-      grid-template-columns: repeat(4, 1fr);
-      grid-column-gap: 16px;
-      grid-row-gap: 24px;
-    }
-
-    @include mq('tablet-small') {
-      grid-column-gap: 12px;
-      grid-row-gap: 16px;
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-}
-
-.gridCount__more .cardSection__list {
-  @include mq('tablet-small') {
-    grid-template-columns: repeat(4, 1fr);
-    grid-column-gap: 8px;
-    grid-row-gap: 16px;
   }
 }
 </style>

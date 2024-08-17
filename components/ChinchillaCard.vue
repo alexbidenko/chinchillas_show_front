@@ -1,332 +1,83 @@
-<template>
-  <nuxt-link
-    class="chinchillaCard"
-    :class="{ chinchillaCard__forPrint: forPrint }"
-    :to="`/profile/chinchillas/${chinchilla.id}`"
-  >
-    <div class="chinchillaCard__container">
-      <nuxt-img
-        class="chinchillaCard__image"
-        format="webp"
-        placeholder="/assets/empty.jpg"
-        :src="
-          chinchilla.avatar
-            ? `https://api.chinchillas-show.com/photos/chinchillas/${chinchilla.owner_id}/${chinchilla.id}/${chinchilla.avatar.name}`
-            : '/assets/empty.jpg'
-        "
-        width="400"
-        height="400"
-      />
-      <div class="chinchillaCard__bubbleContainer" @click.stop.prevent>
-        <div class="chinchillaCard__infoBubble">
-          <v-icon icon="info" color="white" />
-        </div>
-      </div>
-      <div class="chinchillaCard__info">
-        <p class="chinchillaCard__infoRow">
-          Пол: {{ chinchilla.sex === 'f' ? 'самка' : 'самец' }}
-        </p>
-        <p class="chinchillaCard__infoRow">
-          {{ colorString || 'стандарт' }}
-        </p>
-        <p class="chinchillaCard__infoRow">
-          {{ forPrint ? birthdayDate : dateDifference }}
-        </p>
-      </div>
-    </div>
-    <div class="chinchillaCard__titleContainer">
-      <h4 class="chinchillaCard__title">
-        <span class="chinchillaCard__name">
-        {{ chinchilla.name }}
-          <span v-if="!chinchilla.color">(без окраса)</span>
-        </span>
-      </h4>
-    </div>
-  </nuxt-link>
-</template>
+<script setup lang="ts">
+import type {ChinchillaType} from "~/types/common";
 
-<script>
-export default {
-  name: 'ChinchillaCard',
+const props = defineProps<{
+  chinchilla: ChinchillaType;
+  forPrint?: boolean;
+  withParent?: boolean;
+}>();
 
-  props: {
-    chinchilla: {
-      type: Object,
-      required: true,
-    },
-    forPrint: {
-      type: Boolean,
-      default: false,
-    },
-  },
+const colorString = computed(() => colorToString(props.chinchilla.color));
 
-  computed: {
-    colorString() {
-      return colorToString(this.chinchilla.color)
-    },
-    dateDifference() {
-      return getDateDifference(this.chinchilla.birthday, new Date(), 'sm')
-    },
-    birthdayDate() {
-      return dateFormat(this.chinchilla.birthday, 'yyyy.MM.dd')
-    },
-  },
-}
+const dateDifference = computed(() => getDateDifference(props.chinchilla.birthday, new Date(), 'sm'));
+
+const birthdayDate = computed(() => dateFormat(props.chinchilla.birthday, 'yyyy.MM.dd'));
 </script>
 
-<style lang="scss">
-.chinchillaCard {
-  $self: &;
+<template>
+  <nuxt-link
+    class="contents"
+    :to="`/profile/chinchillas/${chinchilla.id}`"
+  >
+    <Card class="group/card !rounded-xl !bg-surface-100 !shadow-lg hover:!shadow-sm transition" :pt="{ body: { class: '!p-1 md:!p-2' } }">
+      <template #header>
+        <div class="overflow-hidden relative aspect-square !rounded-xl">
+          <NuxtImg
+            class="w-full h-full object-cover"
+            format="webp"
+            placeholder="/assets/empty.jpg"
+            :src="
+              chinchilla.avatar
+                ? `https://api.chinchillas-show.com/photos/chinchillas/${chinchilla.owner_id}/${chinchilla.id}/${chinchilla.avatar.name}`
+                : '/assets/empty.jpg'
+            "
+            width="400"
+            height="400"
+          />
 
-  padding-top: 100%;
-  background-color: #ccc;
-  position: relative;
-  display: flex;
-  align-items: flex-end;
-  text-decoration: none;
-  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
+          <div class="group/info absolute pt-1 pr-1 top-0 right-0 lg:hidden transition group-hover/card:-translate-y-full group-hover:info:-translate-y-full" @click.stop.prevent>
+            <div class="bg-primary-600 text-900 text-surface-100 aspect-square flex align-center justify-center rounded-full p-1">
+              <i class="pi pi-info-circle" />
+            </div>
+          </div>
 
-  &__container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    overflow: hidden;
-    aspect-ratio: 1 / 1;
-  }
+          <div class="absolute top-0 left-0 right-0 bottom-0 transition translate-y-full group-hover:info:translate-y-0 group-hover/card:translate-y-0 bg-surface-200/75 p-1 md:p-2">
+            <ul class="list-none m-0 p-0">
+              <li class="px-0 py-1 flex justify-between gap-1">
+                <span class="text-900 font-medium text-xs">{{ chinchilla.sex === 'f' ? 'Самка' : 'Самец' }}</span>
+              </li>
+              <li class="px-0 py-1 flex justify-between gap-1 border-t border-surface-900">
+                <span class="text-900 font-medium text-xs">{{ colorString || 'стандарт' }}</span>
+              </li>
+              <li class="px-0 py-1 flex justify-between gap-1 border-t border-surface-900">
+                <span class="text-900 font-medium text-xs">{{ forPrint ? birthdayDate : dateDifference }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </template>
 
-  &__image {
-    max-height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  &__titleContainer {
-    position: absolute;
-    background-color: #828282;
-    padding: 0 12px;
-    height: 34px;
-    width: 100%;
-    left: 0;
-    bottom: 0;
-
-    @include mq('desktop-small') {
-      height: 24px;
-    }
-
-    @include mq('tablet-small') {
-      padding: 0 8px;
-      height: 20px;
-    }
-
-    @include mq('phone') {
-      padding: 0 4px;
-    }
-  }
-
-  &__info {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    width: 100%;
-    background: rgba(224, 224, 224, 0.86);
-    transform: translateY(100%);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    transition: transform 0.3s ease;
-    padding: 0 14px 34px;
-
-    @include mq('desktop') {
-      padding: 0 10px 34px;
-    }
-
-    @include mq('desktop-small') {
-      padding: 0 12px 24px;
-    }
-
-    @include mq('tablet') {
-      padding: 0 10px 24px;
-    }
-
-    @include mq('tablet-small') {
-      padding: 0 12px 20px;
-    }
-
-    @include mq('phone') {
-      padding: 0 8px 20px;
-    }
-  }
-
-  & &__infoRow {
-    font-size: 14px;
-    color: #797979;
-    display: -webkit-box;
-    margin-bottom: 8px;
-    overflow: hidden;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-
-    @include mq('desktop') {
-      line-height: 120%;
-      font-size: 11px;
-      margin-bottom: 6px;
-    }
-
-    @include mq('tablet-small') {
-      font-size: 11px;
-      margin-bottom: 4px;
-    }
-
-    @include mq('phone') {
-      font-size: 9px;
-    }
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-
-  &__title {
-    text-align: center;
-    color: #fff;
-    border-top: 1px solid #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    width: fit-content;
-    max-width: 100%;
-    margin: 0 auto;
-  }
-
-  &__name {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-
-    & span {
-      color: red;
-    }
-
-    @include mq('desktop-small') {
-      line-height: 21px;
-      font-size: 16px;
-    }
-
-    @include mq('tablet') {
-      line-height: 18px;
-      font-size: 14px;
-    }
-
-    @include mq('tablet-small') {
-      line-height: 15px;
-      font-size: 12px;
-    }
-  }
-
-  & .v-responsive__content {
-    width: 100% !important;
-  }
-
-  &__bubbleContainer {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 16px;
-    width: 56px;
-    height: 56px;
-  }
-
-  &__infoBubble {
-    background: #d79b00;
-    transition: transform 0.3s ease;
-    border-radius: 50%;
-    align-items: center;
-    justify-content: center;
-    display: none;
-    width: 100%;
-    height: 100%;
-
-    @include mq('tablet') {
-      display: flex;
-    }
-
-    & > * {
-      @include mq('tablet-small') {
-        font-size: 100% !important;
-        min-width: initial !important;
-        width: 100% !important;
-        height: 100% !important;
-      }
-    }
-  }
-
-  &__forPrint &__infoRow {
-    color: #000;
-  }
-
-  &__forPrint,
-  &:hover {
-    #{$self}__info {
-      transform: translateY(0);
-    }
-
-    #{$self}__infoBubble {
-      transform: translateY(-50px);
-    }
-  }
-}
-
-.gridCount__more .chinchillaCard {
-  &__bubbleContainer {
-    @include mq('tablet-small') {
-      padding: 4px;
-      width: 24px;
-      height: 24px;
-    }
-
-    @include mq('phone') {
-      padding: 2px;
-      width: 20px;
-      height: 20px;
-    }
-  }
-
-  &__info {
-    @include mq('tablet-small') {
-      padding: 0 8px 16px;
-    }
-
-    @include mq('phone') {
-      padding: 0 4px 16px;
-    }
-  }
-
-  &__infoRow {
-    @include mq('tablet-small') {
-      font-size: 10px;
-      -webkit-line-clamp: 2;
-    }
-
-    @include mq('phone') {
-      font-size: 8px;
-    }
-  }
-
-  &__titleContainer {
-    @include mq('tablet-small') {
-      height: 16px;
-    }
-  }
-
-  &__title {
-    @include mq('tablet-small') {
-      line-height: 16px;
-      font-size: 12px;
-    }
-  }
-}
-</style>
+      <template #content>
+        <ul class="list-none m-0 p-0">
+          <li v-if="!chinchilla.color" class="px-0 py-1 flex justify-between gap-1 border-b border-surface-900">
+            <span class="text-600 font-medium text-xs">Без окраса</span>
+          </li>
+          <li class="px-0 py-1 flex justify-between gap-1">
+            <span class="text-600 font-medium text-xs hidden lg:inline-block">Кличка</span>
+            <span class="text-900 font-medium text-xs lg:text-right">{{ chinchilla.name }}</span>
+          </li>
+          <template v-if="withParent">
+            <li v-if="chinchilla.mother" class="px-0 py-1 flex justify-between gap-1 border-t border-surface-900">
+              <span class="text-600 font-medium text-xs hidden lg:inline-block">Мать</span>
+              <span class="text-900 font-medium text-xs lg:text-right">{{ chinchilla.mother.name }}</span>
+            </li>
+            <li v-if="chinchilla.father" class="px-0 py-1 flex justify-between gap-1 border-t border-surface-900">
+              <span class="text-600 font-medium text-xs hidden lg:inline-block">Отец</span>
+              <span class="text-900 font-medium text-xs lg:text-right">{{ chinchilla.father.name }}</span>
+            </li>
+          </template>
+        </ul>
+      </template>
+    </Card>
+  </nuxt-link>
+</template>

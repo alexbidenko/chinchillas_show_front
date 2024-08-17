@@ -1,9 +1,3 @@
-<template>
-  <div class="usersPage baseContainer">
-    <UserCard v-for="user in users" :key="user.id" :user="user" />
-  </div>
-</template>
-
 <script setup>
 const PER_PAGE = 24;
 
@@ -42,29 +36,8 @@ onBeforeUnmount(() => {
 await useAsyncData(() => onRequest());
 </script>
 
-<style lang="scss">
-.usersPage {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-column-gap: 24px;
-  grid-row-gap: 32px;
-  padding-top: 32px;
-  padding-bottom: 32px;
-
-  @include mq('desktop') {
-    grid-template-columns: repeat(4, 1fr);
-    grid-column-gap: 16px;
-    grid-row-gap: 24px;
-  }
-
-  @include mq('desktop-small', 'tablet') {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  @include mq('tablet') {
-    grid-template-columns: repeat(2, 1fr);
-    grid-column-gap: 8px;
-    grid-row-gap: 16px;
-  }
-}
-</style>
+<template>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5 py-6 baseContainer">
+    <UserCard v-for="user in users" :key="user.id" :user="user" />
+  </div>
+</template>

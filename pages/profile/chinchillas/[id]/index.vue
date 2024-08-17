@@ -32,6 +32,7 @@ const isPrinting = computed(() => (
 const colorString = computed(() => colorToString(data.value.color));
 const birthdayDate = computed(() => dateFormat(data.value.birthday, 'yyyy.MM.dd'));
 const dateDifference = computed(() => getDateDifference(data.value.birthday));
+
 const activeStatus = computed(() => {
   const status = {
     ...(data.value.statuses[0] || {}),
@@ -51,6 +52,54 @@ const activeStatus = computed(() => {
     status.prices.push(data.value.price_eur)
   return status;
 });
+
+const infoData = computed(() => [
+  {
+    label: 'Идентификатор',
+    value: data.value.id,
+  },
+  {
+    disabled: !data.value.breeder,
+    label: 'Заводчик',
+    value: `${data.value.breeder.first_name} ${data.value.breeder.last_name} (${data.value.breeder.login})`,
+  },
+  {
+    disabled: data.value.breeder || !data.value.breeder_name,
+    label: 'Заводчик',
+    value: data.value.breeder_name,
+  },
+  {
+    label: 'Пол',
+    value: data.value.sex === 'f' ? 'самка' : 'самец',
+  },
+  {
+    label: 'Дата рождения',
+    value: birthdayDate.value,
+  },
+  {
+    label: 'Возраст',
+    value: dateDifference.value,
+  },
+  {
+    label: 'Окрас',
+    value: colorString.value,
+  },
+  {
+    disabled: !data.value.weight,
+    label: 'Вес при рождении',
+    value: data.value.weight,
+  },
+  {
+    disabled: !data.value.brothers,
+    label: 'Щенков в помете',
+    value: data.value.brothers,
+  },
+  {
+    disabled: !data.value.description,
+    label: 'Комментарий',
+    value: data.value.description,
+  },
+].filter((el) => !el.disabled));
 
 const updateUser = async () => {
   data.value = await $request(
@@ -156,7 +205,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="viewPage">
+  <div class="viewPage bg-surface-100">
     <template v-if="data">
       <ChinchillaHeader
         :chinchilla="data"
@@ -214,37 +263,24 @@ onBeforeUnmount(() => {
             </p>
           </v-card-text>
         </v-card>
-        <v-card title="Информация шиншиллы" class="mb-8">
-          <v-card-text class="pb-0">
-            <p class="pb-4 mb-0">Идентификатор: {{ data.id }}</p>
-            <p v-if="data.breeder" class="pb-4 mb-0">
-              Заводчик:
-              {{
-                `${data.breeder.first_name} ${data.breeder.last_name} (${data.breeder.login})`
-              }}
-            </p>
-            <p v-else-if="data.breeder_name">
-              Заводчик: {{ data.breeder_name }}
-            </p>
-            <p class="pb-4 mb-0">
-              Пол: {{ data.sex === 'f' ? 'самка' : 'самец' }}
-            </p>
-            <p class="pb-4 mb-0">Дата рождения: {{ birthdayDate }}</p>
-            <p class="pb-4 mb-0">Возраст: {{ dateDifference }}</p>
-            <p class="pb-4 mb-0 viewPage--phoneOnly">
-              Окрас: {{ colorString }}
-            </p>
-            <p v-if="data.weight" class="pb-4 mb-0">
-              Вес при рождении: {{ data.weight }} г.
-            </p>
-            <p v-if="data.brothers" class="pb-4 mb-0">
-              Щенков в помете: {{ data.brothers }}
-            </p>
-            <p v-if="data.description" class="pb-4 mb-0">
-              Комментарий: {{ data.description }}
-            </p>
-          </v-card-text>
-        </v-card>
+
+        <section class="bg-white !p-4 md:p-5 lg:p-6 shadow-md rounded-lg !mb-7">
+          <div class="font-medium text-3xl text-surface-900 !mb-5">О шиншилле</div>
+          <ul class="list-none p-0 m-0 border-t">
+            <li
+              v-for="(item, index) in infoData"
+              :key="item.label"
+              class="flex items-center !py-2 sm:!py-3 !px-2 flex-wrap"
+              :class="{ 'bg-surface-100': index % 2 === 0 }"
+            >
+              <div class="text-surface-500 w-full md:w-52 font-medium">{{ item.label }}</div>
+              <div class="text-surface-900 index">{{ item.value }}</div>
+            </li>
+          </ul>
+        </section>
+
+        <div class="font-medium text-3xl text-surface-900 mb-5">Фотографии</div>
+
         <div class="baseGrid">
           <ChinchillaPhoto
             v-for="(photo, index) in data.photos"
@@ -259,7 +295,7 @@ onBeforeUnmount(() => {
               activePhoto = index;
             "
           />
-          <label v-if="userStore.userId === data.owner_id" class="viewPage__uploadPhoto">
+          <label v-if="userStore.userId === data.owner_id" class="viewPage__uploadPhoto shadow-lg hover:shadow-sm rounded-lg">
             <v-icon size="40px" color="white">add</v-icon>
             <input
               type="file"
@@ -269,7 +305,10 @@ onBeforeUnmount(() => {
             >
           </label>
         </div>
+
+        <div class="font-medium text-3xl text-surface-900 mt-8">Родословная</div>
       </div>
+
       <div v-if="isPrinting" class="my-4">
         <a
           :href="`/profile/chinchillas/${data.id}/print`"
@@ -352,15 +391,10 @@ onBeforeUnmount(() => {
     align-items: center;
     justify-content: center;
     background-color: #828282;
-    box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
     transition: box-shadow 0.3s ease;
 
     & input {
       display: none;
-    }
-
-    &:hover {
-      box-shadow: none;
     }
 
     &::before {
