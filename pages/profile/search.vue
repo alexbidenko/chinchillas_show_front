@@ -1,118 +1,56 @@
-<script>
-import {mapStores} from "pinia";
+<script setup lang="ts">
+import type {ChinchillaType, ColorInfoType} from '~/types/common';
 
-export default {
-  name: 'SearchPage',
+const route = useRoute();
 
-  async setup() {
-    const route = useRoute()
-    const userStore = useUserStore();
-    const chinchillaStore = useChinchillaStore();
+const userStore = useUserStore();
+const chinchillaStore = useChinchillaStore();
+const settingsStore = useSettingsStore();
 
-    if (!chinchillaStore.chinchillas.length) {
-      const params = { ...route.params, status: userStore.fullAccess ? route.params.status : 'sale' }
+const params = ref({
+  search: '',
+  sex: '',
+  status: (route.query.status || '') as string,
+  colors: {} as ColorInfoType,
+});
 
-      await useAsyncData(async () => {
-        await chinchillaStore.fetchChinchillas({
-          reset: true,
-          params,
-        });
+const chinchillas = computed<ChinchillaType[]>(() => chinchillaStore.chinchillas);
+const isLoading = computed<boolean>(() => chinchillaStore.isLoading);
 
-        return 'search-chinchillas';
-      });
-    }
-  },
+const onScroll = () => {
+  if (window.scrollY + window.innerHeight + 500 > document.body.scrollHeight) {
+    chinchillaStore.fetchChinchillas({ params: params.value });
+  }
+};
 
-  data() {
-    return {
-      gridCountItems: [
-        {
-          label: '2 карточки',
-          value: 'default',
-        },
-        {
-          label: '4 карточки',
-          value: 'more',
-        },
-      ],
-      gridCountValue: this.$cookies.get('grid_count_value') || 'default',
-      params: {
-        search: '',
-        sex: '',
-        status: this.$route.query.status || '',
-        colors: {},
-      },
-    }
-  },
+const apply = (parameters: typeof params.value) => {
+  params.value = parameters;
+  chinchillaStore.fetchChinchillas({ reset: true, params: params.value });
+};
 
-  computed: {
-    ...mapStores(useUserStore, useChinchillaStore),
-    chinchillas() {
-      return this.chinchillaStore.chinchillas
-    },
-    isLoading() {
-      return this.chinchillaStore.isLoading
-    },
-  },
+onMounted(() => {
+  window.addEventListener('scroll', onScroll);
 
-  watch: {
-    gridCountValue(val) {
-      const date = new Date()
-      date.setFullYear(date.getFullYear() + 200)
-      this.$cookies.set('grid_count_value', val, { expires: date })
-    },
-  },
+  if (!chinchillaStore.chinchillas.length) {
+    const fetchParams = { ...route.params, status: userStore.fullAccess ? (route.params.status as string) : 'sale' };
 
-  mounted() {
-    window.addEventListener('scroll', this.onScroll)
-  },
+    chinchillaStore.fetchChinchillas({ reset: true, params: fetchParams });
+  }
+});
 
-  beforeUnmount() {
-    window.removeEventListener('scroll', this.onScroll)
-  },
-
-  methods: {
-    onScroll() {
-      if (
-        window.scrollY + window.innerHeight + 500 >
-        document.body.scrollHeight
-      ) {
-        this.chinchillaStore.fetchChinchillas({
-          params: this.params,
-        });
-      }
-    },
-    apply(parameters) {
-      this.dialog = false
-      this.params = parameters
-      this.chinchillaStore.fetchChinchillas({
-        reset: true,
-        params: this.params,
-      });
-    },
-  },
-}
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', onScroll);
+});
 </script>
+
 
 <template>
   <div class="searchPage baseContainer">
     <ChinchillaSearch :parameters="params" @change="apply" />
 
-    <div class="searchPage__settings">
-      <v-select
-        v-model="gridCountValue"
-        solo
-        label="В ряд"
-        :items="gridCountItems"
-        item-title="label"
-        item-value="value"
-        class="searchPage__gridCount"
-      />
-    </div>
-
     <div
       class="searchPage__list baseGrid"
-      :class="[`gridCount__${gridCountValue}`, { 'text-sm md:text-md': gridCountValue === 'more' }]"
+      :class="`gridCount__${settingsStore.gridCountValue}`"
     >
       <ChinchillaCard
         v-for="chinchilla in chinchillas"
@@ -150,21 +88,6 @@ export default {
     .baseSpinner {
       height: 44px;
       width: 44px;
-    }
-  }
-
-  &__settings {
-    & > *:first-child {
-      @include mq('tablet') {
-        display: none;
-      }
-    }
-    & > *:last-child {
-      display: none;
-
-      @include mq('tablet') {
-        display: block;
-      }
     }
   }
 

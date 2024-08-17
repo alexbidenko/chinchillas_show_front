@@ -1,105 +1,3 @@
-<template>
-  <label class="chinchillaSearch">
-    <v-icon color="white" icon="search" />
-    <input
-      v-model="models.search"
-      class="chinchillaSearch__input"
-      placeholder="Поиск шиншиллы"
-    >
-    <span class="chinchillaSearch__settings">
-      <v-btn icon variant="text" @click="dialog = true">
-        <v-icon color="white">settings</v-icon>
-      </v-btn>
-      <v-fab
-        color="primary"
-        dark
-        position="fixed"
-        location="bottom end"
-        app
-        icon="settings"
-        @click="dialog = true"
-      />
-    </span>
-
-    <v-dialog v-model="dialog" width="500">
-      <v-card>
-        <v-card-title class="headline lighten-2">
-          Параметры поиска
-        </v-card-title>
-
-        <v-card-text>
-          <v-select
-            v-model="models.sex"
-            :items="sexItems"
-            label="Пол"
-            item-title="label"
-            item-value="value"
-          />
-          <v-select
-            v-if="userStore.fullAccess"
-            v-model="models.status"
-            :items="statuses"
-            label="Статус"
-            item-title="label"
-            item-value="key"
-          />
-        </v-card-text>
-
-        <v-divider/>
-
-        <v-card-text class="py-4">
-          <v-btn @click="showColorDialog">Поиск по окрасам</v-btn>
-          <div class="mt-3">{{ stringColor }}</div>
-        </v-card-text>
-
-        <v-divider/>
-
-        <v-card-actions>
-          <v-spacer/>
-          <v-btn variant="text" @click="dialog = false"> Закрыть </v-btn>
-          <v-btn color="primary" variant="text" @click="apply"> Применить </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <v-dialog
-      v-model="colorDialog"
-      width="820"
-      content-class="chinchillaSearch__colorDialog"
-    >
-      <v-card class="chinchillaSearch__colorCard">
-        <v-card-title class="headline lighten-2">
-          Поиск по окрасам
-        </v-card-title>
-
-        <v-card-text class="chinchillaSearch__grid">
-          <v-combobox
-            v-for="item in config"
-            :key="item.name"
-            :value="item.variants.find((el) => el.value === colors[item.name])"
-            class="chinchillaSearch__label"
-            :name="item.name"
-            :items="item.variants"
-            item-title="label"
-            item-value="value"
-            :label="item.label"
-            clearable
-            @change="onUpdateColor(item.name, $event)"
-          />
-        </v-card-text>
-
-        <v-divider class="chinchillaSearch__footerDivider"/>
-
-        <v-card-actions>
-          <v-spacer/>
-          <v-btn variant="text" @click="colorDialog = false"> Закрыть </v-btn>
-          <v-btn color="primary" variant="text" @click="saveColors"> Сохранить </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </label>
-</template>
-
 <script>
 import colorConfig from '~/assets/datas/colorConfig.json'
 import statuses from '~/assets/datas/statuses.json'
@@ -183,7 +81,7 @@ export default {
       this.colors = { ...this.models.colors }
     },
     onUpdateColor(name, event) {
-      if (event?.value) this.colors[name] = event.value
+      if (event) this.colors[name] = event;
       else delete this.colors[name]
     },
     apply() {
@@ -197,6 +95,99 @@ export default {
   },
 }
 </script>
+
+<template>
+  <label class="chinchillaSearch">
+    <v-icon color="white" icon="search" />
+    <input
+      v-model="models.search"
+      class="chinchillaSearch__input"
+      placeholder="Поиск шиншиллы"
+    >
+    <span class="chinchillaSearch__settings">
+      <v-btn icon variant="text" @click="dialog = true">
+        <v-icon color="white">settings</v-icon>
+      </v-btn>
+      <v-fab
+        color="primary"
+        dark
+        position="fixed"
+        location="bottom end"
+        app
+        icon="settings"
+        @click="dialog = true"
+      />
+    </span>
+
+    <Dialog
+      v-model:visible="dialog"
+      header="Параметры поиска"
+      modal
+      dismissable-mask
+      class="w-96 min-w-fit max-w-full"
+    >
+      <div class="pt-1">
+        <Select
+          v-model="models.sex"
+          :options="sexItems"
+          placeholder="Пол"
+          option-label="label"
+          option-value="value"
+          class="w-full"
+        />
+        <Select
+          v-if="userStore.fullAccess"
+          v-model="models.status"
+          :options="statuses"
+          placeholder="Статус"
+          option-label="label"
+          option-value="key"
+          class="w-full mt-4"
+        />
+      </div>
+
+      <Divider/>
+
+      <div class="pb-4">
+        <Button severity="secondary" outlined @click="showColorDialog" label="Поиск по окрасам" />
+        <div class="mt-3 text-md">{{ stringColor }}</div>
+      </div>
+
+      <template #footer>
+        <Button @click="dialog = false" severity="secondary" label="Закрыть" />
+        <Button @click="apply" label="Применить" />
+      </template>
+    </Dialog>
+
+    <Dialog
+      v-model:visible="colorDialog"
+      header="Поиск по окрасам"
+      modal
+      dismissable-mask
+      class="w-96 min-w-fit max-w-full"
+    >
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 sm:gap-2 md:gap-3 lg:gap-4 pt-1">
+        <Select
+          v-for="item in config"
+          :key="item.name"
+          @update:model-value="onUpdateColor(item.name, $event)"
+          :model-value="colors[item.name]"
+          :placeholder="item.label"
+          :options="item.variants"
+          option-label="label"
+          option-value="value"
+          show-clear
+          class="sm:w-52"
+        />
+      </div>
+
+      <template #footer>
+        <Button @click="colorDialog = false" severity="secondary" label="Закрыть" />
+        <Button @click="saveColors" label="Сохранить" />
+      </template>
+    </Dialog>
+  </label>
+</template>
 
 <style lang="scss">
 .chinchillaSearch {
@@ -240,44 +231,6 @@ export default {
 
     @include mq('tablet') {
       row-gap: 0;
-    }
-  }
-
-  &__label {
-    width: calc((100% + var(--column-space)) / 4 - var(--column-space));
-    display: block;
-
-    @include mq('tablet') {
-      width: calc((100% + var(--column-space)) / 2 - var(--column-space));
-    }
-  }
-
-  &__colorDialog.v-dialog {
-    @include mq('tablet-small') {
-      border-radius: 0;
-      margin: 0;
-      height: 100%;
-      position: fixed;
-      overflow-y: auto;
-      top: 0;
-      left: 0;
-      max-height: initial !important;
-      max-width: 100%;
-    }
-  }
-
-  &__colorCard.v-card {
-    @include mq('tablet-small') {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      overflow: auto;
-    }
-  }
-
-  &__footerDivider {
-    @include mq('tablet-small') {
-      margin-top: auto;
     }
   }
 }

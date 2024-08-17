@@ -1,106 +1,53 @@
-<script>
-import statuses from '~/assets/datas/statuses.json'
+<script setup lang="ts">
+import statuses from '~/assets/datas/statuses.json';
+import type {ChinchillaType, UserType} from "~/types/common";
 
-export default {
-  name: 'ProfilePage',
+const props = defineProps<{
+  userId: number;
+  user: UserType;
+  chinchillas: Record<string, ChinchillaType[]>;
+  soldChinchillas: Record<string, any>[];
+}>();
 
-  props: {
-    userId: {
-      type: Number,
-      required: true,
-    },
-    user: {
-      type: Object,
-      required: true,
-    },
-    chinchillas: {
-      type: Object,
-      required: true,
-    },
-    soldChinchillas: {
-      type: Array,
-      required: true,
-    },
+const userStore = useUserStore();
+const settingsStore = useSettingsStore();
+
+const sortValue = useCookie('sort_value', { path: '/', expires: getEternalCookieExpired() })
+
+const isOwner = computed(() => props.userId === userStore.userId);
+
+const statusesData = [
+  { key: 'm', label: 'Самцы' },
+  { key: 'f', label: 'Самки' },
+  ...statuses,
+];
+
+const sortItems = [
+  {
+    label: 'По алфавиту',
+    value: 'default',
   },
-
-  data() {
-    return {
-      isOwner: this.userId === +this.$cookies.get('USER_ID'),
-      statuses: [
-        { key: 'm', label: 'Самцы' },
-        { key: 'f', label: 'Самки' },
-        ...statuses,
-      ],
-      gridCountItems: [
-        {
-          label: '2 карточки',
-          value: 'default',
-        },
-        {
-          label: '4 карточки',
-          value: 'more',
-        },
-      ],
-      sortItems: [
-        {
-          label: 'По алфавиту',
-          value: 'default',
-        },
-        {
-          label: 'По дате рождения',
-          value: 'birthday',
-        },
-      ],
-      gridCountValue: this.$cookies.get('grid_count_value') || 'default',
-      sortValue: this.$cookies.get('sort_value') || 'default',
-    }
+  {
+    label: 'По дате рождения',
+    value: 'birthday',
   },
+];
 
-  computed: {
-    sortedChinchillas() {
-      const result = {}
-      Object.entries(this.chinchillas).forEach(([key, value]) => {
-        const field = this.sortValue === 'birthday' ? 'birthday' : 'name'
-        result[key] = value.sort((a, b) => (a[field] > b[field] ? 1 : -1))
-      })
-      return result
-    },
-  },
-
-  watch: {
-    gridCountValue(val) {
-      const date = new Date()
-      date.setFullYear(date.getFullYear() + 200)
-      this.$cookies.set('grid_count_value', val, { expires: date })
-    },
-    sortValue(val) {
-      const date = new Date()
-      date.setFullYear(date.getFullYear() + 200)
-      this.$cookies.set('sort_value', val, { expires: date })
-    },
-  },
-}
-
+const sortedChinchillas = computed(() => {
+  const result: Record<string, ChinchillaType[]> = {};
+  Object.entries(props.chinchillas).forEach(([key, value]) => {
+    const field = sortValue.value === 'birthday' ? 'birthday' : 'name';
+    result[key] = value.sort((a, b) => (a[field] > b[field] ? 1 : -1));
+  });
+  return result;
+});
 </script>
+
 
 <template>
   <div class="profilePage">
-    <ProfileInfo
-      v-if="user"
-      :user="user"
-      :is-owner="isOwner"
-      @update="user = $event"
-    />
+    <ProfileInfo :user="user" />
     <div class="profilePage__settings baseContainer">
-      <v-select
-        v-model="gridCountValue"
-        solo
-        label="В ряд"
-        :items="gridCountItems"
-        item-title="label"
-        item-value="value"
-        class="profilePage__gridCount"
-      />
       <v-select
         v-model="sortValue"
         solo
@@ -114,14 +61,14 @@ export default {
     <div
       v-for="(list, key) in sortedChinchillas"
       :key="key"
-      :class="`gridCount__${gridCountValue}`"
+      :class="`gridCount__${settingsStore.gridCountValue}`"
     >
       <CardSection
         v-if="list.length && key !== 'dead'"
         :section-key="key"
         :items="list"
         :title="
-          (statuses.find((el) => el.key === key) || { label: 'Без статуса' })
+          (statusesData.find((el) => el.key === key) || { label: 'Без статуса' })
             .label
         "
       />
@@ -132,7 +79,7 @@ export default {
       section-key="extra-sold"
       :items="soldChinchillas"
       :default-expand="false"
-      :class="`gridCount__${gridCountValue}`"
+      :class="`gridCount__${settingsStore.gridCountValue}`"
     />
     <CardSection
       v-if="sortedChinchillas.dead && sortedChinchillas.dead.length"
@@ -140,7 +87,7 @@ export default {
       section-key="extra-dead"
       title="На радуге"
       :default-expand="false"
-      :class="`gridCount__${gridCountValue}`"
+      :class="`gridCount__${settingsStore.gridCountValue}`"
     />
     <v-fab
       v-if="isOwner"

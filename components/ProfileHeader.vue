@@ -94,7 +94,8 @@ const menu = computed(() => [
       v-model:visible="isSettingsVisible"
       header="Настройки"
       modal
-      class="min-w-72 max-w-full"
+      dismissable-mask
+      class="w-80 min-w-fit max-w-full"
     >
       <label>
         <span class="text-md mb-4 block">Масштаб интерфейса</span>
@@ -106,7 +107,7 @@ const menu = computed(() => [
       <Button @click="logout" label="Выйти из аккаунт" severity="danger" outlined class="w-full" />
 
       <template #footer>
-        <Button @click="isSettingsVisible = false" label="Закрыть" />
+        <Button @click="isSettingsVisible = false" label="Закрыть" severity="secondary" />
       </template>
     </Dialog>
   </header>

@@ -47,16 +47,16 @@ input[type=file] {
   grid-column-gap: 16px;
   grid-row-gap: 24px;
 
-  @include mq('desktop', 'desktop-small') {
+  @include mq('desktop') {
     grid-column-gap: 12px;
     grid-row-gap: 18px;
   }
 
-  @include mq('desktop-small', 'tablet') {
+  @include mq('desktop-small') {
     grid-template-columns: repeat(6, 1fr);
   }
 
-  @include mq('tablet', 'tablet-small') {
+  @include mq('tablet') {
     grid-template-columns: repeat(4, 1fr);
     grid-column-gap: 16px;
     grid-row-gap: 24px;
@@ -70,7 +70,6 @@ input[type=file] {
 }
 
 .gridCount__more.baseGrid {
-
   @include mq('tablet-small') {
     grid-template-columns: repeat(4, 1fr);
   }

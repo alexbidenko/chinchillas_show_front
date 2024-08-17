@@ -1,3 +1,55 @@
+<script setup lang="ts">
+import {ref, watch} from 'vue';
+import type {UserType} from "~/types/common";
+
+const INFO_META: { label: string; key: keyof UserType }[] = [
+  { label: 'Телефон', key: 'phone' },
+  { label: 'E-Mail', key: 'email' },
+  { label: 'Страна', key: 'country' },
+  { label: 'Город', key: 'city' },
+];
+
+const props = defineProps<{
+  user: UserType;
+}>();
+
+const userStore = useUserStore();
+
+const dialog = ref(false);
+const isLoading = ref(false);
+
+const models = ref<Partial<UserType>>({
+  first_name: '',
+  last_name: '',
+  patronymic: '',
+  country: '',
+  city: '',
+  avatar: null,
+});
+
+const isOwner = computed(() => props.user.id === userStore.userId);
+
+const update = async () => {
+  isLoading.value = true;
+  const formData = new FormData();
+  Object.keys(models.value).forEach((key) => {
+    const value = models.value[key as keyof UserType];
+    if (key !== 'avatar' || value) formData.append(key, value as string | Blob);
+  });
+
+  try {
+    userStore.user = await $request<UserType>('user/update', {method: 'post', body: formData});
+    dialog.value = false;
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+watch(dialog, (val) => {
+  if (val) models.value = { ...props.user, avatar: null };
+});
+</script>
+
 <template>
   <section class="profileInfo">
     <div class="profileInfo__background">
@@ -27,7 +79,7 @@
       </div>
       <div class="profileInfo__cell">
         <p
-          v-for="meta in infoMetaRight"
+          v-for="meta in INFO_META"
           :key="meta.key"
           class="profileInfo__info"
         >
@@ -40,9 +92,7 @@
     <v-bottom-sheet v-model="dialog" inset scrollable>
       <v-card>
         <v-toolbar dark color="primary">
-          <v-btn icon dark @click="dialog = false">
-            <v-icon>close</v-icon>
-          </v-btn>
+          <v-btn icon="close" dark @click="dialog = false" />
           <v-toolbar-title>Редактирование профиля</v-toolbar-title>
           <v-spacer/>
           <v-toolbar-items>
@@ -105,84 +155,6 @@
     </v-bottom-sheet>
   </section>
 </template>
-
-<script>
-export default {
-  name: 'ProfileInfo',
-
-  props: {
-    isOwner: {
-      type: Boolean,
-      required: true,
-    },
-    user: {
-      type: Object,
-      required: true,
-    },
-  },
-
-  data() {
-    return {
-      dialog: false,
-      infoMetaRight: [
-        {
-          label: 'Телефон',
-          key: 'phone',
-        },
-        {
-          label: 'E-Mail',
-          key: 'email',
-        },
-        {
-          label: 'Страна',
-          key: 'country',
-        },
-        {
-          label: 'Город',
-          key: 'city',
-        },
-      ],
-      models: {
-        first_name: '',
-        last_name: '',
-        patronymic: '',
-        country: '',
-        city: '',
-        avatar: null,
-      },
-      isLoading: false,
-    }
-  },
-
-  watch: {
-    dialog(val) {
-      if (val) {
-        Object.assign(this.models, this.user)
-        this.models.avatar = null
-      }
-    },
-  },
-
-  methods: {
-    update() {
-      this.isLoading = true
-      const formData = new FormData()
-      Object.keys(this.models).forEach((key) => {
-        if (key !== 'avatar' || this.models[key])
-          formData.append(key, this.models[key])
-      })
-      $request('user/update', { method: 'post', body: formData })
-        .then((data) => {
-          this.$emit('update', data)
-          this.dialog = false
-        })
-        .finally(() => {
-          this.isLoading = false
-        })
-    },
-  },
-}
-</script>
 
 <style lang="scss">
 .profileInfo {

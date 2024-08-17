@@ -1,11 +1,5 @@
-const EXPIRES = (() => {
-  const value = new Date();
-  value.setFullYear(value.getFullYear() + 1);
-  return value;
-})();
-
 export const useSettingsStore = defineStore('settings', () => {
-  const interfaceScaleValue = useCookie<number | null>('interface_scale', { path: '/', expires: EXPIRES });
+  const interfaceScaleValue = useCookie<number | null>('interface_scale', { path: '/', expires: getEternalCookieExpired() });
 
   const interfaceScale = computed({
     get: () => interfaceScaleValue.value || 16,
@@ -14,5 +8,7 @@ export const useSettingsStore = defineStore('settings', () => {
     }
   });
 
-  return { interfaceScale };
+  const gridCountValue = computed(() => interfaceScale.value < 16 ? 'more' : 'default');
+
+  return { interfaceScale, gridCountValue };
 });
