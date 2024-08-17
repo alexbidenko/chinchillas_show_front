@@ -5,7 +5,6 @@ const route = useRoute();
 
 const userStore = useUserStore();
 const chinchillaStore = useChinchillaStore();
-const settingsStore = useSettingsStore();
 
 const params = ref({
   search: '',
@@ -48,22 +47,14 @@ onBeforeUnmount(() => {
   <div class="searchPage baseContainer">
     <ChinchillaSearch :parameters="params" @change="apply" />
 
-    <div
-      class="searchPage__list grid sm:grid-cols-4 md:grid-cols-6 xl:grid-cols-8 sm:gap-2 md:gap-3 lg:gap-4 py-4"
-      :class="{
-        'grid-cols-4 gap-1': settingsStore.gridCountValue === 'sm',
-        'grid-cols-3 gap-2': settingsStore.gridCountValue === 'md',
-        'grid-cols-2 gap-2': settingsStore.gridCountValue === 'lg',
-        'grid-cols-1 gap-3': settingsStore.gridCountValue === 'xl',
-      }"
-    >
+    <AdaptiveGrid class="searchPage__list py-4">
       <ChinchillaCard
         v-for="chinchilla in chinchillas"
         :key="chinchilla.id"
         :chinchilla="chinchilla"
         with-parent
       />
-    </div>
+    </AdaptiveGrid>
     <div v-if="isLoading" class="searchPage__loaderContainer">
       <BaseSpinner />
     </div>

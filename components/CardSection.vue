@@ -32,17 +32,16 @@ const expanded = useCookie<boolean>(
         </div>
       </header>
       <div v-auto-animate style="overflow: hidden">
-        <main
+        <AdaptiveGrid
           v-if="expanded"
-          class="grid sm:grid-cols-4 md:grid-cols-6 xl:grid-cols-8 sm:gap-2 md:gap-3 lg:gap-4 py-4 baseContainer"
-          :class="settingsStore.gridCountValue === 'more' ? 'grid-cols-4 gap-1' : 'grid-cols-2 gap-2'"
+          class="py-4 baseContainer"
         >
           <ChinchillaCard
             v-for="item in items"
             :key="item.id"
             :chinchilla="item"
           />
-        </main>
+        </AdaptiveGrid>
       </div>
     </div>
   </section>

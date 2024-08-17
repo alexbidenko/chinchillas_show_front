@@ -41,40 +41,6 @@ input[type=file] {
   box-sizing: border-box !important;
 }
 
-.baseGrid {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  grid-column-gap: 16px;
-  grid-row-gap: 24px;
-
-  @include mq('desktop') {
-    grid-column-gap: 12px;
-    grid-row-gap: 18px;
-  }
-
-  @include mq('desktop-small') {
-    grid-template-columns: repeat(6, 1fr);
-  }
-
-  @include mq('tablet') {
-    grid-template-columns: repeat(4, 1fr);
-    grid-column-gap: 16px;
-    grid-row-gap: 24px;
-  }
-
-  @include mq('tablet-small') {
-    grid-template-columns: repeat(2, 1fr);
-    grid-column-gap: 8px;
-    grid-row-gap: 12px;
-  }
-}
-
-.gridCount__more.baseGrid {
-  @include mq('tablet-small') {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
 body {
   .v-application a { color: #d79b00; }
   .v-application .primary {

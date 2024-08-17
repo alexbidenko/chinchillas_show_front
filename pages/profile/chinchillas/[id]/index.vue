@@ -313,7 +313,7 @@ onBeforeUnmount(() => {
 
         <div class="font-medium text-3xl text-surface-900 mb-5">Фотографии</div>
 
-        <div class="baseGrid">
+        <AdaptiveGrid>
           <ChinchillaPhoto
             v-for="(photo, index) in data.photos"
             :key="photo.id"
@@ -336,7 +336,7 @@ onBeforeUnmount(() => {
               @change="uploadPhotos"
             >
           </label>
-        </div>
+        </AdaptiveGrid>
 
         <div class="font-medium text-3xl text-surface-900 mt-8">Родословная</div>
       </div>
