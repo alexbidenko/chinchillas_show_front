@@ -1,11 +1,11 @@
 <template>
   <div
-    class="chinchillaPhoto"
+    class="relative transition aspect-square hover:shadow-lg rounded-lg cursor-pointer"
     :class="{ chinchillaPhoto_avatar: isAvatar }"
     @click="$emit('click', $event)"
   >
     <NuxtImg
-      class="chinchillaPhoto__image"
+      class="block w-full h-full object-cover rounded-lg"
       format="webp"
       placeholder="/assets/empty.jpg"
       :src="
@@ -72,24 +72,6 @@ export default {
 
 <style lang="scss">
 .chinchillaPhoto {
-  position: relative;
-  cursor: pointer;
-  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.2);
-  transition: box-shadow 0.3s ease;
-  max-height: 400px;
-  aspect-ratio: 1 / 1;
-
-  &:hover {
-    box-shadow: none;
-  }
-
-  &__image {
-    width: 100%;
-    max-height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
   &__actions {
     position: absolute;
     top: 4px;

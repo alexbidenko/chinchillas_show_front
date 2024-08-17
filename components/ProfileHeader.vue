@@ -95,7 +95,7 @@ const menu = computed(() => [
       header="Настройки"
       modal
       dismissable-mask
-      class="w-80 min-w-fit max-w-full"
+      class="w-96 min-w-fit max-w-full"
     >
       <label>
         <span class="text-md mb-4 block">Масштаб интерфейса</span>

@@ -63,16 +63,16 @@ const birthdayDate = computed(() => dateFormat(props.chinchilla.birthday, 'yyyy.
             <span class="text-600 font-medium text-xs">Без окраса</span>
           </li>
           <li class="px-0 py-1 flex justify-between gap-1 items-center">
-            <span class="text-600 font-medium text-xs hidden md:inline-block">Кличка</span>
+            <span class="text-600 font-medium text-xs hidden lg:inline-block">Кличка</span>
             <span class="text-900 font-medium text-xs md:text-right">{{ chinchilla.name }}</span>
           </li>
           <template v-if="withParent">
             <li v-if="chinchilla.mother" class="px-0 py-1 flex justify-between gap-1 items-center border-t border-surface-900">
-              <span class="text-600 font-medium text-xs hidden md:inline-block">Мать</span>
+              <span class="text-600 font-medium text-xs hidden lg:inline-block">Мать</span>
               <span class="text-900 font-medium text-xs md:text-right">{{ chinchilla.mother.name }}</span>
             </li>
             <li v-if="chinchilla.father" class="px-0 py-1 flex justify-between gap-1 items-center border-t border-surface-900">
-              <span class="text-600 font-medium text-xs hidden md:inline-block">Отец</span>
+              <span class="text-600 font-medium text-xs hidden lg:inline-block">Отец</span>
               <span class="text-900 font-medium text-xs md:text-right">{{ chinchilla.father.name }}</span>
             </li>
           </template>
