@@ -126,7 +126,7 @@ export default defineNuxtConfig({
     rateLimiter: false,
     headers: {
       contentSecurityPolicy: {
-        'img-src': ["'self'", "data:", 'https://api.chinchillas-show.com'],
+        'img-src': ["'self'", "data:", "blob:", 'https://api.chinchillas-show.com'],
       },
     },
   },
