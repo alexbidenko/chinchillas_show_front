@@ -9,7 +9,7 @@ export default defineNuxtPlugin(async ({ ssrContext }) => {
     else {
       const ip = getRequestIP(ssrContext.event, { xForwardedFor: true });
       const data = await $request<{ code: string }>(
-        `https://ip-info.admire.social/api/location/${ip}`
+        `https://ip-info.asmy.pro/api/location/${ip}`
       )
       location.value = data.code;
     }
