@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     '@vite-pwa/nuxt',
     '@nuxt/eslint',
     '@primevue/nuxt-module',
+    '@nuxtjs/tailwindcss',
   ],
   app: {
     pageTransition: { name: 'page', mode: 'out-in' },
@@ -121,7 +122,7 @@ export default defineNuxtConfig({
       autoprefixer: {}
     }
   },
-  css: ['./assets/styles/tailwind.scss', './assets/styles/styles.scss', './assets/styles/reset.scss'],
+  css: ['./assets/styles/styles.scss', './assets/styles/reset.scss'],
   security: {
     rateLimiter: false,
     headers: {
@@ -129,6 +130,9 @@ export default defineNuxtConfig({
         'img-src': ["'self'", "data:", "blob:", 'https://api.chinchillas-show.com'],
       },
     },
+  },
+  tailwindcss: {
+    cssPath: '~/assets/styles/tailwind.scss',
   },
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
