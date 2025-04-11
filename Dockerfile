@@ -1,11 +1,11 @@
-FROM node:lts-alpine AS base
+FROM node:22-alpine AS base
 
 RUN npm i --global --no-cache --no-update-notifier --no-fund pnpm
 
 FROM base AS dependencies
 
 WORKDIR /app
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 RUN pnpm install --frozen-lockfile
 
@@ -17,7 +17,7 @@ COPY . .
 
 RUN pnpm build
 
-FROM node:lts-alpine
+FROM node:22-alpine
 
 WORKDIR /app
 
